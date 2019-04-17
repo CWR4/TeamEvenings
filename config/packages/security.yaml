@@ -14,11 +14,16 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            logout:
+                path: app_logout
         main:
             anonymous: true
             guard:
                 authenticators:
                     - App\Security\AppAuthenticator
+
+            logout:
+                path: app_logout
 
             # activate different ways to authenticate
 
