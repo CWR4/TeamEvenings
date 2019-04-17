@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<file source-language="de" target-language="en" datatype="plaintext" original="file.ext">
+    <header>
+        <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+
+        <trans-unit id="symfony.is_great">
+            <source>symfony.is_great</source>
+            <target>Symfony is great!</target>
+        </trans-unit>
+        <trans-unit id="symfony.is_awesome">
+            <source>symfony.is_awesome</source>
+            <target>Symfony is awesome!</target>
+        </trans-unit>
+
+        <trans-unit id="navigation.home">
+            <source>navigation.home</source>
+            <target>Home</target>
+        </trans-unit>
+        <trans-unit id="navigation.login">
+            <source>navigation.login</source>
+            <target>Sign in</target>
+        </trans-unit>
+        <trans-unit id="navigation.logout">
+            <source>navigation.logout</source>
+            <target>Sign out</target>
+        </trans-unit>
+
+        <trans-unit id="login.username">
+            <source>login.username</source>
+            <target>Username</target>
+        </trans-unit>
+        <trans-unit id="login.password">
+            <source>login.password</source>
+            <target>Password</target>
+        </trans-unit>
+        <trans-unit id="login.signin">
+            <source>login.signin</source>
+            <target>Sign in</target>
+        </trans-unit>
+
+    </body>
+</file>
+</xliff>
