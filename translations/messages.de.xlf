@@ -36,6 +36,12 @@
             <target>Ausloggen</target>
         </trans-unit>
 
+        <trans-unit id="home.next">
+            <source>home.next</source>
+            <target>nächster</target>
+        </trans-unit>
+
+
         <trans-unit id="login.username">
             <source>login.username</source>
             <target>Benutzername</target>
@@ -51,6 +57,15 @@
         <trans-unit id="login.message">
             <source>login.message</source>
             <target>Bitte anmelden:</target>
+        </trans-unit>
+
+        <trans-unit id="af.logo.game">
+            <source>af.logo.game</source>
+            <target>fab fa-d-and-d</target>
+        </trans-unit>
+        <trans-unit id="af.logo.movie">
+            <source>af.logo.movie</source>
+            <target>fas fa-film</target>
         </trans-unit>
 
     </body>

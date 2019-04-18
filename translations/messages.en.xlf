@@ -53,6 +53,15 @@
             <target>Please sign in</target>
         </trans-unit>
 
+        <trans-unit id="af.logo.game">
+            <source>af.logo.game</source>
+            <target>fab fa-d-and-d</target>
+        </trans-unit>
+        <trans-unit id="af.logo.movie">
+            <source>af.logo.movie</source>
+            <target>fas fa-film</target>
+        </trans-unit>
+
     </body>
 </file>
 </xliff>
