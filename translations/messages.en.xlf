@@ -40,6 +40,10 @@
             <source>login.signin</source>
             <target>Sign in</target>
         </trans-unit>
+        <trans-unit id="login.message">
+            <source>login.message</source>
+            <target>Please sign in</target>
+        </trans-unit>
 
     </body>
 </file>

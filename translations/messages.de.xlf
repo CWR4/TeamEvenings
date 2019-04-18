@@ -21,7 +21,7 @@
         </trans-unit>
         <trans-unit id="navigation.login">
             <source>navigation.login</source>
-            <target>Einloggen</target>
+            <target>Anmelden</target>
         </trans-unit>
         <trans-unit id="navigation.logout">
             <source>navigation.logout</source>
@@ -38,7 +38,11 @@
         </trans-unit>
         <trans-unit id="login.signin">
             <source>login.signin</source>
-            <target>Einloggen</target>
+            <target>Anmelden</target>
+        </trans-unit>
+        <trans-unit id="login.message">
+            <source>login.message</source>
+            <target>Bitte anmelden:</target>
         </trans-unit>
 
     </body>
