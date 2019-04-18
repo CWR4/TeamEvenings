@@ -19,6 +19,14 @@
             <source>navigation.home</source>
             <target>Startseite</target>
         </trans-unit>
+        <trans-unit id="navigation.gamenight">
+            <source>navigation.gamenight</source>
+            <target>Spielabend</target>
+        </trans-unit>
+        <trans-unit id="navigation.movienight">
+            <source>navigation.movienight</source>
+            <target>Filmabend</target>
+        </trans-unit>
         <trans-unit id="navigation.login">
             <source>navigation.login</source>
             <target>Anmelden</target>

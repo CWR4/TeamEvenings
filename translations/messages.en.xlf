@@ -19,6 +19,14 @@
             <source>navigation.home</source>
             <target>Home</target>
         </trans-unit>
+        <trans-unit id="navigation.gamenight">
+            <source>navigation.gamenight</source>
+            <target>Game Night</target>
+        </trans-unit>
+        <trans-unit id="navigation.movienight">
+            <source>navigation.movienight</source>
+            <target>Movie Night</target>
+        </trans-unit>
         <trans-unit id="navigation.login">
             <source>navigation.login</source>
             <target>Sign in</target>
