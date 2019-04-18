@@ -1,27 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello BaseController!{% endblock %}
+{% block title %}T-Eve{% endblock %}
 
 {% block body %}
-<p></p>
-<div class="row justify-content-center">
+<p>
+    <div class="container">
+        <div class="row justify-content-center">
 
-    <div class="col-md-5 text-center">
-        <div class="jumbotron">
-            <i class="{{ 'af.logo.movie'|trans }} fa-10x" aria-hidden="true"></i>
-            <p>{{ 'home.next'|trans }}</p>
-            <h1>{{ 'navigation.movienight'|trans }}</h1>
+            <div class="col-md-5 text-center">
+                <div class="jumbotron">
+                    <i class="{{ 'af.logo.movie'|trans }} fa-10x" aria-hidden="true"></i>
+                    <p>{{ 'home.next'|trans }}</p>
+                    <h1>{{ 'navigation.movienight'|trans }}</h1>
+                </div>
+            </div>
+
+            <div class="col-md-5 text-center">
+                <div class="jumbotron">
+                    <i class="{{ 'af.logo.game'|trans }} fa-10x" aria-hidden="true"></i>
+                    <p>{{ 'home.next'|trans }}</p>
+                    <h1>{{ 'navigation.gamenight'|trans }}</h1>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="col-md-5 text-center">
-        <div class="jumbotron">
-            <i class="{{ 'af.logo.game'|trans }} fa-10x" aria-hidden="true"></i>
-            <p>{{ 'home.next'|trans }}</p>
-            <h1>{{ 'navigation.gamenight'|trans }}</h1>
-        </div>
-    </div>
-
-</div>
-
+</p>
 {% endblock %}

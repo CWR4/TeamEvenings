@@ -1,32 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}T-Eve - Log in!{% endblock %}
 
 {% block body %}
 <p>
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="row justify-content-center">
+        <div class="jumbotron text-center">
+            <form method="post">
+                <h1 class="h3 mb-3 font-weight-normal">{{ 'login.message'|trans }}</h1>
 
-    <h1 class="h3 mb-3 font-weight-normal">{{ 'login.message'|trans }}</h1>
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-    <p>
-        <label for="inputUsername" class="sr-only">{{ 'login.username'|trans }}</label>
-        <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control col-md-3" placeholder="{{ 'login.username'|trans }}" required autofocus>
-    </p>
-    <p>
-        <label for="inputPassword" class="sr-only">{{ 'login.password'|trans }}</label>
-        <input type="password" name="password" id="inputPassword" class="form-control col-md-3" placeholder="{{ 'login.password'|trans }}" required>
-    </p>
+                <hr class="my-4">
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+                <p>
+                    <label for="inputUsername" class="sr-only">{{ 'login.username'|trans }}</label>
+                    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="{{ 'login.username'|trans }}" required autofocus>
+                </p>
+                <p>
+                    <label for="inputPassword" class="sr-only">{{ 'login.password'|trans }}</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="{{ 'login.password'|trans }}" required>
+                </p>
 
-    <button class="btn btn-md btn-primary" type="submit">
-        {{ 'login.signin'|trans }}
-    </button>
-</form>
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}"
+                >
+
+                <button class="btn btn-md btn-primary" type="submit">
+                    {{ 'login.signin'|trans }}
+                </button>
+            </form>
+        </div>
+    </div>
 </p>
 {% endblock %}
