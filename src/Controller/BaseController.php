@@ -20,8 +20,6 @@ class BaseController extends AbstractController
 
     /**
      * @Route("/hallo", name="hallo")
-     *
-     * @IsGranted("ROLE_USER")
      */
     public function hallo()
     {
