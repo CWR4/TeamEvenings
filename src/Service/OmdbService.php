@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use phpDocumentor\Reflection\Types\Mixed_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
@@ -28,7 +29,15 @@ class OmdbService extends AbstractController
         $json = curl_exec($curl);
         curl_close($curl);
         $result = json_decode($json, true);
-        dump($result);
+
+        if($result['Response'] === 'False')
+        {
+            return $result['Error'];
+        }
+
+        $movies = [];
+
+        return $movies;
     }
 
     public function getDataById($id)

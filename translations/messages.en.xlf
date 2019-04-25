@@ -36,6 +36,11 @@
             <target>Sign out</target>
         </trans-unit>
 
+        <trans-unit id="home.next">
+            <source>home.next</source>
+            <target>next</target>
+        </trans-unit>
+
         <trans-unit id="login.username">
             <source>login.username</source>
             <target>Username</target>

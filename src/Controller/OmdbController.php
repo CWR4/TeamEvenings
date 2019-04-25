@@ -22,6 +22,8 @@ class OmdbController extends AbstractController
         if($form->isSubmitted())
         {
             $title = $form->get('Title')->getData();
+
+
             $omdbService->searchByTitle($title);
         }
 
