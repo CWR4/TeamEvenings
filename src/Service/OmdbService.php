@@ -8,22 +8,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class OmdbService extends AbstractController
 {
     // Base url for retrieving all data
-    private const BASE_URL_DATA = 'http://www.omdbapi.com/?apikey=';
+    private const BASE_URL_DATA = 'https://www.omdbapi.com/?apikey=';
     // Base url for retrieving poster to movie
-    private const BASE_URL_POSTER = 'http://img.omdbapi.com/?apikey=';
+    private const BASE_URL_POSTER = 'https://img.omdbapi.com/?apikey=';
 
 
-    public function searchByTitle($title)
+    public function searchByTitle($title, $page = null)
     {
-        dump($title);
+        $title = urlencode($title);
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $title;
+        if($page !== null)
+        {
+            $requestUrl = $requestUrl . '&page=' . $page;
+        }
         dump($requestUrl);
 
         $curl = curl_init($requestUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
+        $json = curl_exec($curl);
         curl_close($curl);
-        dump($response);
+        $result = json_decode($json, true);
+        dump($result);
     }
 
     public function getDataById($id)

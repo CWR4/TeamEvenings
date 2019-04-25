@@ -22,9 +22,7 @@ class OmdbController extends AbstractController
         if($form->isSubmitted())
         {
             $title = $form->get('Title')->getData();
-            dump($title);
             $omdbService->searchByTitle($title);
-            $omdbService->getDataById('tt0081505');
         }
 
         return $this->render('omdb/index.html.twig', [

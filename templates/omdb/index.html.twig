@@ -3,7 +3,23 @@
 {% block body %}
 
 <p>
-    {{ form(form) }}
+    <div class="container">
+        <div class="row justify-content-center">
+            {{ form_start(form, {'attr': {'class': 'form-inline text-center'}}) }}
+
+            {{ form_widget(form.Title, {'attr': { 'class': 'form-inline',
+                                                'placeholder': 'movie.placeholder'|trans}}) }}
+
+            <button type="submit" class="btn btn-secondary">
+                {{ 'btn.search'|trans }}
+            </button>
+
+            {{ form_end(form) }}
+        </div>
+        <div class="row justify-content-center">
+            Filme und Menü
+        </div>
+    </div>
 </p>
 
 {% endblock %}

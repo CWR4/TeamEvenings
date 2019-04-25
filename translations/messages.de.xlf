@@ -68,6 +68,16 @@
             <target>fas fa-film</target>
         </trans-unit>
 
+        <trans-unit id="movie.placeholder">
+            <source>movie.placeholder</source>
+            <target>Filmtitel</target>
+        </trans-unit>
+
+        <trans-unit id="btn.search">
+            <source>btn.search</source>
+            <target>Suchen</target>
+        </trans-unit>
+
     </body>
 </file>
 </xliff>
