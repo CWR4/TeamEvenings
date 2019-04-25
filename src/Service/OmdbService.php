@@ -4,6 +4,7 @@ namespace App\Service;
 
 use phpDocumentor\Reflection\Types\Mixed_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Flex\Response;
 
 
 class OmdbService extends AbstractController
@@ -14,7 +15,7 @@ class OmdbService extends AbstractController
     private const BASE_URL_POSTER = 'https://img.omdbapi.com/?apikey=';
 
 
-    public function searchByTitle($title, $page = null)
+    public function searchByTitle($title, $page = null) : array
     {
         $title = urlencode($title);
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $title;
@@ -30,14 +31,9 @@ class OmdbService extends AbstractController
         curl_close($curl);
         $result = json_decode($json, true);
 
-        if($result['Response'] === 'False')
-        {
-            return $result['Error'];
-        }
+        dump($result);
 
-        $movies = [];
-
-        return $movies;
+        return $result;
     }
 
     public function getDataById($id)

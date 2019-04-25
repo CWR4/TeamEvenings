@@ -7,6 +7,7 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+            <link rel="stylesheet" href="css/mycss.css">
         {% endblock %}
     </head>
     <body>
@@ -30,12 +31,14 @@
                                     {{ 'navigation.movienight'|trans }}
                                 </a>
                             </li>
+                            <!--
                             <li class="nav-item">
                                 <a href="{{ path('hallo') }}" class="nav-link">
                                     <i class="fab fa-d-and-d" aria-hidden="true"></i>
                                     {{ 'navigation.gamenight'|trans }}
                                 </a>
                             </li>
+                            -->
                         </ul>
 
                         <ul class="nav navbar-nav ml-md-auto">
@@ -61,6 +64,14 @@
             </header>
 
         {% endblock %}
+
+        {% for message in app.flashes('warning') %}
+            <div class="container margin-top-20 flash-width-300 text-center">
+                <div class="alert alert-warning" role="alert">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
 
         {% block body %}{% endblock %}
 
