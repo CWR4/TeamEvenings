@@ -20,11 +20,14 @@ class OmdbController extends AbstractController
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);
 
+        $movies = null;
+
         if($form->isSubmitted())
         {
             $title = $form->get('Title')->getData();
 
             $result = $omdbService->searchByTitle($title, $page);
+            dump($result);
 
             if($result['Response'] === 'False')
             {
@@ -43,14 +46,14 @@ class OmdbController extends AbstractController
             }
             else
             {
-                dump($result);
-
-                dump($omdbService->getResultsAsEntities($result['Search']));
+                $movies = $omdbService->getResultsAsEntities($result['Search']);
+                dump($movies);
             }
         }
 
         return $this->render('omdb/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'movies' => $movies
         ]);
     }
 }

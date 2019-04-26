@@ -19,7 +19,7 @@ class OmdbService extends AbstractController
         $title = urlencode($title);
 
         // Build request url
-        $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $title . '&page=' . $page;
+        $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $title . '&page=' . $page . '&type=movie';
 
         // Initialize curl session(http request)
         $curl = curl_init($requestUrl);
@@ -67,7 +67,7 @@ class OmdbService extends AbstractController
         curl_close($curl);
 
         // Return poster
-        return $poster;
+        return 'data:image/jpg;base64,' . base64_encode($poster);
     }
 
     public function getResultsAsEntities($json) : array
@@ -81,7 +81,15 @@ class OmdbService extends AbstractController
             $m->setTitle($movie['Title']);
             $m->setImdbID($movie['imdbID']);
             $m->setYear($movie['Year']);
-            //$m->setPoster($this->getPosterById($movie['imdbID']));
+
+            if($movie['Poster'] !== 'N/A')
+            {
+                $m->setPoster($this->getPosterById($movie['imdbID']));
+            }
+            else
+            {
+                $m->setPoster(false);
+            }
 
             $movies[] = $m;
         }

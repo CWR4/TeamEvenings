@@ -15,8 +15,40 @@
 
         {{ form_end(form) }}
     </div>
+
     <div class="row justify-content-center margin-top-20">
-        Filme und Menü
+        {% if movies %}
+        <table class="table" style="width: 900px">
+            <thead>
+                <tr>
+                    <th scope="col" class="tab-poster">Poster</th>
+                    <th scope="col" style="width: auto">Titel und Jahr</th>
+                    <th scope="col" class="tab-button">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in movies %}
+                <tr>
+                    <td class="text-center">
+                        {% if(movie.Poster == false) %}
+                            <i class="{{ 'af.logo.movie'|trans }} fa-2x tab-poster" aria-hidden="true"></i>
+                        {% else %}
+                            <img class="tab-poster" src="{{ movie.Poster }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ movie.Title }}
+                        <br/>
+                        {{ movie.Year }}
+                    </td>
+                    <td>
+                        Zu Event hinzufügen
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
     </div>
 </div>
 
