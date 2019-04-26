@@ -49,27 +49,6 @@ class OmdbService extends AbstractController
         dump($response);
     }
 
-    public function getPosterById($imdbID)
-    {
-        // Build request url
-        $requestUrl = self::BASE_URL_POSTER . getenv('OMDB_API_KEY') . '&i=' . $imdbID;
-
-        // Initialize curl session(http request)
-        $curl = curl_init($requestUrl);
-
-        // Set options, return string instead of render it directly
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        // Execute http request
-        $poster = curl_exec($curl);
-
-        // Close curl session
-        curl_close($curl);
-
-        // Return poster
-        return 'data:image/jpg;base64,' . base64_encode($poster);
-    }
-
     public function getResultsAsEntities($json) : array
     {
         $movies = [];
