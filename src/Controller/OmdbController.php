@@ -47,7 +47,6 @@ class OmdbController extends AbstractController
             else
             {
                 $movies = $omdbService->getResultsAsEntities($result['Search']);
-                dump($movies);
             }
         }
 

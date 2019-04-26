@@ -30,7 +30,7 @@
                 {% for movie in movies %}
                 <tr>
                     <td class="text-center">
-                        {% if(movie.Poster == false) %}
+                        {% if(movie.Poster == 'N/A') %}
                             <i class="{{ 'af.logo.movie'|trans }} fa-2x tab-poster" aria-hidden="true"></i>
                         {% else %}
                             <img class="tab-poster" src="{{ movie.Poster }}">

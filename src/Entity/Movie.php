@@ -37,7 +37,7 @@ class Movie
     private $Runtime;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $Poster;
 

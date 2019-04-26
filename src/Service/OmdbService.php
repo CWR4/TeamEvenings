@@ -81,20 +81,11 @@ class OmdbService extends AbstractController
             $m->setTitle($movie['Title']);
             $m->setImdbID($movie['imdbID']);
             $m->setYear($movie['Year']);
-
-            if($movie['Poster'] !== 'N/A')
-            {
-                $m->setPoster($this->getPosterById($movie['imdbID']));
-            }
-            else
-            {
-                $m->setPoster(false);
-            }
+            $m->setPoster($movie['Poster']);
 
             $movies[] = $m;
         }
 
         return $movies;
     }
-
 }
