@@ -8,18 +8,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\PaginationService;
 
 class OmdbController extends AbstractController
 {
     /**
      * @Route("/omdb/{page<\d+>?1}", name="omdb")
      */
-    public function searchInOmdb(OmdbService $omdbService, Request $request, $page) : Response
+    public function searchInOmdb(OmdbService $omdbService, Request $request, $page, PaginationService $paginationService) : Response
     {
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);
 
         $movies = null;
+        $pagination = null;
 
         if($form->isSubmitted())
         {
@@ -27,6 +29,9 @@ class OmdbController extends AbstractController
 
             $result = $omdbService->searchByTitle($title, $page);
             dump($result);
+
+            $pagination = new PaginationService($page, $result['totalResults'], '/omdb');
+            dump($pagination);
 
             if($result['Response'] === 'False')
             {
@@ -51,7 +56,8 @@ class OmdbController extends AbstractController
 
         return $this->render('omdb/index.html.twig', [
             'form' => $form->createView(),
-            'movies' => $movies
+            'movies' => $movies,
+            'pagination' => $pagination->getPaginationLinks()
         ]);
     }
 }
