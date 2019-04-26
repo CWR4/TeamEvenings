@@ -13,9 +13,9 @@ use App\Entity\Movie;
 class OmdbController extends AbstractController
 {
     /**
-     * @Route("/omdb", name="omdb")
+     * @Route("/omdb/{page<\d+>?1}", name="omdb")
      */
-    public function searchInOmdb(OmdbService $omdbService, Request $request) : Response
+    public function searchInOmdb(OmdbService $omdbService, Request $request, $page) : Response
     {
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);
@@ -24,7 +24,7 @@ class OmdbController extends AbstractController
         {
             $title = $form->get('Title')->getData();
 
-            $result = $omdbService->searchByTitle($title);
+            $result = $omdbService->searchByTitle($title, $page);
 
             if($result['Response'] === 'False')
             {
@@ -32,14 +32,20 @@ class OmdbController extends AbstractController
                 {
                     $this->addFlash('warning', 'Zu viele Ergebnisse. Bitte spezifizieren.');
                 }
-                elseif($result['Error'] === 'Movie not found.')
+                elseif($result['Error'] === 'Movie not found!')
                 {
-                    $this->addFlash('warning', 'Kein Film gefunden');
+                    $this->addFlash('warning', 'Kein Film gefunden.');
                 }
                 else
                 {
                     $this->addFlash('warning', $result['Error']);
                 }
+            }
+            else
+            {
+                dump($result);
+
+                dump($omdbService->getResultsAsEntities($result['Search']));
             }
         }
 
