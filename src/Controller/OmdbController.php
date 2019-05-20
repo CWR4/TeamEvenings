@@ -15,7 +15,7 @@ class OmdbController extends AbstractController
     /**
      * @Route("/omdb/{page<\d+>?1}", name="omdb")
      */
-    public function searchInOmdb(OmdbService $omdbService, Request $request, $page, PaginationService $paginationService) : Response
+    public function searchInOmdb(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page) : Response
     {
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);
@@ -30,8 +30,13 @@ class OmdbController extends AbstractController
             $result = $omdbService->searchByTitle($title, $page);
             dump($result);
 
-            $pagination = new PaginationService($page, $result['totalResults'], '/omdb');
-            dump($pagination);
+            if($result['Response'] === 'True')
+            {
+                $paginationService->createPagination('omdb', $page, $result['totalResults']);
+                $pagination = $paginationService->getPaginationLinks();
+                dump($pagination);
+                dump($this->generateUrl('omdb', ['page' => 1]));
+            }
 
             if($result['Response'] === 'False')
             {
@@ -57,7 +62,7 @@ class OmdbController extends AbstractController
         return $this->render('omdb/index.html.twig', [
             'form' => $form->createView(),
             'movies' => $movies,
-            'pagination' => $pagination->getPaginationLinks()
+            'pagination' => $pagination
         ]);
     }
 }

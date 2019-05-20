@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaginationService extends AbstractController
 {
@@ -13,11 +14,9 @@ class PaginationService extends AbstractController
     private const resultsPerPage = 10;
     private $paginationLinks;
 
-    public function __construct($page = 1, $totalResults = 1, $route)
+    public function __construct(UrlGeneratorInterface $router)
     {
-        $this->page = $page;
-        $this->totalPages = ceil($totalResults / self::resultsPerPage);
-        $this->createPagination($route);
+        $this->router = $router;
     }
 
     public function getTotalPages() : int
@@ -35,14 +34,21 @@ class PaginationService extends AbstractController
         return $this->paginationLinks;
     }
 
-    private function createPagination($route) : void
+    public function createPagination($route, $page, $totalResults) : void
     {
+        $this->page = $page;
+        $this->totalPages = (int)ceil($totalResults / self::resultsPerPage);
+
         if($this->totalPages < 5)
         {
             foreach (range(1, $this->totalPages) as $i)
             {
-                $this->paginationLinks[] = $this->generateUrl($route, ['page' => $i]);
+                $this->paginationLinks[] = $this->router->generate($route, ['page' => $i]);
             }
+        }
+        else
+        {
+            $this->paginationLinks = array(1,2,3,4,5);
         }
     }
 }
