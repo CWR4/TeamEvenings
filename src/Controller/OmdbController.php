@@ -13,9 +13,9 @@ use App\Service\PaginationService;
 class OmdbController extends AbstractController
 {
     /**
-     * @Route("/omdb/{page<\d+>?1}", name="omdb")
+     * @Route("/omdb/{page<\d+>?1}/{title<.*?>?}", name="omdb")
      */
-    public function searchInOmdb(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page) : Response
+    public function searchInOmdb(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title) : Response
     {
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);
@@ -23,19 +23,20 @@ class OmdbController extends AbstractController
         $movies = null;
         $pagination = null;
 
-        if($form->isSubmitted())
+        if(($form->isSubmitted() && $form->isValid()) || isset($title))
         {
-            $title = $form->get('Title')->getData();
+            if($form->isSubmitted())
+            {
+                $title = $form->get('Title')->getData();
+                $page = 1;
+            }
 
             $result = $omdbService->searchByTitle($title, $page);
-            dump($result);
 
             if($result['Response'] === 'True')
             {
-                $paginationService->createPagination('omdb', $page, $result['totalResults']);
+                $paginationService->createPagination('omdb', $page, $result['totalResults'], $title);
                 $pagination = $paginationService->getPaginationLinks();
-                dump($pagination);
-                dump($this->generateUrl('omdb', ['page' => 1]));
             }
 
             if($result['Response'] === 'False')

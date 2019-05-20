@@ -34,7 +34,7 @@ class PaginationService extends AbstractController
         return $this->paginationLinks;
     }
 
-    public function createPagination($route, $page, $totalResults) : void
+    public function createPagination($route, $page, $totalResults, $query) : void
     {
         $this->page = $page;
         $this->totalPages = (int)ceil($totalResults / self::resultsPerPage);
@@ -43,7 +43,7 @@ class PaginationService extends AbstractController
         {
             foreach (range(1, $this->totalPages) as $i)
             {
-                $this->paginationLinks[] = $this->router->generate($route, ['page' => $i]);
+                $this->paginationLinks[] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
             }
         }
         else
