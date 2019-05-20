@@ -51,9 +51,15 @@
         {% endif %}
     </div>
     <div class="row justify-content-center margin-top-20">
-        {% if pagination %}
-            {{ pagination }}
-        {% endif %}
+        <ul class="pagination">
+            {% if pagination %}
+                {% for page in pagination %}
+                    <li class="page-item">
+                        <a href="{{ page }}" class="page-link">{{ loop.index }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
     </div>
 </div>
 
