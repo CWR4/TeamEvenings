@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -45,6 +47,16 @@ class Movie
      * @ORM\Column(type="string", length=1000, nullable=true)
      */
     private $Plot;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MovieNight", mappedBy="movie")
+     */
+    private $movieNights;
+
+    public function __construct()
+    {
+        $this->movieNights = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +131,37 @@ class Movie
     public function setPlot(?string $Plot): self
     {
         $this->Plot = $Plot;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MovieNight[]
+     */
+    public function getMovieNights(): Collection
+    {
+        return $this->movieNights;
+    }
+
+    public function addMovieNight(MovieNight $movieNight): self
+    {
+        if (!$this->movieNights->contains($movieNight)) {
+            $this->movieNights[] = $movieNight;
+            $movieNight->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovieNight(MovieNight $movieNight): self
+    {
+        if ($this->movieNights->contains($movieNight)) {
+            $this->movieNights->removeElement($movieNight);
+            // set the owning side to null (unless already changed)
+            if ($movieNight->getMovie() === $this) {
+                $movieNight->setMovie(null);
+            }
+        }
 
         return $this;
     }
