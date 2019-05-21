@@ -13,3 +13,8 @@
 .tab-button {
     width: 80px
 }
+
+.jumbotron {
+    background-color: #EFF0F1 !important;
+    border-radius: 20px;
+}
