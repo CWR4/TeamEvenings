@@ -39,16 +39,41 @@ class PaginationService extends AbstractController
         $this->page = $page;
         $this->totalPages = (int)ceil($totalResults / self::resultsPerPage);
 
-        if($this->totalPages < 5)
+        if($page <= 3 || $this->totalPages <= 5)
         {
-            foreach (range(1, $this->totalPages) as $i)
+            if($this->totalPages >= 5)
             {
-                $this->paginationLinks[] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
+                $limit = 5;
+            }
+            else
+            {
+                $limit = $this->totalPages;
+            }
+            for($i = 1; $i <= $limit; $i++)
+            {
+                $this->paginationLinks[$i] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
+            }
+            if($this->totalPages > 5)
+            {
+                $this->paginationLinks['&raquo;'] = $this->router->generate($route, ['page' => $this->totalPages, 'title' => $query]);
+            }
+        }
+        elseif($page >= $this->totalPages-2)
+        {
+            $this->paginationLinks['&laquo;'] = $this->router->generate($route, ['page' => 1, 'title' => $query]);
+            for($i = $this->totalPages-4; $i <= $this->totalPages; $i++)
+            {
+                $this->paginationLinks[$i] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
             }
         }
         else
         {
-            $this->paginationLinks = array(1,2,3,4,5);
+            $this->paginationLinks['&laquo;'] = $this->router->generate($route, ['page' => 1, 'title' => $query]);
+            for($i = $page-2; $i <= $page+2; $i++)
+            {
+                $this->paginationLinks[$i] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
+            }
+            $this->paginationLinks['&raquo;'] = $this->router->generate($route, ['page' => $this->totalPages, 'title' => $query]);
         }
     }
 }

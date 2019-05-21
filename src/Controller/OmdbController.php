@@ -32,11 +32,13 @@ class OmdbController extends AbstractController
             }
 
             $result = $omdbService->searchByTitle($title, $page);
+            dump($result);
 
-            if($result['Response'] === 'True')
+            if($result['Response'] === 'True' && $result['totalResults'] > 10)
             {
                 $paginationService->createPagination('omdb', $page, $result['totalResults'], $title);
                 $pagination = $paginationService->getPaginationLinks();
+                dump($pagination);
             }
 
             if($result['Response'] === 'False')

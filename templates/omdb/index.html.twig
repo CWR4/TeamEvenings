@@ -53,9 +53,9 @@
     <div class="row justify-content-center margin-top-20">
         <ul class="pagination">
             {% if pagination %}
-                {% for page in pagination %}
+                {% for key, page in pagination %}
                     <li class="page-item">
-                        <a href="{{ page }}" class="page-link">{{ loop.index }}</a>
+                        <a href="{{ page }}" class="page-link">{{ key|raw }}</a>
                     </li>
                 {% endfor %}
             {% endif %}
