@@ -15,9 +15,6 @@ class OmdbService extends AbstractController
 
     public function searchByTitle($title, $page) : array
     {
-        // Encode input for url (replace space with +)
-        $title = urlencode($title);
-
         // Build request url
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $title . '&page=' . $page . '&type=movie';
 

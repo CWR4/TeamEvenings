@@ -27,7 +27,7 @@ class OmdbController extends AbstractController
         {
             if($form->isSubmitted())
             {
-                $title = $form->get('Title')->getData();
+                $title = urlencode($form->get('Title')->getData());
                 $page = 1;
             }
 
