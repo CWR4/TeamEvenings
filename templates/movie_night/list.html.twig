@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Alle Termine{% endblock %}
+
+{% block body %}
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        {% if dates %}
+            <table class="table mytable table-hover">
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th colspan="2">Film</th>
+                        <th class="text-center" colspan="2">Bearbeiten</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for date in dates %}
+                    <tr>
+                        <td class="tab-date">
+                            {{ date.date|date("d.m.Y") }}
+                            {{ date.time|date("H:i") }}
+                        </td>
+                        {% if date.movie %}
+                            <td class="tab-poster">
+                                {{ date.poster }}
+                            </td>
+                            <td>
+                                {{ date.movietitle }}
+                            </td>
+                        {% else %}
+                            <td colspan="2">
+                                Bisher kein Film eingeplant.
+                            </td>
+                        {% endif %}
+                        <td class="tab-button justify-content-center">
+                            <button class="btn btn-secondary tab-button">Termin</button>
+                        </td>
+                        <td class="tab-button">
+                            <button class="btn btn-secondary tab-button">Film</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="container text-center">
+                <h3>Keine Filmabende geplant</h3>
+            </div>
+            <div class="container text-center margin-top-20">
+                <i class="far fa-sad-tear fa-3x"></i>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
