@@ -78,6 +78,13 @@
                 </div>
             </div>
         {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="container margin-top-20 flash-width-300 text-center">
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
 
         {% block body %}{% endblock %}
 
