@@ -11,10 +11,18 @@
 }
 
 .tab-button {
-    width: 80px
+    width: 80px;
+}
+
+.tab-date {
+    width: 100px;
 }
 
 .jumbotron {
     background-color: #EFF0F1 !important;
     border-radius: 20px;
+}
+
+.mytable {
+    width: 900px;
 }

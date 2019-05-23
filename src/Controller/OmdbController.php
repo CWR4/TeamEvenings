@@ -38,7 +38,6 @@ class OmdbController extends AbstractController
             {
                 $paginationService->createPagination('omdb', $page, $result['totalResults'], $title);
                 $pagination = $paginationService->getPaginationLinks();
-                dump($pagination);
             }
 
             if($result['Response'] === 'False')
@@ -65,7 +64,8 @@ class OmdbController extends AbstractController
         return $this->render('omdb/index.html.twig', [
             'form' => $form->createView(),
             'movies' => $movies,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'title' => urldecode($title)
         ]);
     }
 }

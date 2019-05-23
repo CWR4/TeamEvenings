@@ -37,11 +37,27 @@ class MovieNightController extends AbstractController
                 $manager->persist($movienight);
                 $manager->flush();
                 $this->addFlash('success', 'Termin erstellt!');
+
+                return $this->redirectToRoute('list_movienight');
             }
         }
 
         return $this->render('movie_night/index.html.twig', [
             'form' => $dateform->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/movienight/all", name="list_movienight")
+     */
+    public function listAll() : Response
+    {
+        $manager = $this->getDoctrine()->getRepository(MovieNight::class);
+
+        $dates = $manager->findAllByDateAsc();
+
+        return $this->render('movie_night/list.html.twig', [
+            'dates' => $dates
         ]);
     }
 }

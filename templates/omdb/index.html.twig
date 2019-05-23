@@ -7,7 +7,8 @@
         {{ form_start(form, {'attr': {'class': 'form-inline text-center'}}) }}
 
         {{ form_widget(form.Title, {'attr': { 'class': 'form-inline',
-                                            'placeholder': 'movie.placeholder'|trans}}) }}
+                                            'placeholder': 'movie.placeholder'|trans,
+                                            'value': title }}) }}
 
         <button type="submit" class="btn btn-secondary input-group-append">
             {{ 'btn.search'|trans }}
