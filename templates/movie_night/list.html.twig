@@ -11,13 +11,13 @@
                     <tr>
                         <th>Termin</th>
                         <th colspan="2">Film</th>
-                        <th class="text-center" colspan="2">Bearbeiten</th>
+                        <th class="text-center">Bearbeiten</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for date in dates %}
                     <tr>
-                        <td class="tab-date">
+                        <td class="tab-date align-middle">
                             {{ date.date|date("d.m.Y") }}
                             <br>
                             {{ date.time|date("H:i") }}
@@ -25,24 +25,23 @@
                             {{ date.location }}
                         </td>
                         {% if date.movie %}
-                            <td class="tab-poster">
+                            <td class="tab-poster align-middle">
                                 {{ date.poster }}
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 {{ date.movietitle }}
                             </td>
                         {% else %}
-                            <td colspan="2">
+                            <td colspan="2" class="align-middle">
                                 Bisher kein Film eingeplant.
                             </td>
                         {% endif %}
-                        <td class="tab-button justify-content-center">
+                        <td class="tab-button justify-content-center align-middle">
                             <a href="{{ path('edit_movienight', {'id': date.id}) }}">
-                                <button class="btn btn-secondary tab-button" type="button">Termin</button>
+                                <button class="btn btn-secondary tab-button btn-spacing" type="button">Termin</button>
                             </a>
-                        </td>
-                        <td class="tab-button">
-                            <button class="btn btn-secondary tab-button">Film</button>
+                        <br>
+                            <button class="btn btn-secondary tab-button btn-spacing">Film</button>
                         </td>
                     </tr>
                 {% endfor %}
