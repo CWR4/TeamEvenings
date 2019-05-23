@@ -34,16 +34,33 @@ class OmdbService extends AbstractController
         return  json_decode($json, true);
     }
 
-    public function getDataById($id) : void
+    public function getDataById($id) : ?Movie
     {
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&i=' . $id;
-        dump($requestUrl);
 
         $curl = curl_init($requestUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);
         curl_close($curl);
-        dump($response);
+
+        $response = json_decode($response, true);
+
+        if($response['Response'] === 'True') {
+            $m = new Movie();
+
+            $m->setTitle($response['Title']);
+            $m->setImdbID($response['imdbID']);
+            $m->setYear($response['Year']);
+            $m->setPoster($response['Poster']);
+            $m->setPlot($response['Plot']);
+            $m->setRuntime($response['Runtime']);
+        }
+        else
+        {
+            $m = null;
+        }
+
+        return $m;
     }
 
     public function getResultsAsEntities($json) : array

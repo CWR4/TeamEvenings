@@ -75,4 +75,5 @@ class OmdbController extends AbstractController
             'title' => urldecode($title)
         ]);
     }
+
 }

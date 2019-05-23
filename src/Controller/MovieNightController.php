@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
+use App\Entity\Movie;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use App\Service\OmdbService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +24,7 @@ class MovieNightController extends AbstractController
     /**
      * @Route("/movienight/create", name="movie_night")
      */
-    public function createMovieNight(Request $request) : Response
+    public function createMovieNight(Request $request, OmdbService $omdbService) : Response
     {
         $manager = $this->getDoctrine()->getManager();
 
@@ -42,11 +44,16 @@ class MovieNightController extends AbstractController
             }
             else
             {
+                $movie = $omdbService->getDataById('tt0081505');
+
+                $movienight->setMovie($movie);
+
+                $manager->persist($movie);
                 $manager->persist($movienight);
                 $manager->flush();
                 $this->addFlash('success', 'Termin erstellt!');
 
-                return $this->redirectToRoute('list_movienight');
+//                return $this->redirectToRoute('list_movienight');
             }
         }
 
@@ -63,6 +70,8 @@ class MovieNightController extends AbstractController
         $manager = $this->getDoctrine()->getRepository(MovieNight::class);
 
         $dates = $manager->findAllByDateAsc();
+
+        dump($dates);
 
         return $this->render('movie_night/list.html.twig', [
             'dates' => $dates

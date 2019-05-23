@@ -26,10 +26,10 @@
                         </td>
                         {% if date.movie %}
                             <td class="tab-poster align-middle">
-                                {{ date.poster }}
+                                date.poster
                             </td>
                             <td class="align-middle">
-                                {{ date.movietitle }}
+                                date.movietitle
                             </td>
                         {% else %}
                             <td colspan="2" class="align-middle">
@@ -38,10 +38,11 @@
                         {% endif %}
                         <td class="tab-button justify-content-center align-middle">
                             <a href="{{ path('edit_movienight', {'id': date.id}) }}">
-                                <button class="btn btn-secondary tab-button btn-spacing" type="button">Termin</button>
+                                <button class="btn btn-sm btn-secondary tab-button btn-spacing" type="button">Termin</button>
                             </a>
                         <br>
-                            <button class="btn btn-secondary tab-button btn-spacing">Film</button>
+                            <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                            <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
                         </td>
                     </tr>
                 {% endfor %}

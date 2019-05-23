@@ -59,15 +59,4 @@ class MovieNightRepository extends ServiceEntityRepository
 
         return $qb->execute();
     }
-
-    public function updateEntryById($id)
-    {
-        $qb = $this->createQueryBuilder('m')
-            ->update('movie_night')
-            ->where('m.id = ?id')
-            ->setParameter('id', $id)
-            ->getQuery();
-
-        return $qb->execute();
-    }
 }
