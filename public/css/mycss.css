@@ -19,10 +19,15 @@
 }
 
 .jumbotron {
-    background-color: #EFF0F1 !important;
+    background-color: lightgray !important;
     border-radius: 20px;
 }
 
 .mytable {
     width: 900px;
+}
+
+.btn-spacing {
+    margin-left: 10px;
+    margin-right: 10px;
 }

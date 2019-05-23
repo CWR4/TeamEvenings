@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\MovieNight;
 use App\Form\MovieNightType;
+use App\Form\EditMovieNightType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,6 +59,23 @@ class MovieNightController extends AbstractController
 
         return $this->render('movie_night/list.html.twig', [
             'dates' => $dates
+        ]);
+    }
+
+    /**
+     * @Route("/movienight/edit", name="edit_movienight")
+     */
+    public function editMovieNight(Request $request) : Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $date = $manager->getRepository(MovieNight::class)->find(17);
+        dump($date);
+
+        $editForm = $this->createForm(EditMovieNightType::class);
+        $editForm->handleRequest($request);
+
+        return $this->render('movie_night/edit.html.twig', [
+            'form' => $editForm->createView()
         ]);
     }
 }
