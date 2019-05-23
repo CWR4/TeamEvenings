@@ -17,7 +17,7 @@ class EditMovieNightType extends AbstractType
         $builder
             ->add('date', DateType::class, ['format' => 'dd MM yyyy', 'label' => false, 'years' => range(date('Y'), date('Y')+4)])
             ->add('time', TimeType::class, ['label' => false, 'minutes' => [0,15,30,45]])
-            ->add('location', TextType::class, ['label' => false, 'attr' => ['style' => 'width: 200px', 'class' => 'text-center']])
+            ->add('location', TextType::class, ['empty_data' => 'K56 5.OG', 'label' => false, 'attr' => ['style' => 'width: 200px', 'class' => 'text-center']])
         ;
     }
 

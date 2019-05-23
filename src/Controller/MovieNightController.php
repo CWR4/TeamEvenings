@@ -63,16 +63,42 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @Route("/movienight/edit", name="edit_movienight")
+     * @Route("/movienight/edit/{id<\d+>}", name="edit_movienight")
      */
-    public function editMovieNight(Request $request) : Response
+    public function editMovieNight(Request $request, $id) : Response
     {
         $manager = $this->getDoctrine()->getManager();
-        $date = $manager->getRepository(MovieNight::class)->find(17);
-        dump($date);
+        $date = $manager->getRepository(MovieNight::class)->find($id);
 
-        $editForm = $this->createForm(EditMovieNightType::class);
+        if($date === null)
+        {
+            $this->addFlash('warning', 'Termin wurde nicht gefunden');
+            return $this->redirectToRoute('list_movienight');
+        }
+
+        $editForm = $this->createForm(EditMovieNightType::class, $date);
         $editForm->handleRequest($request);
+
+        if($editForm->isSubmitted() && $editForm->isValid())
+        {
+            if($date->getDate()->format('Y.m.d') < date('Y.m.d'))
+            {
+                $this->addFlash('warning', 'Datum ist vergangen!');
+            }
+            elseif($date->getDate()->format('d.m.Y') ===  date('d.m.Y') && $date->getTime()->format('H:i') < date('H:i', time() - 3600))
+            {
+                $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
+            }
+            else
+            {
+                $manager->persist($date);
+                $manager->flush();
+
+                $this->addFlash('success', 'Termin erfolgreich geändert');
+
+                return $this->redirectToRoute('list_movienight');
+            }
+        }
 
         return $this->render('movie_night/edit.html.twig', [
             'form' => $editForm->createView()

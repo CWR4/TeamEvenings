@@ -34,7 +34,9 @@
                             </td>
                         {% endif %}
                         <td class="tab-button justify-content-center">
-                            <button class="btn btn-secondary tab-button">Termin</button>
+                            <a href="{{ path('edit_movienight', {'id': date.id}) }}">
+                                <button class="btn btn-secondary tab-button" type="button">Termin</button>
+                            </a>
                         </td>
                         <td class="tab-button">
                             <button class="btn btn-secondary tab-button">Film</button>
