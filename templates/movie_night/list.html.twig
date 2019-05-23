@@ -9,7 +9,7 @@
             <table class="table mytable table-hover">
                 <thead>
                     <tr>
-                        <th>Datum</th>
+                        <th>Termin</th>
                         <th colspan="2">Film</th>
                         <th class="text-center" colspan="2">Bearbeiten</th>
                     </tr>
@@ -19,7 +19,10 @@
                     <tr>
                         <td class="tab-date">
                             {{ date.date|date("d.m.Y") }}
+                            <br>
                             {{ date.time|date("H:i") }}
+                            <br>
+                            {{ date.location }}
                         </td>
                         {% if date.movie %}
                             <td class="tab-poster">

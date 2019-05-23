@@ -5,10 +5,17 @@ namespace App\Controller;
 use App\Entity\MovieNight;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * Class MovieNightController
+ * @package App\Controller
+ * @IsGranted("ROLE_USER")
+ */
 
 class MovieNightController extends AbstractController
 {
