@@ -24,7 +24,7 @@ class MovieNightController extends AbstractController
     /**
      * @Route("/movienight/create", name="movie_night")
      */
-    public function createMovieNight(Request $request, OmdbService $omdbService) : Response
+    public function createMovieNight(Request $request) : Response
     {
         $manager = $this->getDoctrine()->getManager();
 
