@@ -20,9 +20,9 @@ use App\Service\PaginationService;
 class OmdbController extends AbstractController
 {
     /**
-     * @Route("/omdb/{page<\d+>?1}/{title<.*?>?}", name="omdb")
+     * @Route("/omdb/{page<\d+>?1}/{title<.*?>?}/{mnid<\d+>?}", name="omdb")
      */
-    public function searchInOmdb(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title) : Response
+    public function searchInOmdb(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title, $mnid) : Response
     {
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);

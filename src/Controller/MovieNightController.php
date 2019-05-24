@@ -3,10 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
-use App\Entity\Movie;
+use App\Form\DeleteMovienightType;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
-use App\Service\OmdbService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +23,7 @@ class MovieNightController extends AbstractController
     /**
      * @Route("/movienight/create", name="movie_night")
      */
-    public function createMovieNight(Request $request, OmdbService $omdbService) : Response
+    public function createMovieNight(Request $request) : Response
     {
         $manager = $this->getDoctrine()->getManager();
 
@@ -126,6 +125,27 @@ class MovieNightController extends AbstractController
 
         return $this->render('movie_night/edit.html.twig', [
             'form' => $editForm->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @Route("/movienight/delete/{id<\d+>?}", name="delete_movienight")
+     */
+    public function deleteMovieNight(Request $request, $id) : Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+
+        $date = $manager->getRepository(MovieNight::class)->find($id);
+
+        $form = $this->createForm(DeleteMovienightType::class, $date);
+        $form->handleRequest($request);
+
+
+        return $this->render('movie_night/delete.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
