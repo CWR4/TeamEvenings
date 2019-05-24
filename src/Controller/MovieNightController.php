@@ -79,6 +79,8 @@ class MovieNightController extends AbstractController
 
         $dates = $manager->findAllByDateAsc();
 
+        dump($dates);
+
         return $this->render('movie_night/list.html.twig', [
             'dates' => $dates
         ]);
@@ -126,4 +128,5 @@ class MovieNightController extends AbstractController
             'form' => $editForm->createView()
         ]);
     }
+
 }

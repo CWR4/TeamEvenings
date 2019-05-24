@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\MovieNight;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,8 +13,12 @@ class BaseController extends AbstractController
      */
     public function index()
     {
+        $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
+
+        dump($movienight);
+
         return $this->render('base/index.html.twig', [
-            'controller_name' => 'BaseController',
+            'movienight' => $movienight,
         ]);
     }
 

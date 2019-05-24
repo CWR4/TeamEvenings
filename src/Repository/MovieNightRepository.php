@@ -49,17 +49,33 @@ class MovieNightRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAllByDateAsc() : array
+    public function findAllByDateAsc()  : array
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date > :currentdate')
+            ->andWhere('m.date > :currentdate or (m.time > :currenttime and m.date = :currentdate)')
             ->setParameter('currentdate', date('Y-m-d'))
+            ->setParameter('currenttime', date('H:i'))
             ->orderBy('m.date', 'ASC')
             ->addOrderBy('m.time', 'ASC')
             ->getQuery()
         ;
 
+        return $qb->getResult();
+    }
 
-        return $qb->execute();
+    public function getNextMovienight()  : ?MovieNight
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->andWhere('m.date >= :currentdate')
+            ->setParameter('currentdate', date('Y-m-d'))
+            ->andWhere('m.time > :currenttime')
+            ->setParameter('currenttime', date('H:i', time() - 1800))
+            ->orderBy('m.date', 'ASC')
+            ->addOrderBy('m.time', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+        ;
+
+        return $qb->getOneOrNullResult();
     }
 }
