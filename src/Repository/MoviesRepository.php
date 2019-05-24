@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use phpDocumentor\Reflection\Types\This;
+use Doctrine\ORM\AbstractQuery;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -47,4 +49,14 @@ class MoviesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByImdbId($id) : ?Movie
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.imdbID = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT)
+        ;
+    }
 }
