@@ -11,16 +11,23 @@
                     <h3 class="text-center">
                         {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }} - {{ movienight.location }}
                     </h3>
+                    <hr />
                     <div class="row margin-top-20">
                         <div class="col-4 text-center">
                             <img style="width: 150px" src="{{ movienight.movie.poster }}">
                         </div>
                         <div class="col-8">
-                            <h4>{{ movienight.movie.title }}</h4>
-                            {{ movienight.movie.plot }}
-                            <p class="align-items-end">
+                            <div class="row">
+                                <h4>
+                                    {{ movienight.movie.title }}
+                                </h4>
+                            </div>
+                            <div class="row margin-top-5">
+                                {{ movienight.movie.plot }}
+                            </div>
+                            <div class="row margin-top-20">
                                 {{ movienight.movie.runtime }}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>

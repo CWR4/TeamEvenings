@@ -2,6 +2,10 @@
     margin-top: 20px;
 }
 
+.margin-top-5 {
+    margin-top: 10px;
+}
+
 .flash-width-300 {
     width: 300px;
 }
@@ -19,7 +23,7 @@
 }
 
 .jumbotron {
-    background-color: lightgray !important;
+    background-color: #E7E7E7 !important;
     border-radius: 20px;
 }
 
