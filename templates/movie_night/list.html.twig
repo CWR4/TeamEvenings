@@ -25,11 +25,20 @@
                             {{ date.location }}
                         </td>
                         {% if date.movie %}
-                            <td class="tab-poster align-middle">
-                                date.poster
+                            <td class="tab-poster align-middle text-center">
+                                {% if(date.movie.poster == 'N/A') %}
+                                    <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
+                                {% else %}
+                                    <img class="tab-poster"src="{{ date.movie.poster }}">
+                                {% endif %}
+
                             </td>
                             <td class="align-middle">
-                                date.movietitle
+                                {{ date.movie.title }}
+                                <br>
+                                {{ date.movie.year }}
+                                <br>
+                                {{ date.movie.runtime }}
                             </td>
                         {% else %}
                             <td colspan="2" class="align-middle">

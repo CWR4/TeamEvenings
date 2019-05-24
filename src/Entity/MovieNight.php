@@ -32,7 +32,7 @@ class MovieNight
     private $location;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="movieNights")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="movieNights", fetch="EAGER")
      */
     private $movie;
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MovieNight;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -55,7 +56,9 @@ class MovieNightRepository extends ServiceEntityRepository
             ->setParameter('currentdate', date('Y-m-d'))
             ->orderBy('m.date', 'ASC')
             ->addOrderBy('m.time', 'ASC')
-            ->getQuery();
+            ->getQuery()
+        ;
+
 
         return $qb->execute();
     }

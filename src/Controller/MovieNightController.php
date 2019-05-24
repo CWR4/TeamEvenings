@@ -38,22 +38,17 @@ class MovieNightController extends AbstractController
             {
                 $this->addFlash('warning', 'Datum ist vergangen!');
             }
-            elseif($movienight->getDate()->format('d.m.Y') ===  date('d.m.Y') && $movienight->getTime()->format('H:i') < date('H:i', time() - 3600))
+            elseif($movienight->getDate()->format('d.m.Y') ===  date('d.m.Y') && $movienight->getTime()->format('H:i') < date('H:i', time() - 900))
             {
                 $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
             }
             else
             {
-                $movie = $omdbService->getDataById('tt0081505');
-
-                $movienight->setMovie($movie);
-
-                $manager->persist($movie);
                 $manager->persist($movienight);
                 $manager->flush();
                 $this->addFlash('success', 'Termin erstellt!');
 
-//                return $this->redirectToRoute('list_movienight');
+                return $this->redirectToRoute('list_movienight');
             }
         }
 
@@ -71,7 +66,10 @@ class MovieNightController extends AbstractController
 
         $dates = $manager->findAllByDateAsc();
 
-        dump($dates);
+        foreach ($dates as $night)
+        {
+            dump($night);
+        }
 
         return $this->render('movie_night/list.html.twig', [
             'dates' => $dates
@@ -101,7 +99,7 @@ class MovieNightController extends AbstractController
             {
                 $this->addFlash('warning', 'Datum ist vergangen!');
             }
-            elseif($date->getDate()->format('d.m.Y') ===  date('d.m.Y') && $date->getTime()->format('H:i') < date('H:i', time() - 3600))
+            elseif($date->getDate()->format('d.m.Y') ===  date('d.m.Y') && $date->getTime()->format('H:i') < date('H:i', time() - 900))
             {
                 $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
             }
