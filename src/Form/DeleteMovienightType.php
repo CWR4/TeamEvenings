@@ -15,7 +15,8 @@ class DeleteMovienightType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date', DateType::class, ['format' => 'dd MM yyyy', 'label' => false, 'disabled' => true, 'attr' => ['readonly' => true]])
+            ->add('date', DateType::class, ['format' => 'dd MM yyyy', 'label' => false, 'disabled' => true])
+            ->add('date', DateType::class, ['format' => 'dd MM yyyy', 'label' => false, 'disabled' => true])
             ->add('time', TimeType::class, ['label' => false, 'disabled' => true])
             ->add('location', TextType::class, ['label' => false, 'disabled' => true])
         ;
