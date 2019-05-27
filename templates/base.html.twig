@@ -16,55 +16,63 @@
             <header>
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                     <div class="container">
-                    <a class="navbar-brand" href="{{ path('base') }}">
-                        <i class="fas fa-home" aria-hidden="true"></i>
-                        {{ 'navigation.home'|trans }}
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="nav navbar-nav ml-md-auto">
-                            <li class="nav-item">
-                                <a href="{{ path('movie_night') }}" class="nav-link">
-                                    <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
-                                    {{ 'navigation.movienight'|trans }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ path('list_movienight') }}" class="nav-link">
-                                    <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
-                                    {{ 'navigation.movienight'|trans }}
-                                </a>
-                            </li>
-                            <!--
-                            <li class="nav-item">
-                                <a href="{{ path('hallo') }}" class="nav-link">
-                                    <i class="fab fa-d-and-d" aria-hidden="true"></i>
-                                    {{ 'navigation.gamenight'|trans }}
-                                </a>
-                            </li>
-                            -->
-                        </ul>
+                        <a class="navbar-brand" href="{{ path('base') }}">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                            {{ 'navigation.home'|trans }}
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
 
-                        <ul class="nav navbar-nav ml-md-auto">
+
+                        <div class="collapse navbar-collapse" id="navbarNav">
                             {% if app.user %}
-                                <li class="nav-item">
-                                    <a href="{{ path('app_logout') }}" class="nav-link">
-                                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                                        {{ 'navigation.logout'|trans }}
-                                    </a>
-                                </li>
-                            {% else  %}
-                                <li class="nav-item">
-                                    <a href="{{ path('app_login') }}" class="nav-link">
-                                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
-                                        {{ 'navigation.login'|trans }}
-                                    </a>
-                                </li>
+                                <ul class="nav navbar-nav ml-md-auto">
+                                    <div class="dropdown">
+                                    <li class="nav-item  dropdown">
+                                        <a class="nav-link dropdown-toggle" id="movienightDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
+                                            {{ 'navigation.movienight'|trans }}
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="movienightDropdown">
+                                            <a class="dropdown-item" href="{{ path('list_movienight') }}">
+                                                Alle Termine
+                                            </a>
+                                            <a class="dropdown-item" href="{{ path('movie_night') }}">
+                                                Erstellen
+                                            </a>
+                                        </div>
+                                    </li>
+                                    </div>
+                                    <!--
+                                    <li class="nav-item">
+                                        <a href="{{ path('hallo') }}" class="nav-link disabled">
+                                            <i class="fab fa-d-and-d" aria-hidden="true"></i>
+                                            {{ 'navigation.gamenight'|trans }}
+                                        </a>
+                                    </li>
+                                    -->
+                                </ul>
                             {% endif %}
-                        </ul>
-                    </div>
+
+                            <ul class="nav navbar-nav ml-md-auto">
+                                {% if app.user %}
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_logout') }}" class="nav-link">
+                                            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                            {{ 'navigation.logout'|trans }}
+                                        </a>
+                                    </li>
+                                {% else  %}
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_login') }}" class="nav-link">
+                                            <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                                            {{ 'navigation.login'|trans }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
                 </nav>
             </header>
