@@ -8,6 +8,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BaseController extends AbstractController
 {
+    /*
+     *  - landing page
+     *  - displays next event
+     */
     /**
      * @Route("/", name="base")
      */
@@ -17,15 +21,6 @@ class BaseController extends AbstractController
 
         return $this->render('base/index.html.twig', [
             'movienight' => $movienight,
-        ]);
-    }
-
-    /**
-     * @Route("/hallo", name="hallo")
-     */
-    public function hallo()
-    {
-        return $this->render('base/hallo.html.twig', [
         ]);
     }
 }

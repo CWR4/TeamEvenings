@@ -20,6 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MovieNightController extends AbstractController
 {
+    /*
+     *  - form for creating a new event
+     *  - date, time and location
+     */
     /**
      * @Route("/movienight/create", name="movie_night")
      */
@@ -56,6 +60,9 @@ class MovieNightController extends AbstractController
         ]);
     }
 
+    /*
+     *  - overview of all movienights planned, only future ones.
+     */
     /**
      * @Route("/movienight/all", name="list_movienight")
      */
@@ -70,36 +77,49 @@ class MovieNightController extends AbstractController
         ]);
     }
 
+    /*
+     *  - form for editing movienight date, time location
+     *  - same as creating, except buttons
+     *  - loaded with data from existing object
+     *  - button save and abort
+     *  - checks if date and time are in the future
+     */
     /**
      * @Route("/movienight/edit/{id<\d+>}", name="edit_movienight")
      */
     public function editMovieNight(Request $request, $id) : Response
     {
         $manager = $this->getDoctrine()->getManager();
-        $date = $manager->getRepository(MovieNight::class)->find($id);
+        $movieNight = $manager->getRepository(MovieNight::class)->find($id);
 
-        if($date === null)
+        // check if event was found in database -> flash message if not and redirection
+        if($movieNight === null)
         {
             $this->addFlash('warning', 'Termin wurde nicht gefunden');
             return $this->redirectToRoute('list_movienight');
         }
 
-        $editForm = $this->createForm(EditMovieNightType::class, $date);
+        // create form and hand data from object to it
+        $editForm = $this->createForm(EditMovieNightType::class, $movieNight);
         $editForm->handleRequest($request);
 
+        // check if form is submitted and valid
         if($editForm->isSubmitted() && $editForm->isValid())
         {
-            if($date->getDate()->format('Y.m.d') < date('Y.m.d'))
+            // check date has passed
+            if($movieNight->getDate()->format('Y.m.d') < date('Y.m.d'))
             {
                 $this->addFlash('warning', 'Datum ist vergangen!');
             }
-            elseif($date->getDate()->format('d.m.Y') ===  date('d.m.Y') && $date->getTime()->format('H:i') < date('H:i', time() - 900))
+            // check if time has passed if date is today
+            elseif($movieNight->getDate()->format('d.m.Y') ===  date('d.m.Y') && $movieNight->getTime()->format('H:i') < date('H:i', time() - 900))
             {
                 $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
             }
+            // else save object to database, redirect and show flash message
             else
             {
-                $manager->persist($date);
+                $manager->persist($movieNight);
                 $manager->flush();
 
                 $this->addFlash('success', 'Termin erfolgreich geändert');
@@ -113,6 +133,11 @@ class MovieNightController extends AbstractController
         ]);
     }
 
+    /*
+     *  - form for deleting movienight date
+     *  - same as creating, except buttons
+     *  - loaded with data from existing object
+     */
     /**
      * @param Request $request
      * @param $id
@@ -125,6 +150,7 @@ class MovieNightController extends AbstractController
 
         $date = $manager->getRepository(MovieNight::class)->find($id);
 
+        // check if event exists and it's in the future, empty form if event passed
         if($date === null ||
             $date->getDate()->format('Y.m.d') <= date('Y.m.d') ||
             ($date->getDate()->format('Y.m.d') <= date('Y.m.d') &&
@@ -140,6 +166,7 @@ class MovieNightController extends AbstractController
 
         $form->handleRequest($request);
 
+        // check if submitted and delete if so
         if($form->isSubmitted())
         {
             $manager->remove($date);
