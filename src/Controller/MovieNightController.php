@@ -140,9 +140,28 @@ class MovieNightController extends AbstractController
 
         $date = $manager->getRepository(MovieNight::class)->find($id);
 
-        $form = $this->createForm(DeleteMovienightType::class, $date);
+        if($date === null ||
+            $date->getDate()->format('Y.m.d') <= date('Y.m.d') ||
+            ($date->getDate()->format('Y.m.d') <= date('Y.m.d') &&
+            $date->getTime()->format('H:i') <= date('H:i')))
+        {
+            $form = $this->createForm(MovieNightType::class);
+            $this->addFlash('warning', 'Termin nicht gefunden');
+        }
+        else
+        {
+            $form = $this->createForm(MovieNightType::class, $date);
+        }
+
         $form->handleRequest($request);
 
+        if($form->isSubmitted())
+        {
+            $manager->remove($date);
+            $manager->flush();
+
+            return $this->redirectToRoute('list_movienight');
+        }
 
         return $this->render('movie_night/delete.html.twig', [
             'form' => $form->createView(),
