@@ -5,7 +5,14 @@
 {% block body %}
 
 <div class="container margin-top-20">
-    <div class="row justify-content-center">
+
+    <!-- Current movienight to add movie to -->
+    <div class="row justify-content-center margin-top-20">
+        Date - Film auswählen
+    </div>
+
+    <!-- Search field form -->
+    <div class="row justify-content-center margin-top-20">
         {{ form_start(form, {'attr': {'class': 'form-inline text-center'}}) }}
 
         {{ form_widget(form.Title, {'attr': { 'class': 'form-inline',
@@ -19,6 +26,7 @@
         {{ form_end(form) }}
     </div>
 
+    <!-- List of all movies as table if results found -->
     <div class="row justify-content-center margin-top-20">
         {% if movies %}
         <table class="table mytable">
@@ -45,9 +53,14 @@
                         {{ movie.Year }}
                     </td>
                     <td>
+                        {{ form_start(addform) }}
+                        {{ form_widget(addform.movieid, {value: movie.imdbID}) }}
+                        {{ form_widget(addform.movienightid, {value: date.id}) }}
+                        {{ form_rest(addform) }}
                         <button class="btn btn-secondary">
                             Zu Event hinzufügen
                         </button>
+                        {{ form_end(addform) }}
                     </td>
                 </tr>
                 {% endfor %}
@@ -55,6 +68,8 @@
         </table>
         {% endif %}
     </div>
+
+    <!-- Pagination -->
     <div class="row justify-content-center margin-top-20">
         <ul class="pagination">
             {% if pagination %}
@@ -66,6 +81,7 @@
             {% endif %}
         </ul>
     </div>
+
 </div>
 
 {% endblock %}

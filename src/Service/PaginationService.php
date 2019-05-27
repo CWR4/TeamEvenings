@@ -34,12 +34,13 @@ class PaginationService extends AbstractController
         return $this->paginationLinks;
     }
 
-    public function createPagination($route, $page, $totalResults, $query) : void
+    public function createPagination($route, $parameters, $totalResults) : void
     {
-        $this->page = $page;
+        $this->page = $parameters['page'];
         $this->totalPages = (int)ceil($totalResults / self::resultsPerPage);
 
-        if($page <= 3 || $this->totalPages <= 5)
+
+        if($this->page <= 3 || $this->totalPages <= 5)
         {
             if($this->totalPages >= 5)
             {
@@ -51,29 +52,36 @@ class PaginationService extends AbstractController
             }
             for($i = 1; $i <= $limit; $i++)
             {
-                $this->paginationLinks[$i] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
+                $parameters['page'] = $i;
+                $this->paginationLinks[$i] = $this->router->generate($route, $parameters);
             }
             if($this->totalPages > 5)
             {
-                $this->paginationLinks['&raquo;'] = $this->router->generate($route, ['page' => $this->totalPages, 'title' => $query]);
+                $parameters['page'] = $this->totalPages;
+                $this->paginationLinks['&raquo;'] = $this->router->generate($route, $parameters);
             }
         }
-        elseif($page >= $this->totalPages-2)
+        elseif($this->page >= $this->totalPages-2)
         {
-            $this->paginationLinks['&laquo;'] = $this->router->generate($route, ['page' => 1, 'title' => $query]);
+            $parameters['page'] = 1;
+            $this->paginationLinks['&laquo;'] = $this->router->generate($route, $parameters);
             for($i = $this->totalPages-4; $i <= $this->totalPages; $i++)
             {
-                $this->paginationLinks[$i] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
+                $parameters['page'] = $i;
+                $this->paginationLinks[$i] = $this->router->generate($route, $parameters);
             }
         }
         else
         {
-            $this->paginationLinks['&laquo;'] = $this->router->generate($route, ['page' => 1, 'title' => $query]);
-            for($i = $page-2; $i <= $page+2; $i++)
+            $parameters['page'] = 1;
+            $this->paginationLinks['&laquo;'] = $this->router->generate($route, $parameters);
+            for($i = $this->page-2; $i <= $this->page+2; $i++)
             {
-                $this->paginationLinks[$i] = $this->router->generate($route, ['page' => $i, 'title' => $query]);
+                $parameters['page'] = $i;
+                $this->paginationLinks[$i] = $this->router->generate($route, $parameters);
             }
-            $this->paginationLinks['&raquo;'] = $this->router->generate($route, ['page' => $this->totalPages, 'title' => $query]);
+            $parameters['page'] = $this->totalPages;
+            $this->paginationLinks['&raquo;'] = $this->router->generate($route, $parameters);
         }
     }
 }

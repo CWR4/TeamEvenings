@@ -13,10 +13,10 @@ class OmdbService extends AbstractController
     // Base url for retrieving poster to movie
     private const BASE_URL_POSTER = 'https://img.omdbapi.com/?apikey=';
 
-    public function searchByTitle($title, $page) : array
+    public function searchByTitle($parameters) : array
     {
         // Build request url
-        $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $title . '&page=' . $page . '&type=movie';
+        $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $parameters['title'] . '&page=' . $parameters['page'] . '&type=movie';
 
         // Initialize curl session(http request)
         $curl = curl_init($requestUrl);

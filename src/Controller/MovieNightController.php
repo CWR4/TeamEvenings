@@ -43,19 +43,6 @@ class MovieNightController extends AbstractController
             }
             else
             {
-//                $movie = $omdbService->getDataById('tt0081505');
-//
-//                if($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID()))
-//                {
-//                    $movie = $this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
-//                    $movie->addMovieNight($movienight);
-//                }
-//                else
-//                {
-//                    $movienight->setMovie($movie);
-//                }
-//
-//                $manager->persist($movie);
                 $manager->persist($movienight);
                 $manager->flush();
                 $this->addFlash('success', 'Termin erstellt!');

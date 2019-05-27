@@ -15,8 +15,6 @@ class BaseController extends AbstractController
     {
         $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
 
-        dump($movienight);
-
         return $this->render('base/index.html.twig', [
             'movienight' => $movienight,
         ]);

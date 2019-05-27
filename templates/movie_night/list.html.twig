@@ -50,7 +50,7 @@
                                 <button class="btn btn-sm btn-secondary tab-button btn-spacing" type="button">Termin</button>
                             </a>
                         <br>
-                            <a href="#">
+                            <a href="{{ path('omdb', {'mnid': date.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                             </a>
                             <a href="{{ path('delete_movienight', {'id': date.id}) }}">
