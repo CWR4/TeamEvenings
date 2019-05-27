@@ -8,8 +8,13 @@
 
     <!-- Current movienight to add movie to -->
     <div class="row justify-content-center margin-top-20">
-        Date - Film auswählen
+        <h4>
+            {{ date.date|date('d.m.Y') }} -
+            {{ date.time|date('H:i') }} -
+            {{ date.location }}
+        </h4>
     </div>
+
 
     <!-- Search field form -->
     <div class="row justify-content-center margin-top-20">
