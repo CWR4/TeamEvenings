@@ -50,8 +50,12 @@
                                 <button class="btn btn-sm btn-secondary tab-button btn-spacing" type="button">Termin</button>
                             </a>
                         <br>
-                            <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
-                            <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
+                            <a href="#">
+                                <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                            </a>
+                            <a href="{{ path('delete_movienight', {'id': date.id}) }}">
+                                <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

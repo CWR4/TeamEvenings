@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+<div class="container margin-top-20">
+    <div class="jumbotron text-center">
+        <h3>Eintrag löschen</h3>
+        <hr>
+            {{ form_start(form) }}
+
+            {{ form_widget(form) }}
+            {{ form_rest(form) }}
+            <button type="submit" class="btn btn-danger btn-spacing btn-size-form">
+                Löschen
+            </button>
+
+            <a href="{{ path('list_movienight') }}">
+                <button type="button" class="btn btn-secondary btn-spacing btn-size-form">
+                    Abbruch
+                </button>
+            </a>
+            {{ form_end(form) }}
+    </div>
+</div>
+
+{% endblock %}
