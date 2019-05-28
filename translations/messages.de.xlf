@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<file source-language="de" target-language="de" datatype="plaintext" original="file.ext">
+    <header>
+        <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+
+        <trans-unit id="symfony.is_great">
+            <source>symfony.is_great</source>
+            <target>Symfony ist super!</target>
+        </trans-unit>
+        <trans-unit id="symfony.is_awesome">
+            <source>symfony.is_awesome</source>
+            <target>Symfony ist genial!</target>
+        </trans-unit>
+
+        <trans-unit id="navigation.home">
+            <source>navigation.home</source>
+            <target>Startseite</target>
+        </trans-unit>
+        <trans-unit id="navigation.gamenight">
+            <source>navigation.gamenight</source>
+            <target>Spielabend</target>
+        </trans-unit>
+        <trans-unit id="navigation.movienight">
+            <source>navigation.movienight</source>
+            <target>Filmabend</target>
+        </trans-unit>
+        <trans-unit id="navigation.login">
+            <source>navigation.login</source>
+            <target>Anmelden</target>
+        </trans-unit>
+        <trans-unit id="navigation.logout">
+            <source>navigation.logout</source>
+            <target>Ausloggen</target>
+        </trans-unit>
+
+        <trans-unit id="home.next">
+            <source>home.next</source>
+            <target>nächster</target>
+        </trans-unit>
+
+
+        <trans-unit id="login.username">
+            <source>login.username</source>
+            <target>Benutzername</target>
+        </trans-unit>
+        <trans-unit id="login.password">
+            <source>login.password</source>
+            <target>Passwort</target>
+        </trans-unit>
+        <trans-unit id="login.signin">
+            <source>login.signin</source>
+            <target>Anmelden</target>
+        </trans-unit>
+        <trans-unit id="login.message">
+            <source>login.message</source>
+            <target>Bitte anmelden:</target>
+        </trans-unit>
+
+        <trans-unit id="af.logo.game">
+            <source>af.logo.game</source>
+            <target>fab fa-d-and-d</target>
+        </trans-unit>
+        <trans-unit id="af.logo.movie">
+            <source>af.logo.movie</source>
+            <target>fas fa-film</target>
+        </trans-unit>
+
+        <trans-unit id="movie.placeholder">
+            <source>movie.placeholder</source>
+            <target>Filmtitel</target>
+        </trans-unit>
+
+        <trans-unit id="btn.search">
+            <source>btn.search</source>
+            <target>Suchen</target>
+        </trans-unit>
+
+    </body>
+</file>
+</xliff>

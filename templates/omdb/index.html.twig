@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime - Select a movie{% endblock %}
+
+{% block body %}
+
+<div class="container margin-top-20">
+
+    <!-- Current movienight to add movie to -->
+    <div class="row justify-content-center margin-top-20">
+        <h4>
+            {{ date.date|date('d.m.Y') }} -
+            {{ date.time|date('H:i') }} -
+            {{ date.location }}
+        </h4>
+    </div>
+
+
+    <!-- Search field form -->
+    <div class="row justify-content-center margin-top-20">
+        {{ form_start(form, {'attr': {'class': 'form-inline text-center'}}) }}
+
+        {{ form_widget(form.Title, {'attr': { 'class': 'form-inline',
+                                            'placeholder': 'movie.placeholder'|trans,
+                                            'value': title }}) }}
+
+        <button type="submit" class="btn btn-secondary input-group-append">
+            {{ 'btn.search'|trans }}
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+
+    <!-- List of all movies as table if results found -->
+    <div class="row justify-content-center margin-top-20">
+        {% if movies %}
+        <table class="table mytable">
+            <thead>
+                <tr>
+                    <th class="tab-poster">Poster</th>
+                    <th>Titel und Jahr</th>
+                    <th class="tab-button">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in movies %}
+                <tr>
+                    <td class="text-center">
+                        {% if(movie.Poster == 'N/A') %}
+                            <i class="{{ 'af.logo.movie'|trans }} fa-2x tab-poster" aria-hidden="true"></i>
+                        {% else %}
+                            <img class="tab-poster" src="{{ movie.Poster }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ movie.Title }}
+                        <br/>
+                        {{ movie.Year }}
+                    </td>
+                    <td>
+                        {{ form_start(addform) }}
+                        {{ form_widget(addform.movieid, {value: movie.imdbID}) }}
+                        {{ form_widget(addform.movienightid, {value: date.id}) }}
+                        {{ form_rest(addform) }}
+                        <button class="btn btn-secondary">
+                            Zu Event hinzufügen
+                        </button>
+                        {{ form_end(addform) }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <!-- Pagination, if needed -->
+    {% if pagination %}
+        <div class="row justify-content-center margin-top-20">
+            <ul class="pagination">
+                {% for key, page in pagination %}
+                    <li class="page-item">
+                        <a href="{{ page }}" class="page-link">{{ key|raw }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-top-5 {
+    margin-top: 10px;
+}
+
+.flash-width-300 {
+    width: 300px;
+}
+
+.tab-poster {
+    width: 50px;
+}
+
+.tab-button {
+    width: 80px;
+}
+
+.tab-date {
+    width: 100px;
+}
+
+.jumbotron {
+    background-color: #E7E7E7 !important;
+    border-radius: 20px;
+}
+
+.mytable {
+    width: 900px;
+}
+
+.btn-spacing {
+    margin: 3px 10px 3px 10px;
+}
+
+.btn-size-form {
+    width: 100px;
+}

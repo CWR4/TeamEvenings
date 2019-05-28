@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Alle Termine{% endblock %}
+
+{% block body %}
+
+<!-- list of all movienights if any are planned (as a table) -->
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        {% if dates %}
+            <table class="table mytable table-hover">
+                <thead>
+                    <tr>
+                        <th>Termin</th>
+                        <th colspan="2">Film</th>
+                        <th class="text-center">Bearbeiten</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for date in dates %}
+                    <tr>
+                        <td class="tab-date align-middle">
+                            {{ date.date|date("d.m.Y") }}
+                            <br>
+                            {{ date.time|date("H:i") }}
+                            <br>
+                            {{ date.location }}
+                        </td>
+                        {% if date.movie %}
+                            <td class="tab-poster align-middle text-center">
+                                {% if(date.movie.poster == 'N/A') %}
+                                    <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
+                                {% else %}
+                                    <img class="tab-poster"src="{{ date.movie.poster }}">
+                                {% endif %}
+
+                            </td>
+                            <td class="align-middle">
+                                {{ date.movie.title }}
+                                <br>
+                                {{ date.movie.year }}
+                                <br>
+                                {{ date.movie.runtime }}
+                            </td>
+                        {% else %}
+                            <td colspan="2" class="align-middle">
+                                Bisher kein Film eingeplant.
+                            </td>
+                        {% endif %}
+                        <td class="tab-button justify-content-center align-middle">
+                            <a href="{{ path('edit_movienight', {'id': date.id}) }}">
+                                <button class="btn btn-sm btn-secondary tab-button btn-spacing" type="button">Termin</button>
+                            </a>
+                        <br>
+                            <a href="{{ path('omdb', {'mnid': date.id}) }}">
+                                <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                            </a>
+                            <a href="{{ path('delete_movienight', {'id': date.id}) }}">
+                                <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="container text-center">
+                <h3>Keine Filmabende geplant</h3>
+            </div>
+            <div class="container text-center margin-top-20">
+                <i class="far fa-sad-tear fa-3x"></i>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
