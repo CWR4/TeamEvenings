@@ -74,18 +74,18 @@
         {% endif %}
     </div>
 
-    <!-- Pagination -->
-    <div class="row justify-content-center margin-top-20">
-        <ul class="pagination">
-            {% if pagination %}
+    <!-- Pagination, if needed -->
+    {% if pagination %}
+        <div class="row justify-content-center margin-top-20">
+            <ul class="pagination">
                 {% for key, page in pagination %}
                     <li class="page-item">
                         <a href="{{ page }}" class="page-link">{{ key|raw }}</a>
                     </li>
                 {% endfor %}
-            {% endif %}
-        </ul>
-    </div>
+            </ul>
+        </div>
+    {% endif %}
 
 </div>
 

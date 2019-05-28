@@ -13,6 +13,9 @@ class OmdbService extends AbstractController
     // Base url for retrieving poster to movie
     private const BASE_URL_POSTER = 'https://img.omdbapi.com/?apikey=';
 
+    /*
+     *  Search in open movie database for movie by title
+     */
     public function searchByTitle($parameters) : array
     {
         // Build request url
@@ -34,6 +37,10 @@ class OmdbService extends AbstractController
         return  json_decode($json, true);
     }
 
+    /*
+     *  Retrieve all movie data from omdb
+     *  - returns movie entity
+     */
     public function getDataById($id) : ?Movie
     {
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&i=' . $id;
@@ -63,6 +70,9 @@ class OmdbService extends AbstractController
         return $m;
     }
 
+    /*
+     *  Convert omdb results from json to movie array
+     */
     public function getResultsAsEntities($json) : array
     {
         $movies = [];

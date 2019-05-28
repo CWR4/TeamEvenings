@@ -20,35 +20,10 @@ class MovieNightRepository extends ServiceEntityRepository
         parent::__construct($registry, MovieNight::class);
     }
 
-    // /**
-    //  * @return MovieNight[] Returns an array of MovieNight objects
-    //  */
     /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?MovieNight
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
+     *  - retrieve all future movienights
+     *  - ordered ascending by date
+     */
     public function findAllByDateAsc()  : array
     {
         $qb = $this->createQueryBuilder('m')
@@ -63,6 +38,9 @@ class MovieNightRepository extends ServiceEntityRepository
         return $qb->getResult();
     }
 
+    /*
+     *  - retrieve next movienight or null if none planned
+     */
     public function getNextMovienight()  : ?MovieNight
     {
         $qb = $this->createQueryBuilder('m')

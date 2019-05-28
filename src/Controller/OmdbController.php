@@ -22,10 +22,15 @@ use App\Service\PaginationService;
 
 class OmdbController extends AbstractController
 {
+    /*
+     *  - search movie in open movie database
+     *  - relate movie to movienight
+     *  - store movie in database
+     */
     /**
      * @Route("/omdb/{mnid<\d+>?}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function searchInOmdb(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title, $mnid) : Response
+    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title, $mnid) : Response
     {
         // Get movienight from db
         $manager = $this->getDoctrine()->getManager();

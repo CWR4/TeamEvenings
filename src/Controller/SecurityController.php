@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+
+/*
+ *  Created by php bin/console make:auth
+ *  - handles login
+ */
 class SecurityController extends AbstractController
 {
     /**

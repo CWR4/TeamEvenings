@@ -34,6 +34,12 @@ class PaginationService extends AbstractController
         return $this->paginationLinks;
     }
 
+    /*
+     *  Creates Pagination links
+     *  - takes route to link to
+     *  - parameters -> to be added to url to route
+     *  - number of total results -> to calculate number of pages and current links
+     */
     public function createPagination($route, $parameters, $totalResults) : void
     {
         $this->page = $parameters['page'];
