@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+        {% if result %}
+            {% for movie in result.voting.movies %}
+                {{ movie.id }} {{ movie.title }} {{ result.votes[movie.id] }}
+                <img src="{{ movie.poster }}" class="tab-poster">
+            {% endfor %}
+        {% endif %}
+    </div>
+
+{% endblock %}

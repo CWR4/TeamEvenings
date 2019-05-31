@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
-use App\Form\DeleteMovienightType;
+use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -180,4 +181,21 @@ class MovieNightController extends AbstractController
         ]);
     }
 
+    /*
+     *  - voting page
+     *  - only vote for next upcoming movienight
+     */
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/movienight/voting/{votingId<\d+>?}", name="voting")
+     */
+    public function voting(Request $request, VotingService $votingService, $votingId) : Response
+    {
+        $result = $votingService->getVotingResult($votingId);
+
+        return $this->render('movie_night/voting.html.twig', [
+            'result' => $result,
+        ]);
+    }
 }

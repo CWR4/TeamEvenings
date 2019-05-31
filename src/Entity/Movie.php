@@ -53,9 +53,15 @@ class Movie
      */
     private $movieNights;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Voting", mappedBy="movies")
+     */
+    private $votings;
+
     public function __construct()
     {
         $this->movieNights = new ArrayCollection();
+        $this->votings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +167,34 @@ class Movie
             if ($movieNight->getMovie() === $this) {
                 $movieNight->setMovie(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Voting[]
+     */
+    public function getVotings(): Collection
+    {
+        return $this->votings;
+    }
+
+    public function addVoting(Voting $voting): self
+    {
+        if (!$this->votings->contains($voting)) {
+            $this->votings[] = $voting;
+            $voting->addMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoting(Voting $voting): self
+    {
+        if ($this->votings->contains($voting)) {
+            $this->votings->removeElement($voting);
+            $voting->removeMovie($this);
         }
 
         return $this;
