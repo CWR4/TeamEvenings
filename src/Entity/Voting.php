@@ -33,6 +33,11 @@ class Voting
      */
     private $open;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\MovieNight", mappedBy="voting", cascade={"persist", "remove"})
+     */
+    private $movieNight;
+
     public function __construct()
     {
         $this->movies = new ArrayCollection();
@@ -109,6 +114,24 @@ class Voting
     public function setOpen(bool $open): self
     {
         $this->open = $open;
+
+        return $this;
+    }
+
+    public function getMovieNight(): ?MovieNight
+    {
+        return $this->movieNight;
+    }
+
+    public function setMovieNight(?MovieNight $movieNight): self
+    {
+        $this->movieNight = $movieNight;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newVoting = $movieNight === null ? null : $this;
+        if ($newVoting !== $movieNight->getVoting()) {
+            $movieNight->setVoting($newVoting);
+        }
 
         return $this;
     }

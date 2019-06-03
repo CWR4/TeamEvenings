@@ -2,13 +2,36 @@
 
 {% block body %}
 
-    <div class="container">
-        {% if result %}
+<div class="container text-center margin-top-20">
+
+    {% if result %}
+
+        <div class="row">
+
             {% for movie in result.voting.movies %}
-                {{ movie.id }} {{ movie.title }} {{ result.votes[movie.id] }}
-                <img src="{{ movie.poster }}" class="tab-poster">
+
+                <div class="col">
+                    <div class="jumbotron">
+                        <h4>{{ movie.title }}</h4>
+                        <img src="{{ movie.poster }}" style="width: 100px">
+
+                        <!--
+                        <div class="row margin-top-20">
+                            {{ movie.plot }}
+                        </div>
+                        <div class="row margin-top-5">
+                            Votes: {{ result.votes[movie.id] }}
+                        </div>
+                        -->
+                    </div>
+                </div>
+
             {% endfor %}
-        {% endif %}
-    </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

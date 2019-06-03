@@ -36,6 +36,11 @@ class MovieNight
      */
     private $movie;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Voting", inversedBy="movieNight", cascade={"persist", "remove"})
+     */
+    private $voting;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,18 @@ class MovieNight
     public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
+
+        return $this;
+    }
+
+    public function getVoting(): ?Voting
+    {
+        return $this->voting;
+    }
+
+    public function setVoting(?Voting $voting): self
+    {
+        $this->voting = $voting;
 
         return $this;
     }

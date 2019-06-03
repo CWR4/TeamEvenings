@@ -191,17 +191,14 @@ class MovieNightController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route("/movienight/voting/{votingId<\d+>?}", name="voting")
+     * @Route("/movienight/voting", name="voting")
      */
-    public function voting(Request $request, VotingService $votingService, $votingId) : Response
+    public function voting(Request $request, VotingService $votingService) : Response
     {
-        $result = $votingService->getVotingResult($votingId);
+        // $user = $this->getUser();
 
-        $user = $this->getUser();
-
-        $movieId = 10;
-
-        dump($this->getDoctrine()->getManager()->getRepository(Vote::class)->numVotes(1, $movieId));
+        $voting = $this->getDoctrine()->getManager()->getRepository(MovieNight::class)->getNextMovienight()->getVoting();
+        $result = $votingService->getVotingResult($voting->getId());
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
