@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class VotingService extends AbstractController
 {
+    /*
+     *  -
+     */
     public function getVotingResult($votingId)
     {
         // Get voting by id
@@ -33,6 +36,8 @@ class VotingService extends AbstractController
      */
     private function getVotes(Voting $voting)
     {
+        $votes = [];
+
         foreach ($voting->getMovies() as $movie)
         {
             $votes[$movie->getId()] = 0;

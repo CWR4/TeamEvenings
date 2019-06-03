@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
+use App\Entity\Vote;
 use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
 use App\Service\VotingService;
+use http\Client\Curl\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class MovieNightController
@@ -193,6 +196,12 @@ class MovieNightController extends AbstractController
     public function voting(Request $request, VotingService $votingService, $votingId) : Response
     {
         $result = $votingService->getVotingResult($votingId);
+
+        $user = $this->getUser();
+
+        $movieId = 10;
+
+        dump($this->getDoctrine()->getManager()->getRepository(Vote::class)->numVotes(1, $movieId));
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
