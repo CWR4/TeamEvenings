@@ -7,6 +7,7 @@ use App\Entity\Vote;
 use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use App\Form\VoteType;
 use App\Service\VotingService;
 use http\Client\Curl\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -196,12 +197,14 @@ class MovieNightController extends AbstractController
     public function voting(Request $request, VotingService $votingService) : Response
     {
         // $user = $this->getUser();
-
-        $voting = $this->getDoctrine()->getManager()->getRepository(MovieNight::class)->getNextMovienight()->getVoting();
+        $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
+        $voting = $movienight->getVoting();
         $result = $votingService->getVotingResult($voting->getId());
+
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
+            'movienight' => $movienight,
         ]);
     }
 }

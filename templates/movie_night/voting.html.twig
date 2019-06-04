@@ -4,26 +4,68 @@
 
 <div class="container text-center margin-top-20">
 
+    {% if movienight %}
+
+        <h4>Abstimmen für</h4>
+
+        <h3>
+            {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
+        </h3>
+
+    {% endif %}
+
     {% if result %}
 
-        <div class="row">
+        <div class="row margin-top-20">
 
             {% for movie in result.voting.movies %}
 
                 <div class="col">
-                    <div class="jumbotron">
-                        <h4>{{ movie.title }}</h4>
-                        <img src="{{ movie.poster }}" style="width: 100px">
 
-                        <!--
-                        <div class="row margin-top-20">
-                            {{ movie.plot }}
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <h4 class="card-title">
+
+                                {{ movie.title }}
+
+                            </h4>
+
                         </div>
-                        <div class="row margin-top-5">
-                            Votes: {{ result.votes[movie.id] }}
+
+                        <div class="card-body">
+
+                            <p class="card-text">
+                                {{ movie.plot }}
+                            </p>
+
+                            <hr />
+
+                            <div class="row justify-content-between">
+
+                                <div class="col-3">
+
+                                    <div class="border border-secondary rounded text-secondary" style="height: 100%; padding: 6px;">
+
+                                        {{ result.votes[movie.id] }}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-auto">
+
+                                    <input type="submit" class="btn btn-outline-secondary" value="Vote!" />
+
+                                </div>
+
+                            </div>
+
                         </div>
-                        -->
+
                     </div>
+
                 </div>
 
             {% endfor %}
