@@ -23,7 +23,7 @@
 }
 
 .jumbotron {
-    background-color: #E7E7E7 !important;
+    background-color: #E7E7E7;
     border-radius: 20px;
 }
 
@@ -37,4 +37,26 @@
 
 .btn-size-form {
     width: 100px;
+}
+
+.card-top {
+    height: 100%;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.card-bot {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+    padding: 20px
+}
+
+.vote-poster {
+    height: 200px;
+}
+
+.vote-score {
+    height: 100%;
+    padding: 6px 0px;
 }

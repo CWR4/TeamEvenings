@@ -16,13 +16,14 @@
 
     {% if result %}
 
+        <!-- Show menu -->
         <div class="row margin-top-20">
 
             {% for movie in result.voting.movies %}
 
                 <div class="col">
 
-                    <div class="card">
+                    <div class="card card-top">
 
                         <div class="card-header">
 
@@ -36,34 +37,50 @@
 
                         <div class="card-body">
 
-                            <p class="card-text">
+                            <img src="{{ movie.poster }}" class="vote-poster">
+
+                            <p class="card-text margin-top-5">
                                 {{ movie.plot }}
                             </p>
 
-                            <hr />
+                        </div>
 
-                            <div class="row justify-content-between">
+                    </div>
 
-                                <div class="col-3">
+                </div>
 
-                                    <div class="border border-secondary rounded text-secondary" style="height: 100%; padding: 6px;">
+            {% endfor %}
 
-                                        {{ result.votes[movie.id] }}
+        </div>
 
-                                    </div>
+        <!-- Show votes and vote button -->
+        <div class="row">
 
-                                </div>
+            {% for movie in result.voting.movies %}
 
-                                <div class="col-auto">
+                <div class="col">
 
-                                    <input type="submit" class="btn btn-outline-secondary" value="Vote!" />
+                    <div class="card card-bot">
+
+                        <div class="row justify-content-between">
+
+                            <div class="col-3">
+
+                                <div class="border border-secondary rounded text-secondary align-content-center vote-score">
+
+                                    {{ result.votes[movie.id] }}
 
                                 </div>
 
                             </div>
 
-                        </div>
+                            <div class="col-auto">
 
+                                <input type="submit" class="btn btn-outline-secondary" value="Vote!" />
+
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>

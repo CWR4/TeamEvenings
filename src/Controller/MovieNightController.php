@@ -201,6 +201,8 @@ class MovieNightController extends AbstractController
         $voting = $movienight->getVoting();
         $result = $votingService->getVotingResult($voting->getId());
 
+        dump( $movienight->getVoting()->getMovies()[0]->getId());
+
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
