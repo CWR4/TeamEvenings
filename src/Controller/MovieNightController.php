@@ -201,12 +201,25 @@ class MovieNightController extends AbstractController
         $voting = $movienight->getVoting();
         $result = $votingService->getVotingResult($voting->getId());
 
-        dump( $movienight->getVoting()->getMovies()[0]->getId());
+        $form = $this->createForm(VoteType::class);
+        $form->handleRequest($request);
 
+        if($form->isSubmitted())
+        {
+            dump($form->getData());
+
+            dump($form->getClickedButton);
+
+            if($form->getClickedButton())
+            {
+                dump(1);
+            }
+        }
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
             'movienight' => $movienight,
+            'form' => $form->createView(),
         ]);
     }
 }

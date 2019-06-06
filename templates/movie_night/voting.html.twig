@@ -16,6 +16,8 @@
 
     {% if result %}
 
+        {{ form_start(form) }}
+
         <!-- Show menu -->
         <div class="row margin-top-20">
 
@@ -76,7 +78,7 @@
 
                             <div class="col-auto">
 
-                                <input type="submit" class="btn btn-outline-secondary" value="Vote!" />
+                                <input type="submit" class="btn btn-outline-secondary" value="Vote!"  />
 
                             </div>
 
@@ -89,6 +91,8 @@
 
         </div>
 
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
     {% endif %}
 
 </div>
