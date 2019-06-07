@@ -12,6 +12,8 @@ use App\Service\VotingService;
 use http\Client\Curl\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Button;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -192,14 +194,22 @@ class MovieNightController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route("/movienight/voting", name="voting")
+     * @Route("/movienight/voting/{mid<\d+>?}", name="voting")
      */
-    public function voting(Request $request, VotingService $votingService) : Response
+    public function voting(Request $request, VotingService $votingService, $mid) : Response
     {
         // $user = $this->getUser();
         $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
-        $voting = $movienight->getVoting();
-        $result = $votingService->getVotingResult($voting->getId());
+
+        if($movienight)
+        {
+            $voting = $movienight->getVoting();
+            $result = $votingService->getVotingResult($voting->getId());
+        }
+        else
+        {
+            $result = null;
+        }
 
         $form = $this->createForm(VoteType::class);
         $form->handleRequest($request);
@@ -207,13 +217,7 @@ class MovieNightController extends AbstractController
         if($form->isSubmitted())
         {
             dump($form->getData());
-
-            dump($form->getClickedButton);
-
-            if($form->getClickedButton())
-            {
-                dump(1);
-            }
+            dump($form->getViewData());
         }
 
         return $this->render('movie_night/voting.html.twig', [
