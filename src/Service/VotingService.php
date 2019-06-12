@@ -4,6 +4,7 @@
 namespace App\Service;
 
 
+use App\Entity\Vote;
 use App\Entity\Voting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -27,6 +28,55 @@ class VotingService extends AbstractController
         }
 
         return $result;
+    }
+
+    /*
+     *  - vote
+     */
+    public function vote(Voting $voting, $mid) : void
+    {
+        if(!$this->hasVoted($voting->getVotes()))
+        {
+            foreach($voting->getMovies() as $movie)
+            {
+                dump($movie);
+                if($movie->getId() ===(int)$mid)
+                {
+                    $vote = new Vote();
+                    $vote->setUser($this->getUser());
+                    $vote->setMovie($movie);
+                    $vote->setVoting($voting);
+
+                    $manager = $this->getDoctrine()->getManager();
+                    $manager->persist($vote);
+                    $manager->flush();
+
+                    $this->addFlash('success', 'Erfolgreich abgestimmt!');
+                }
+            }
+        }
+    }
+
+    /*
+     *  - checks if user already voted and add flash message
+     */
+    private function hasVoted($votes) : bool
+    {
+        $user = $this->getUser();
+
+        if($votes)
+        {
+            foreach($votes as $vote)
+            {
+                if($user === $vote->getUser())
+                {
+                    $this->addFlash('warning', 'Sie haben bereits abgestimmt');
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /*

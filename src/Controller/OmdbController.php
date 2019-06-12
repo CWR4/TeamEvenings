@@ -28,6 +28,13 @@ class OmdbController extends AbstractController
      *  - store movie in database
      */
     /**
+     * @param OmdbService $omdbService
+     * @param Request $request
+     * @param PaginationService $paginationService
+     * @param $page
+     * @param $title
+     * @param $mnid
+     * @return Response
      * @Route("/omdb/{mnid<\d+>?}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
     public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title, $mnid) : Response

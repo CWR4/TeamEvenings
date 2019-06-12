@@ -3,21 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
-use App\Entity\Vote;
-use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
-use App\Form\VoteType;
 use App\Service\VotingService;
-use http\Client\Curl\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Button;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class MovieNightController
@@ -32,6 +25,8 @@ class MovieNightController extends AbstractController
      *  - date, time and location
      */
     /**
+     * @param Request $request
+     * @return Response
      * @Route("/movienight/create", name="movie_night")
      */
     public function createMovieNight(Request $request) : Response
@@ -92,6 +87,9 @@ class MovieNightController extends AbstractController
      *  - checks if date and time are in the future
      */
     /**
+     * @param Request $request
+     * @param $id
+     * @return Response
      * @Route("/movienight/edit/{id<\d+>}", name="edit_movienight")
      */
     public function editMovieNight(Request $request, $id) : Response
@@ -192,13 +190,13 @@ class MovieNightController extends AbstractController
      *  - only vote for next upcoming movienight
      */
     /**
-     * @param Request $request
+     * @param VotingService $votingService
+     * @param $mid
      * @return Response
      * @Route("/movienight/voting/{mid<\d+>?}", name="voting")
      */
-    public function voting(Request $request, VotingService $votingService, $mid) : Response
+    public function voting(VotingService $votingService, $mid) : Response
     {
-        // $user = $this->getUser();
         $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
 
         if($movienight)
@@ -211,19 +209,34 @@ class MovieNightController extends AbstractController
             $result = null;
         }
 
-        $form = $this->createForm(VoteType::class);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted())
-        {
-            dump($form->getData());
-            dump($form->getViewData());
+        if(isset($mid)) {
+            $votingService->vote($voting, $mid);
+            return $this->redirectToRoute('voting');
         }
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
-            'movienight' => $movienight,
-            'form' => $form->createView(),
+            'movienight' => $movienight
+        ]);
+    }
+
+    /*
+     *  - page to connect movies to voting / movienight
+     */
+    /**
+     * @param $vid
+     * @return Response
+     * @Route("/movienight/addMovie/{vid<\d+>?}", name="addMovie")
+     */
+    public function addMovieToVote($vid) : Response
+    {
+        if(isset($vid))
+        {
+            dump('Hi');
+        }
+
+        return $this->render('movie_night/addMovie.html.twig', [
+
         ]);
     }
 }
