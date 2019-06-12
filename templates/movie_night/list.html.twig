@@ -9,87 +9,112 @@
 
     <div class="row justify-content-center">
 
-        {% if dates %}
+        {% if movienights %}
 
             <table class="table mytable table-hover">
 
                 <thead>
                     <tr>
-                        <th colspan="1">Termin</th>
-                        <th colspan="auto" class="text-center">Film</th>
-                        <th colspan="1" class="text-center">Aktion</th>
+                        <th scope="col">Termin</th>
+                        <th scope="colgroup" colspan="3" class="text-center">Filme</th>
+                        <th scope="col" class="align-self-end text-center">Aktion</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                {% for date in dates %}
+                {% for movienight in movienights %}
 
                     <tr>
 
-                        <td class="tab-date align-middle">
-                            {{ date.date|date("d.m.Y") }}
-                            <br>
-                            {{ date.time|date("H:i") }}
-                            <br>
-                            {{ date.location }}
+                        <td class="align-middle">
+                            {{ movienight.date|date('d.m.Y') }}
+                            <br />
+                            {{ movienight.time|date('H:i') }}
+                            <br />
+                            {{ movienight.location }}
                         </td>
 
-                        {% if date.movie %}
+                        {% if movienight.voting.movies is empty %}
 
-                            {% for movie in date.voting.movies %}
-                                <td class="tab-poster align-middle text-center">
-                                    {% if(date.movie.poster == 'N/A') %}
-                                        <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
-                                    {% else %}
-                                        <img class="tab-poster"src="{{ date.movie.poster }}">
-                                    {% endif %}
-                                    <br />
-                                    {{ date.movie.title }}
-                                    <br>
-                                    {{ date.movie.year }}
-                                    <br>
-                                    {{ date.movie.runtime }}
-                                </td>
-                            {% endfor %}
+                            <td colspan="3" class="align-middle">Keine Filme vorgeschlagen!</td>
 
                         {% else %}
-                            <td class="align-middle">
-                                Bisher kein Film eingeplant.
-                            </td>
+
+                            {% for i in 0..2 %}
+                                {% if  movienight.voting.movies[i] is defined %}
+
+                                    <td class="tab-content-3 text-center align-middle">
+                                        <img src="{{ movienight.voting.movies[i].poster }}" class="tab-poster">
+                                        <br />
+                                        {{ movienight.voting.movies[i].title }}
+                                    </td>
+
+                                {% else %}
+
+                                    <td class="tab-content-3">
+                                        &nbsp;
+                                    </td>
+
+                                {% endif %}
+
+                            {% endfor %}
+
                         {% endif %}
-                        <td class="tab-button justify-content-center align-middle">
-                            <a href="">
-                                <button class="btn btn-sm btn-secondary tab-button btn-spacing">
-                                    Abstimmen
+
+                        <td class="tab-button">
+
+                            {% if movienight.voting.open %}
+                            <a href="{{ path('voting', {'mnid': movienight.id}) }}">
+                                <button class="btn btn-sm btn-secondary btn-spacing">
+                                    Abstimmen!
                                 </button>
                             </a>
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('edit_movienight', {'id': date.id}) }}">
-                                <button class="btn btn-sm btn-secondary tab-button btn-spacing" type="button">Termin</button>
-                            </a>
-                            <a href="">
-                                <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
-                            </a>
-                            <a href="">
-                                <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
-                            </a>
                             {% endif %}
+
+                            {% if is_granted('ROLE_ADMIN') %}
+
+                                <a href="{{ path('edit_movienight', {'id': movienight.id}) }}">
+                                    <button class="btn btn-sm btn-secondary btn-spacing">
+                                        Termin
+                                    </button>
+                                </a>
+                                <a href="{{ path('addMovie', {'vid': movienight.voting.id}) }}">
+                                    <button class="btn btn-sm btn-secondary btn-spacing">
+                                        Filme
+                                    </button>
+                                </a>
+                                <a href="{{ path('delete_movienight', {'id': movienight.id}) }}">
+                                    <button class="btn btn-sm btn-outline-secondary btn-spacing">
+                                        Löschen
+                                    </button>
+                                </a>
+
+                            {% endif %}
+
                         </td>
+
                     </tr>
+
                 {% endfor %}
+
                 </tbody>
+
             </table>
+
         {% else %}
+
             <div class="container text-center">
                 <h3>Keine Filmabende geplant</h3>
             </div>
             <div class="container text-center margin-top-20">
                 <i class="far fa-sad-tear fa-3x"></i>
             </div>
+
         {% endif %}
 
     </div>
+
 </div>
 
 {% endblock %}

@@ -52,7 +52,14 @@ class MovieNightController extends AbstractController
             }
             else
             {
+                $voting = new Voting();
+                $voting->setOpen(true);
+
+                $movienight->setVoting($voting);
+
+                $manager->persist($voting);
                 $manager->persist($movienight);
+
                 $manager->flush();
                 $this->addFlash('success', 'Termin erstellt!');
 
@@ -76,10 +83,10 @@ class MovieNightController extends AbstractController
     {
         $manager = $this->getDoctrine()->getRepository(MovieNight::class);
 
-        $dates = $manager->findAllByDateAsc();
+        $movienights = $manager->findAllByDateAsc();
 
         return $this->render('movie_night/list.html.twig', [
-            'dates' => $dates
+            'movienights' => $movienights,
         ]);
     }
 
@@ -197,13 +204,14 @@ class MovieNightController extends AbstractController
     /**
      * @param VotingService $votingService
      * @param $mid
+     * @param $mnid
      * @return Response
-     * @Route("/movienight/voting/{mid<\d+>?}", name="voting")
+     * @Route("/movienight/voting/{mnid<\d+>?}/{mid<\d+>?}", name="voting")
      * @IsGranted("ROLE_USER")
      */
-    public function voting(VotingService $votingService, $mid) : Response
+    public function voting(VotingService $votingService, $mnid, $mid) : Response
     {
-        $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
+        $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->find($mnid);
 
         if($movienight)
         {
@@ -217,7 +225,7 @@ class MovieNightController extends AbstractController
 
         if(isset($mid)) {
             $votingService->vote($voting, $mid);
-            return $this->redirectToRoute('voting');
+            return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
         }
 
         return $this->render('movie_night/voting.html.twig', [

@@ -15,11 +15,15 @@
 }
 
 .tab-button {
-    width: 80px;
+    width: 120px;
 }
 
 .tab-date {
-    width: 100px;
+    width: 120px;
+}
+
+.tab-content-3 {
+    width: 220px;
 }
 
 .jumbotron {
@@ -35,6 +39,10 @@
     margin: 2px 0px;
     padding: 6px 0px;
     width: 100%;
+}
+
+.btn-margin {
+    margin: 2px;
 }
 
 .btn-size-form {
