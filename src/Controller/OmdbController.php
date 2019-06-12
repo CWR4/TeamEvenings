@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Entity\MovieNight;
+use App\Entity\Voting;
 use App\Form\AddMovieType;
 use App\Form\MovieFormType;
 use App\Service\OmdbService;
@@ -35,9 +36,9 @@ class OmdbController extends AbstractController
      * @param $title
      * @param $mnid
      * @return Response
-     * @Route("/omdb/{mnid<\d+>?}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
+     * @Route("/omdb/{mnid<\d+>?}/{vid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title, $mnid) : Response
+    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, Voting $vid, $mid, $page, $title, $mnid) : Response
     {
         // Get movienight from db
         $manager = $this->getDoctrine()->getManager();
@@ -48,7 +49,7 @@ class OmdbController extends AbstractController
         $form->handleRequest($request);
 
         // Set parameters for pagination and api call
-        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page];
+        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page, 'vid' => $vid->getId(), 'mid' => $mid];
 
         // Set variables to null, so they won't show if not needed
         $movies = null;
@@ -112,20 +113,20 @@ class OmdbController extends AbstractController
             if($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID()))
             {
                 $movie = $this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
-                $movie->addMovieNight($movienight);
+                $movie->addVoting($vid);
             }
             else
             {
-                $movienight->setMovie($movie);
+                $vid->addMovie($movie);
             }
 
             $manager->persist($movie);
-            $manager->persist($movienight);
+            $manager->persist($vid);
             $manager->flush();
 
             $this->addFlash('success', 'Film erfolgreich hinzugefügt');
 
-            return $this->redirectToRoute('list_movienight');
+            return $this->redirectToRoute('addMovie', ['vid' => $vid->getId()]);
         }
 
         return $this->render('omdb/index.html.twig', [

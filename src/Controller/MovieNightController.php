@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class MovieNightController
  * @package App\Controller
- * @IsGranted("ROLE_USER")
+ * @IsGranted("ROLE_ADMIN")
  */
 
 class MovieNightController extends AbstractController
@@ -70,6 +70,7 @@ class MovieNightController extends AbstractController
      */
     /**
      * @Route("/movienight/all", name="list_movienight")
+     * @IsGranted("ROLE_USER")
      */
     public function listAll() : Response
     {
@@ -196,6 +197,7 @@ class MovieNightController extends AbstractController
      * @param $mid
      * @return Response
      * @Route("/movienight/voting/{mid<\d+>?}", name="voting")
+     * @IsGranted("ROLE_USER")
      */
     public function voting(VotingService $votingService, $mid) : Response
     {

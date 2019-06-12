@@ -49,12 +49,14 @@
                                             <a class="dropdown-item" href="{{ path('voting') }}">
                                                 Abstimmen
                                             </a>
+                                            {% if is_granted('ROLE_ADMIN') %}
                                             <a class="dropdown-item" href="{{ path('movie_night') }}">
                                                 Erstellen
                                             </a>
                                             <a class="dropdown-item" href="{{ path('addMovie', {'vid': 1}) }}">
                                                 AddMovie
                                             </a>
+                                            {% endif %}
                                         </div>
                                     </li>
                                     </div>

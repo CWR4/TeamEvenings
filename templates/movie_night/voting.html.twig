@@ -37,7 +37,7 @@
 
                         <div class="card-body">
 
-                            <img src="{{ movie.poster }}" class="vote-poster">
+                            <img src="{{ movie.poster }}" class="vote-poster" alt="N/A">
 
                             <p class="card-text margin-top-5">
                                 {{ movie.plot }}
@@ -74,11 +74,11 @@
 
                             </div>
 
-                            <div class="col-auto">
+                            <div class="col-3">
 
                                 <a href="{{ path('voting', {'mid': movie.id}) }}">
 
-                                    <button class="btn btn-outline-secondary">
+                                    <button class="btn btn-outline-secondary" style="width: 100%; padding: 6px 0;">
                                         Vote!
                                     </button>
 
@@ -87,6 +87,7 @@
                             </div>
 
                         </div>
+
                     </div>
 
                 </div>
