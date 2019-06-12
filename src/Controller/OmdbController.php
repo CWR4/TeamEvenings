@@ -8,6 +8,7 @@ use App\Entity\Voting;
 use App\Form\AddMovieType;
 use App\Form\MovieFormType;
 use App\Service\OmdbService;
+use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -40,7 +41,7 @@ class OmdbController extends AbstractController
      * @return Response
      * @Route("/omdb/{mnid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, $mid, $page, $title, $mnid) : Response
+    public function addOmdbMovie(OmdbService $omdbService, VotingService $votingService, Request $request, PaginationService $paginationService, $mid, $page, $title, $mnid) : Response
     {
         // Get movienight from db
         $manager = $this->getDoctrine()->getManager();
@@ -127,6 +128,7 @@ class OmdbController extends AbstractController
             {
                 $oldmovie = $manager->getRepository(Movie::class)->find($mid);
                 $movienight->getVoting()->removeMovie($oldmovie);
+                $votingService->deleteVotes($movienight->getVoting(), $oldmovie);
             }
 
             $manager->persist($movie);

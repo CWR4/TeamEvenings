@@ -4,6 +4,7 @@
 namespace App\Service;
 
 
+use App\Entity\MovieNight;
 use App\Entity\Vote;
 use App\Entity\Voting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,7 @@ class VotingService extends AbstractController
     /*
      *  -
      */
-    public function getVotingResult($votingId)
+    public function getVotingResult($votingId) : ?array
     {
         // Get voting by id
         $result['voting'] = $this->getDoctrine()->getManager()->getRepository(Voting::class)->getVoting($votingId);
@@ -22,13 +23,10 @@ class VotingService extends AbstractController
         if($result['voting'])
         {
             $result['votes'] = $this->getVotes($result['voting']);
-        }
-        else
-        {
-            return null;
+            return $result;
         }
 
-        return $result;
+        return null;
     }
 
     /*
@@ -120,5 +118,24 @@ class VotingService extends AbstractController
 
         $this->getDoctrine()->getManager()->persist($voting);
         $this->getDoctrine()->getManager()->flush();
+    }
+
+    public function getVotedMovieId(MovieNight $movieNight) : int
+    {
+        $votes = [];
+
+        foreach ($movieNight->getVoting()->getMovies() as $movie)
+        {
+            $votes[$movie->getId()] = 0;
+        }
+
+        foreach ($movieNight->getVoting()->getVotes() as $vote)
+        {
+            $votes[$vote->getMovie()->getId()]++;
+        }
+
+        $mid = array_keys($votes, max($votes))[0];
+
+        return $mid;
     }
 }
