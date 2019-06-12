@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Vote;
 use App\Entity\Voting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Movie;
 
 class VotingService extends AbstractController
 {
@@ -84,7 +85,7 @@ class VotingService extends AbstractController
      *  - array key => movie id
      *  - value => number of votes for movie
      */
-    private function getVotes(Voting $voting)
+    private function getVotes(Voting $voting) : array
     {
         $votes = [];
 
@@ -99,5 +100,25 @@ class VotingService extends AbstractController
         }
 
         return $votes;
+    }
+
+    /*
+     *  - delete all votes in given voting for given movie
+     *  - in case a movie gets removed from voting
+     */
+    public function deleteVotes(Voting $voting, Movie $movie) : void
+    {
+        $votes = $voting->getVotes();
+
+        foreach ($votes as $vote)
+        {
+            if($vote->getMovie() === $movie)
+            {
+                $voting->removeVote($vote);
+            }
+        }
+
+        $this->getDoctrine()->getManager()->persist($voting);
+        $this->getDoctrine()->getManager()->flush();
     }
 }

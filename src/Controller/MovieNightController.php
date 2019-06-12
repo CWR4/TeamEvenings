@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Entity\Voting;
 use App\Form\MovieNightType;
@@ -189,7 +190,6 @@ class MovieNightController extends AbstractController
 
     /*
      *  - voting page
-     *  - only vote for next upcoming movienight
      */
     /**
      * @param VotingService $votingService
@@ -243,5 +243,23 @@ class MovieNightController extends AbstractController
             'movies' => $movies,
             'movienight' => $movienight,
         ]);
+    }
+
+    /**
+     * @param $vid
+     * @param $mid
+     * @param VotingService $votingService
+     * @return Response
+     * @Route("/movienight/deleteMovie/{vid<\d+>?}/{mid<\d+>?}", name="deleteMovieFromVoting")
+     */
+    public function deleteMovieFromVoting(VotingService $votingService, Voting $vid, Movie $mid) : Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $vid->removeMovie($mid);
+        $votingService->deleteVotes($vid, $mid);
+        $manager->persist($vid);
+        $manager->flush();
+
+        return $this->redirectToRoute('addMovie', ['vid' => 1]);
     }
 }

@@ -35,7 +35,7 @@
                                 {% if(movie.poster == 'N/A') %}
                                     <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
                                 {% else %}
-                                    <img class="tab-poster"src="{{ movie.poster }}">
+                                    <img class="tab-poster" src="{{ movie.poster }}">
                                 {% endif %}
 
                             </td>
@@ -48,22 +48,34 @@
                             </td>
 
                             <td class="tab-button justify-content-center align-middle">
-                                <a href="">
+                                <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id, 'mid': movie.id}) }}">
                                     <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                                 </a>
-                                <a href="">
+                                <a href="{{ path('deleteMovieFromVoting', {'vid': movienight.voting.id, 'mid': movie.id}) }}">
                                     <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
                                 </a>
                             </td>
                         </tr>
                     {% endfor %}
+                    {% if movies|length < 3 %}
+                        <tr>
+                            <td colspan="2" class="align-middle">
+                                Weiteren Film hinzufügen
+                            </td>
+                            <td class="tab-button justify-content-center align-middle">
+                                <a href="">
+                                    <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% else %}
                     <tr>
                         <td colspan="2" class="align-middle">
                             Bisher kein Film eingeplant.
                         </td>
                         <td class="tab-button justify-content-center align-middle">
-                            <a href="">
+                            <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                             </a>
                         </td>
