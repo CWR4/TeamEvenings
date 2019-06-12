@@ -10,6 +10,7 @@ use App\Form\MovieFormType;
 use App\Service\OmdbService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,10 +36,11 @@ class OmdbController extends AbstractController
      * @param $page
      * @param $title
      * @param $mnid
+     * @param $mid
      * @return Response
-     * @Route("/omdb/{mnid<\d+>?}/{vid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
+     * @Route("/omdb/{mnid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, Voting $vid, $mid, $page, $title, $mnid) : Response
+    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, $mid, $page, $title, $mnid) : Response
     {
         // Get movienight from db
         $manager = $this->getDoctrine()->getManager();
@@ -49,7 +51,7 @@ class OmdbController extends AbstractController
         $form->handleRequest($request);
 
         // Set parameters for pagination and api call
-        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page, 'vid' => $vid->getId(), 'mid' => $mid];
+        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page, 'mid' => $mid];
 
         // Set variables to null, so they won't show if not needed
         $movies = null;
@@ -100,6 +102,7 @@ class OmdbController extends AbstractController
 
         // Create form to add movie to event
         $addForm = $this->createForm(AddMovieType::class);
+        $addForm->add('mid', HiddenType::class, ['data' => $mid]);
         $addForm->handleRequest($request);
 
         // Check if form was send
@@ -113,20 +116,26 @@ class OmdbController extends AbstractController
             if($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID()))
             {
                 $movie = $this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
-                $movie->addVoting($vid);
+                $movie->addVoting($movienight->getVoting());
             }
             else
             {
-                $vid->addMovie($movie);
+                $movienight->getVoting()->addMovie($movie);
+            }
+
+            if($addForm->getData()['mid'] !== 0)
+            {
+                $oldmovie = $manager->getRepository(Movie::class)->find($mid);
+                $movienight->getVoting()->removeMovie($oldmovie);
             }
 
             $manager->persist($movie);
-            $manager->persist($vid);
+            $manager->persist($movienight->getVoting());
             $manager->flush();
 
             $this->addFlash('success', 'Film erfolgreich hinzugefügt');
 
-            return $this->redirectToRoute('addMovie', ['vid' => $vid->getId()]);
+            return $this->redirectToRoute('addMovie', ['vid' => $movienight->getVoting()->getId()]);
         }
 
         return $this->render('omdb/index.html.twig', [
