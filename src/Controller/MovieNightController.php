@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
+use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use App\Repository\VotingRepository;
 use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -232,11 +234,14 @@ class MovieNightController extends AbstractController
     {
         if(isset($vid))
         {
-            dump('Hi');
+            $voting = $this->getDoctrine()->getManager()->getRepository(Voting::class)->getVoting($vid);
+            $movies = $voting->getMovies();
+            $movienight = $voting->getMovieNight();
         }
 
         return $this->render('movie_night/addMovie.html.twig', [
-
+            'movies' => $movies,
+            'movienight' => $movienight,
         ]);
     }
 }
