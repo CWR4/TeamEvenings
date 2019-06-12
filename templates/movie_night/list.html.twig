@@ -6,19 +6,27 @@
 
 <!-- list of all movienights if any are planned (as a table) -->
 <div class="container margin-top-20">
+
     <div class="row justify-content-center">
+
         {% if dates %}
+
             <table class="table mytable table-hover">
+
                 <thead>
                     <tr>
-                        <th>Termin</th>
-                        <th colspan="2">Film</th>
-                        <th class="text-center">Bearbeiten</th>
+                        <th colspan="1">Termin</th>
+                        <th colspan="auto" class="text-center">Film</th>
+                        <th colspan="1" class="text-center">Aktion</th>
                     </tr>
                 </thead>
+
                 <tbody>
+
                 {% for date in dates %}
+
                     <tr>
+
                         <td class="tab-date align-middle">
                             {{ date.date|date("d.m.Y") }}
                             <br>
@@ -26,38 +34,47 @@
                             <br>
                             {{ date.location }}
                         </td>
-                        {% if date.movie %}
-                            <td class="tab-poster align-middle text-center">
-                                {% if(date.movie.poster == 'N/A') %}
-                                    <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
-                                {% else %}
-                                    <img class="tab-poster"src="{{ date.movie.poster }}">
-                                {% endif %}
 
-                            </td>
-                            <td class="align-middle">
-                                {{ date.movie.title }}
-                                <br>
-                                {{ date.movie.year }}
-                                <br>
-                                {{ date.movie.runtime }}
-                            </td>
+                        {% if date.movie %}
+
+                            {% for movie in date.voting.movies %}
+                                <td class="tab-poster align-middle text-center">
+                                    {% if(date.movie.poster == 'N/A') %}
+                                        <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
+                                    {% else %}
+                                        <img class="tab-poster"src="{{ date.movie.poster }}">
+                                    {% endif %}
+                                    <br />
+                                    {{ date.movie.title }}
+                                    <br>
+                                    {{ date.movie.year }}
+                                    <br>
+                                    {{ date.movie.runtime }}
+                                </td>
+                            {% endfor %}
+
                         {% else %}
-                            <td colspan="2" class="align-middle">
+                            <td class="align-middle">
                                 Bisher kein Film eingeplant.
                             </td>
                         {% endif %}
                         <td class="tab-button justify-content-center align-middle">
+                            <a href="">
+                                <button class="btn btn-sm btn-secondary tab-button btn-spacing">
+                                    Abstimmen
+                                </button>
+                            </a>
+                            {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('edit_movienight', {'id': date.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button btn-spacing" type="button">Termin</button>
                             </a>
-                        <br>
-                            <a href="{{ path('omdb', {'mnid': date.id}) }}">
+                            <a href="">
                                 <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                             </a>
-                            <a href="{{ path('delete_movienight', {'id': date.id}) }}">
+                            <a href="">
                                 <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
                             </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

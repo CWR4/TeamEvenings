@@ -32,7 +32,9 @@
 }
 
 .btn-spacing {
-    margin: 3px 10px 3px 10px;
+    margin: 2px 0px;
+    padding: 6px 0px;
+    width: 100%;
 }
 
 .btn-size-form {

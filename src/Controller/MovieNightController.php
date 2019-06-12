@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class MovieNightController
  * @package App\Controller
- * @IsGranted("ROLE_ADMIN")
  */
 
 class MovieNightController extends AbstractController
@@ -31,6 +30,7 @@ class MovieNightController extends AbstractController
      * @param Request $request
      * @return Response
      * @Route("/movienight/create", name="movie_night")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createMovieNight(Request $request) : Response
     {
@@ -95,6 +95,7 @@ class MovieNightController extends AbstractController
      * @param $id
      * @return Response
      * @Route("/movienight/edit/{id<\d+>}", name="edit_movienight")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function editMovieNight(Request $request, $id) : Response
     {
@@ -152,6 +153,7 @@ class MovieNightController extends AbstractController
      * @param $id
      * @return Response
      * @Route("/movienight/delete/{id<\d+>?}", name="delete_movienight")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteMovieNight(Request $request, $id) : Response
     {
@@ -231,6 +233,7 @@ class MovieNightController extends AbstractController
      * @param $vid
      * @return Response
      * @Route("/movienight/addMovie/{vid<\d+>?}", name="addMovie")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function addMovieToVote($vid) : Response
     {
@@ -253,6 +256,7 @@ class MovieNightController extends AbstractController
      * @param VotingService $votingService
      * @return Response
      * @Route("/movienight/deleteMovie/{vid<\d+>?}/{mid<\d+>?}", name="deleteMovieFromVoting")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteMovieFromVoting(VotingService $votingService, Voting $vid, Movie $mid) : Response
     {
