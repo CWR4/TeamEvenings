@@ -141,4 +141,16 @@ class VotingService extends AbstractController
 
         return null;
     }
+
+    public function updateMovieNightMovie(MovieNight $movieNight) : void
+    {
+        if($movieNight->getVoting()->getMovies())
+        {
+            $nextMovieId = $this->getVotedMovieId($movieNight);
+            $movieNight->setMovie($this->getDoctrine()->getRepository(Movie::class)->find($nextMovieId));
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($movieNight);
+            $manager->flush();
+        }
+    }
 }

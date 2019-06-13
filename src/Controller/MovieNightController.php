@@ -274,6 +274,11 @@ class MovieNightController extends AbstractController
         $manager->persist($vid);
         $manager->flush();
 
+        if($vid->getMovies() === null)
+        {
+            $vid->getMovieNight()->setMovie(null);
+        }
+
         return $this->redirectToRoute('addMovie', ['vid' => $vid->getId()]);
     }
 }

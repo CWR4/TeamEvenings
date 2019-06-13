@@ -16,27 +16,22 @@ class BaseController extends AbstractController
      *  - displays next event
      */
     /**
+     * @param VotingService $votingService
+     * @return Response
      * @Route("/", name="base")
      */
     public function index(VotingService $votingService) : Response
     {
-        $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
+        $i = 0;
+        do{
+            $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight($i);
+            $i++;
+        } while ( isset($movieNight) && $movieNight->getVoting()->getMovies()->isEmpty());
 
-        dump($movienight);
-
-        if($movienight)
-        {
-            $nextMovieId = $votingService->getVotedMovieId($movienight);
-            $movienight->setMovie($this->getDoctrine()->getRepository(Movie::class)->find($nextMovieId));
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($movienight);
-            $manager->flush();
-
-            $movienight =  $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
-        }
+        $votingService->updateMovieNightMovie($movieNight);
 
         return $this->render('base/index.html.twig', [
-            'movienight' => $movienight,
+            'movienight' => $movieNight,
         ]);
     }
 }
