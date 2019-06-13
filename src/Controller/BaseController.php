@@ -22,6 +22,8 @@ class BaseController extends AbstractController
     {
         $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
 
+        dump($movienight);
+
         if($movienight)
         {
             $nextMovieId = $votingService->getVotedMovieId($movienight);

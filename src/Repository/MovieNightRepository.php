@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\MovieNight;
+use App\Entity\Voting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**

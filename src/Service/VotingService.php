@@ -120,7 +120,7 @@ class VotingService extends AbstractController
         $this->getDoctrine()->getManager()->flush();
     }
 
-    public function getVotedMovieId(MovieNight $movieNight) : int
+    public function getVotedMovieId(MovieNight $movieNight) : ?int
     {
         $votes = [];
 
@@ -134,8 +134,11 @@ class VotingService extends AbstractController
             $votes[$vote->getMovie()->getId()]++;
         }
 
-        $mid = array_keys($votes, max($votes))[0];
+        if($votes)
+        {
+            return array_keys($votes, max($votes))[0];
+        }
 
-        return $mid;
+        return null;
     }
 }

@@ -124,7 +124,7 @@ class OmdbController extends AbstractController
                 $movienight->getVoting()->addMovie($movie);
             }
 
-            if($addForm->getData()['mid'] !== 0)
+            if(!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null))
             {
                 $oldmovie = $manager->getRepository(Movie::class)->find($mid);
                 $movienight->getVoting()->removeMovie($oldmovie);

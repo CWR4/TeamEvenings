@@ -66,7 +66,7 @@
 
                             <td class="tab-button align-middle">
 
-                                {% if movienight.voting.movies is not empty %}
+                                {% if movienight.voting.movies is not empty and movienight.voting.movies|length > 1 %}
                                 <a href="{{ path('voting', {'mnid': movienight.id}) }}">
                                     <button class="btn btn-sm btn-secondary btn-spacing">
                                         Abstimmen!
