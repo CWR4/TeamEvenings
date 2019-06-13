@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Service\VotingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +25,7 @@ class BaseController extends AbstractController
         do{
             $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight($i);
             $i++;
-        } while ( isset($movieNight) && $movieNight->getVoting()->getMovies()->isEmpty());
+        } while ( isset($movieNight) && $movieNight->getVoting() !== null && $movieNight->getVoting()->getMovies()->isEmpty());
 
         $votingService->updateMovieNightMovie($movieNight);
 

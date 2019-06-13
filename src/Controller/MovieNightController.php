@@ -7,7 +7,6 @@ use App\Entity\MovieNight;
 use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
-use App\Repository\VotingRepository;
 use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,11 +41,12 @@ class MovieNightController extends AbstractController
 
         if($dateform->isSubmitted() && $dateform->isValid())
         {
-            if($movienight->getDate()->format('Y.m.d') < date('Y.m.d'))
+            if( $movienight->getDate() !== null && $movienight->getDate()->format('Y.m.d') < date('Y.m.d'))
             {
                 $this->addFlash('warning', 'Datum ist vergangen!');
             }
-            elseif($movienight->getDate()->format('d.m.Y') ===  date('d.m.Y') && $movienight->getTime()->format('H:i') < date('H:i', time() - 900))
+            elseif($movienight->getDate()->format('d.m.Y') ===  date('d.m.Y')
+                && $movienight->getTime()->format('H:i') < date('H:i', time() - 900))
             {
                 $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
             }
@@ -217,15 +217,16 @@ class MovieNightController extends AbstractController
         {
             $voting = $movienight->getVoting();
             $result = $votingService->getVotingResult($voting->getId());
+
+            if(isset($mid, $voting)) {
+                $votingService->vote($voting, $mid);
+                return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
+            }
+
         }
         else
         {
             $result = null;
-        }
-
-        if(isset($mid)) {
-            $votingService->vote($voting, $mid);
-            return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
         }
 
         return $this->render('movie_night/voting.html.twig', [
@@ -248,8 +249,22 @@ class MovieNightController extends AbstractController
         if(isset($vid))
         {
             $voting = $this->getDoctrine()->getManager()->getRepository(Voting::class)->getVoting($vid);
-            $movies = $voting->getMovies();
-            $movienight = $voting->getMovieNight();
+
+            if($voting)
+            {
+                $movies = $voting->getMovies();
+                $movienight = $voting->getMovieNight();
+            }
+            else
+            {
+                $movies = $voting->getMovies();
+                $movienight = $voting->getMovieNight();
+            }
+        }
+        else
+        {
+            $movienight = null;
+            $movies = null;
         }
 
         return $this->render('movie_night/addMovie.html.twig', [
@@ -274,8 +289,7 @@ class MovieNightController extends AbstractController
         $manager->persist($vid);
         $manager->flush();
 
-        if($vid->getMovies() === null)
-        {
+        if($vid->getMovies() === null) {
             $vid->getMovieNight()->setMovie(null);
         }
 

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Entity\MovieNight;
-use App\Entity\Voting;
 use App\Form\AddMovieType;
 use App\Form\MovieFormType;
 use App\Service\OmdbService;
@@ -32,12 +31,13 @@ class OmdbController extends AbstractController
      */
     /**
      * @param OmdbService $omdbService
+     * @param VotingService $votingService
      * @param Request $request
      * @param PaginationService $paginationService
+     * @param $mid
      * @param $page
      * @param $title
      * @param $mnid
-     * @param $mid
      * @return Response
      * @Route("/omdb/{mnid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
@@ -59,7 +59,7 @@ class OmdbController extends AbstractController
         $pagination = null;
 
         // Check if form was submitted and valid OR title is set in url
-        if(($form->isSubmitted() && $form->isValid()) || isset($title))
+        if( isset($title) || ($form->isSubmitted() && $form->isValid()))
         {
             // If form was submitted get new movie title from form and set current page to 1 (for API call)
             if($form->isSubmitted())
