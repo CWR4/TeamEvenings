@@ -184,4 +184,23 @@ class VotingService extends AbstractController
 
         return $movienight;
     }
+
+    /**
+     * @param Voting $voting
+     * @param Movie $movie
+     */
+    public function deleteMovieFromVoting(Voting $voting, Movie $movie): void
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $voting->removeMovie($movie);
+        $this->deleteVotes($voting, $movie);
+        $manager->persist($voting);
+        $manager->flush();
+
+        if ($voting->getMovies() === null) {
+            $voting->getMovieNight()->setMovie(null);
+        }
+
+        $this->addFlash('success', 'Film erfolgreich entfernt!');
+    }
 }

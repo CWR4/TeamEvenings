@@ -165,6 +165,7 @@ class MovieNightController extends AbstractController
      *  - page to connect movies to voting / movienight
      */
     /**
+     * @param VotingService $votingService
      * @param $vid
      * @return Response
      * @Route("/movienight/addMovie/{vid<\d+>?}", name="addMovie")
@@ -195,15 +196,7 @@ class MovieNightController extends AbstractController
      */
     public function deleteMovieFromVoting(VotingService $votingService, Voting $vid, Movie $mid): Response
     {
-        $manager = $this->getDoctrine()->getManager();
-        $vid->removeMovie($mid);
-        $votingService->deleteVotes($vid, $mid);
-        $manager->persist($vid);
-        $manager->flush();
-
-        if ($vid->getMovies() === null) {
-            $vid->getMovieNight()->setMovie(null);
-        }
+        $votingService->deleteMovieFromVoting($vid, $mid);
 
         return $this->redirectToRoute('addMovie', ['vid' => $vid->getId()]);
     }
