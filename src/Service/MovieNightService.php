@@ -75,4 +75,22 @@ class MovieNightService extends AbstractController
         return false;
     }
 
+    /**
+     * @param FormInterface $form
+     * @param MovieNight $movieNight
+     * @return bool
+     */
+    public function deleteMovieNight(FormInterface $form, MovieNight $movieNight): bool
+    {
+        if($form->isSubmitted())
+        {
+            $manager = $this->getDoctrine()->getManager();
+            $manager->remove($movieNight);
+            $manager->flush();
+            $this->addFlash('success', 'Termin erfolgreich gelöscht!');
+            return true;
+        }
+        return false;
+    }
+
 }

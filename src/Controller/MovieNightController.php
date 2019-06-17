@@ -9,7 +9,6 @@ use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
 use App\Service\MovieNightService;
 use App\Service\VotingService;
-use phpDocumentor\Reflection\Types\This;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,7 +96,7 @@ class MovieNightController extends AbstractController
         $editForm = $this->createForm(EditMovieNightType::class, $movieNight);
         $editForm->handleRequest($request);
 
-        if ($movieNightService->editMovieNight($editForm, $movieNight)){
+        if ($movieNightService->editMovieNight($editForm, $movieNight)) {
             return $this->redirectToRoute('list_movienight');
         }
 
@@ -113,35 +112,31 @@ class MovieNightController extends AbstractController
      */
     /**
      * @param Request $request
+     * @param MovieNightService $movieNightService
      * @param $id
      * @return Response
      * @Route("/movienight/delete/{id<\d+>?}", name="delete_movienight")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteMovieNight(Request $request, $id): Response
+    public function deleteMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
 
-        $date = $manager->getRepository(MovieNight::class)->find($id);
+        $movieNight = $manager->getRepository(MovieNight::class)->find($id);
 
         // check if event exists and it's in the future, empty form if event passed
-        if ($date === null ||
-            $date->getDate()->format('Y.m.d') <= date('Y.m.d') ||
-            ($date->getDate()->format('Y.m.d') <= date('Y.m.d') &&
-                $date->getTime()->format('H:i') <= date('H:i'))) {
-            $form = $this->createForm(MovieNightType::class);
+        if ($movieNight === null ||
+            $movieNight->getDate()->format('Y.m.d') < date('Y.m.d') ||
+            ($movieNight->getDate()->format('Y.m.d') <= date('Y.m.d') &&
+                $movieNight->getTime()->format('H:i') <= date('H:i'))) {
             $this->addFlash('warning', 'Termin nicht gefunden');
-        } else {
-            $form = $this->createForm(MovieNightType::class, $date);
+            return $this->redirectToRoute('list_movienight');
         }
 
+        $form = $this->createForm(MovieNightType::class, $movieNight);
         $form->handleRequest($request);
 
-        // check if submitted and delete if so
-        if ($form->isSubmitted()) {
-            $manager->remove($date);
-            $manager->flush();
-
+        if ($movieNightService->deleteMovieNight($form, $movieNight)) {
             return $this->redirectToRoute('list_movienight');
         }
 
