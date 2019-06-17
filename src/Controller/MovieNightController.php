@@ -170,26 +170,18 @@ class MovieNightController extends AbstractController
      * @Route("/movienight/addMovie/{vid<\d+>?}", name="addMovie")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function addMovieToVote($vid): Response
+    public function addMovieToVoting( VotingService $votingService, $vid): Response
     {
-        if (isset($vid)) {
-            $voting = $this->getDoctrine()->getManager()->getRepository(Voting::class)->getVoting($vid);
+        $movienight = $votingService->getMovieAndMovienight($vid);
 
-            if ($voting) {
-                $movies = $voting->getMovies();
-                $movienight = $voting->getMovieNight();
-            } else {
-                $movies = $voting->getMovies();
-                $movienight = $voting->getMovieNight();
-            }
-        } else {
-            $movienight = null;
-            $movies = null;
+        if($movienight['movienight'] === null) {
+            $this->addFlash('warning', 'Filmabend wurde nicht gefunden');
+            return $this->redirectToRoute('list_movienight');
         }
 
         return $this->render('movie_night/addMovie.html.twig', [
-            'movies' => $movies,
-            'movienight' => $movienight,
+            'movies' => $movienight['movies'],
+            'movienight' => $movienight['movienight'],
         ]);
     }
 

@@ -170,15 +170,16 @@ class VotingService extends AbstractController
      * @param $vid
      * @return array
      */
-    public function getMovies($vid): array
+    public function getMovieAndMovienight($vid): array
     {
         $movienight = [
             'movienight' => null,
             'movies' => null
         ];
 
-        if ($vid) {
-
+        if ($vid !== null) {
+            $movienight['movienight'] = $this->getDoctrine()->getRepository(Voting::class)->find($vid)->getMovieNight();
+            $movienight['movies'] = $movienight['movienight']->getVoting()->getMovies();
         }
 
         return $movienight;
