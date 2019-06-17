@@ -1,121 +1,133 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
 
-        <title>
-            {% block title %}
-                MovieTime!
-            {% endblock %}
-        </title>
-
-        {% block stylesheets %}
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-            <link rel="stylesheet" href="{{ asset('css/mycss.css') }}">
+    <title>
+        {% block title %}
+            MovieTime!
         {% endblock %}
+    </title>
 
-    </head>
-    <body>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ asset('css/mycss.css') }}">
+    {% endblock %}
 
-        <!-- Navigation bar -->
-        {% block navigation %}
+</head>
+<body>
 
-            <header>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div class="container">
-                        <a class="navbar-brand" href="{{ path('base') }}">
-                            <i class="fas fa-home" aria-hidden="true"></i>
-                            {{ 'navigation.home'|trans }}
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+<!-- Navigation bar -->
+{% block navigation %}
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('base') }}">
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                    {{ 'navigation.home'|trans }}
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
 
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            {% if app.user %}
-                                <ul class="nav navbar-nav ml-md-auto">
-                                    <div class="dropdown">
-                                    <li class="nav-item  dropdown">
-                                        <a class="nav-link dropdown-toggle" id="movienightDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
-                                            {{ 'navigation.movienight'|trans }}
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    {% if app.user %}
+                        <ul class="nav navbar-nav ml-md-auto">
+                            <div class="dropdown">
+                                <li class="nav-item  dropdown">
+                                    <a class="nav-link dropdown-toggle" id="movienightDropdown" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
+                                        {{ 'navigation.movienight'|trans }}
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="movienightDropdown">
+                                        <a class="dropdown-item" href="{{ path('list_movienight') }}">
+                                            Alle Termine
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="movienightDropdown">
-                                            <a class="dropdown-item" href="{{ path('list_movienight') }}">
-                                                Alle Termine
-                                            </a>
-                                            {% if is_granted('ROLE_ADMIN') %}
+                                        {% if is_granted('ROLE_ADMIN') %}
                                             <a class="dropdown-item" href="{{ path('movie_night') }}">
                                                 Erstellen
                                             </a>
-                                            {% endif %}
-                                        </div>
-                                    </li>
+                                        {% endif %}
                                     </div>
-                                    <!--
-                                    <li class="nav-item">
-                                        <a href="{{ path('list_movienight') }}" class="nav-link disabled">
-                                            <i class="fab fa-d-and-d" aria-hidden="true"></i>
-                                            {{ 'navigation.gamenight'|trans }}
-                                        </a>
-                                    </li>
-                                    -->
-                                </ul>
-                            {% endif %}
+                                </li>
+                            </div>
+                            <!--
+                            <li class="nav-item">
+                                <a href="{{ path('list_movienight') }}" class="nav-link disabled">
+                                    <i class="fab fa-d-and-d" aria-hidden="true"></i>
+                                    {{ 'navigation.gamenight'|trans }}
+                                </a>
+                            </li>
+                            -->
+                        </ul>
+                    {% endif %}
 
-                            <ul class="nav navbar-nav ml-md-auto">
-                                {% if app.user %}
-                                    <li class="nav-item">
-                                        <a href="{{ path('app_logout') }}" class="nav-link">
-                                            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                                            {{ 'navigation.logout'|trans }}
-                                        </a>
-                                    </li>
-                                {% else  %}
-                                    <li class="nav-item">
-                                        <a href="{{ path('app_login') }}" class="nav-link">
-                                            <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
-                                            {{ 'navigation.login'|trans }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </header>
-
-        {% endblock %}
-
-        <!-- Display warning flash messages -->
-        {% for message in app.flashes('warning') %}
-            <div class="container margin-top-20 flash-width-300 text-center">
-                <div class="alert alert-warning" role="alert">
-                    {{ message }}
+                    <ul class="nav navbar-nav ml-md-auto">
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a href="{{ path('app_logout') }}" class="nav-link">
+                                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                    {{ 'navigation.logout'|trans }}
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{{ path('app_login') }}" class="nav-link">
+                                    <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                                    {{ 'navigation.login'|trans }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
-        {% endfor %}
+        </nav>
+    </header>
 
-        <!-- Display success flash messages -->
-        {% for message in app.flashes('success') %}
-            <div class="container margin-top-20 flash-width-300 text-center">
-                <div class="alert alert-success" role="alert">
-                    {{ message }}
-                </div>
-            </div>
-        {% endfor %}
+{% endblock %}
 
-        <!-- Body block -->
-        {% block body %}{% endblock %}
+<!-- Display warning flash messages -->
+{% for message in app.flashes('warning') %}
+    <div class="container margin-top-20 flash-width-300 text-center">
+        <div class="alert alert-warning" role="alert">
+            {{ message }}
+        </div>
+    </div>
+{% endfor %}
 
-        <!-- Javascripts for bootstrap -->
-        {% block javascripts %}
-            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        {% endblock %}
+<!-- Display success flash messages -->
+{% for message in app.flashes('success') %}
+    <div class="container margin-top-20 flash-width-300 text-center">
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    </div>
+{% endfor %}
 
-    </body>
+<!-- Body block -->
+{% block body %}{% endblock %}
+
+<!-- Javascripts for bootstrap -->
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+{% endblock %}
+
+</body>
 </html>

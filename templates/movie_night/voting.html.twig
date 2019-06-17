@@ -2,102 +2,102 @@
 
 {% block body %}
 
-<div class="container text-center margin-top-20">
+    <div class="container text-center margin-top-20">
 
-    {% if movienight %}
+        {% if movienight %}
 
-        <h4>Abstimmen für</h4>
+            <h4>Abstimmen für</h4>
 
-        <h3>
-            {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
-        </h3>
+            <h3>
+                {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
+            </h3>
 
-    {% endif %}
+        {% endif %}
 
-    {% if result %}
+        {% if result %}
 
-        <!-- Show menu -->
-        <div class="row margin-top-20">
+            <!-- Show menu -->
+            <div class="row margin-top-20">
 
-            {% for movie in result.voting.movies %}
+                {% for movie in result.voting.movies %}
 
-                <div class="col">
+                    <div class="col">
 
-                    <div class="card card-top">
+                        <div class="card card-top">
 
-                        <div class="card-header">
+                            <div class="card-header">
 
-                            <h4 class="card-title">
+                                <h4 class="card-title">
 
-                                {{ movie.title }}
+                                    {{ movie.title }}
 
-                            </h4>
+                                </h4>
 
-                        </div>
+                            </div>
 
-                        <div class="card-body">
+                            <div class="card-body">
 
-                            <img src="{{ movie.poster }}" class="vote-poster" alt="N/A">
+                                <img src="{{ movie.poster }}" class="vote-poster" alt="N/A">
 
-                            <p class="card-text margin-top-5">
-                                {{ movie.plot }}
-                            </p>
+                                <p class="card-text margin-top-5">
+                                    {{ movie.plot }}
+                                </p>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
+                {% endfor %}
 
-            {% endfor %}
+            </div>
 
-        </div>
+            <!-- Show votes and vote button -->
+            <div class="row">
 
-        <!-- Show votes and vote button -->
-        <div class="row">
+                {% for movie in result.voting.movies %}
 
-            {% for movie in result.voting.movies %}
+                    <div class="col">
 
-                <div class="col">
+                        <div class="card card-bot">
 
-                    <div class="card card-bot">
+                            <div class="row justify-content-between">
 
-                        <div class="row justify-content-between">
+                                <div class="col-3">
 
-                            <div class="col-3">
+                                    <div class="border border-secondary rounded text-secondary align-content-center vote-score">
 
-                                <div class="border border-secondary rounded text-secondary align-content-center vote-score">
+                                        {{ result.votes[movie.id] }}
 
-                                    {{ result.votes[movie.id] }}
+                                    </div>
+
+                                </div>
+
+                                <div class="col-3">
+
+                                    <a href="{{ path('voting', {'mnid': result.voting.movienight.id,'mid': movie.id}) }}">
+
+                                        <button class="btn btn-outline-secondary" style="width: 100%; padding: 6px 0;">
+                                            Vote!
+                                        </button>
+
+                                    </a>
 
                                 </div>
 
                             </div>
 
-                            <div class="col-3">
-
-                                <a href="{{ path('voting', {'mnid': result.voting.movienight.id,'mid': movie.id}) }}">
-
-                                    <button class="btn btn-outline-secondary" style="width: 100%; padding: 6px 0;">
-                                        Vote!
-                                    </button>
-
-                                </a>
-
-                            </div>
-
                         </div>
 
                     </div>
 
-                </div>
+                {% endfor %}
 
-            {% endfor %}
+            </div>
 
-        </div>
+        {% endif %}
 
-    {% endif %}
-
-</div>
+    </div>
 
 {% endblock %}

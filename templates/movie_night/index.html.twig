@@ -4,30 +4,30 @@
 
 {% block body %}
 
-<!-- Form for creating a new movienight -->
-<div class="container margin-top-20">
-    <div class="row justify-content-around">
-        <div class="col-lg-5 text-center">
-            <div class="jumbotron text-align-center">
-                <h3>Nächster Filmabend:</h3>
-                <hr />
-                {{ form_start(form) }}
-                <div class="row justify-content-center margin-top-20">
-                    {{ form_widget(form.date) }}
+    <!-- Form for creating a new movienight -->
+    <div class="container margin-top-20">
+        <div class="row justify-content-around">
+            <div class="col-lg-5 text-center">
+                <div class="jumbotron text-align-center">
+                    <h3>Nächster Filmabend:</h3>
+                    <hr/>
+                    {{ form_start(form) }}
+                    <div class="row justify-content-center margin-top-20">
+                        {{ form_widget(form.date) }}
+                    </div>
+                    <div class="row justify-content-center margin-top-20">
+                        {{ form_widget(form.time) }}
+                    </div>
+                    <div class="row justify-content-center margin-top-20">
+                        {{ form_widget(form.location) }}
+                        {{ form_rest(form) }}
+                    </div>
+                    <button type="submit" class="margin-top-20 btn btn-secondary">
+                        Termin erstellen
+                    </button>
+                    {{ form_end(form) }}
                 </div>
-                <div class="row justify-content-center margin-top-20">
-                    {{ form_widget(form.time) }}
-                </div>
-                <div class="row justify-content-center margin-top-20">
-                    {{ form_widget(form.location) }}
-                    {{ form_rest(form) }}
-                </div>
-                <button type="submit" class="margin-top-20 btn btn-secondary">
-                    Termin erstellen
-                </button>
-                {{ form_end(form) }}
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

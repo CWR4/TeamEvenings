@@ -3,38 +3,38 @@
 
 {% block body %}
 
-<!-- Form for deleting movienight -->
-<div class="container margin-top-20">
-    <div class="row justify-content-around">
-        <div class="col-lg-5 text-center">
-            <div class="jumbotron text-center">
-                <h3>Eintrag löschen</h3>
-                <hr />
-                {{ form_start(form) }}
-                <div class="row justify-content-center margin-top-20">
-                    {{ form_widget(form.date) }}
-                </div>
-                <div class="row justify-content-center margin-top-20">
-                    {{ form_widget(form.time) }}
-                </div>
-                <div class="row justify-content-center margin-top-20">
-                    {{ form_widget(form.location) }}
-                    {{ form_rest(form) }}
-                </div>
-                <div class="row justify-content-center margin-top-20">
-                    <button type="submit" class="btn btn-danger btn-spacing btn-size-form">
-                        Löschen
-                    </button>
-                    <a href="{{ path('list_movienight') }}">
-                        <button type="button" class="btn btn-secondary btn-spacing btn-margin btn-size-form">
-                            Abbruch
+    <!-- Form for deleting movienight -->
+    <div class="container margin-top-20">
+        <div class="row justify-content-around">
+            <div class="col-lg-5 text-center">
+                <div class="jumbotron text-center">
+                    <h3>Eintrag löschen</h3>
+                    <hr/>
+                    {{ form_start(form) }}
+                    <div class="row justify-content-center margin-top-20">
+                        {{ form_widget(form.date) }}
+                    </div>
+                    <div class="row justify-content-center margin-top-20">
+                        {{ form_widget(form.time) }}
+                    </div>
+                    <div class="row justify-content-center margin-top-20">
+                        {{ form_widget(form.location) }}
+                        {{ form_rest(form) }}
+                    </div>
+                    <div class="row justify-content-center margin-top-20">
+                        <button type="submit" class="btn btn-danger btn-spacing btn-size-form">
+                            Löschen
                         </button>
-                    </a>
+                        <a href="{{ path('list_movienight') }}">
+                            <button type="button" class="btn btn-secondary btn-spacing btn-margin btn-size-form">
+                                Abbruch
+                            </button>
+                        </a>
+                    </div>
+                    {{ form_end(form) }}
                 </div>
-                {{ form_end(form) }}
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
