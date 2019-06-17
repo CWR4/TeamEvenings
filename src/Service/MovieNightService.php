@@ -93,4 +93,17 @@ class MovieNightService extends AbstractController
         return false;
     }
 
+    /**
+     * @return MovieNight|null
+     */
+    public function getNextMovieNight(): ?MovieNight
+    {
+        $i = 0;
+        do{
+            $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight($i);
+            $i++;
+        } while ( isset($movieNight) && $movieNight->getVoting() !== null && $movieNight->getVoting()->getMovies()->isEmpty());
+
+        return $movieNight;
+    }
 }

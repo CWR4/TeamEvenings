@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\MovieNight;
+use App\Service\MovieNightService;
 use App\Service\VotingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,16 +17,13 @@ class BaseController extends AbstractController
      */
     /**
      * @param VotingService $votingService
+     * @param MovieNightService $movieNightService
      * @return Response
      * @Route("/", name="base")
      */
-    public function index(VotingService $votingService) : Response
+    public function index(VotingService $votingService, MovieNightService $movieNightService) : Response
     {
-        $i = 0;
-        do{
-            $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight($i);
-            $i++;
-        } while ( isset($movieNight) && $movieNight->getVoting() !== null && $movieNight->getVoting()->getMovies()->isEmpty());
+        $movieNight = $movieNightService->getNextMovieNight();
 
         $votingService->updateMovieNightMovie($movieNight);
 

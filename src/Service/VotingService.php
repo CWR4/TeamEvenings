@@ -139,9 +139,9 @@ class VotingService extends AbstractController
     /**
      * @param MovieNight $movieNight
      */
-    public function updateMovieNightMovie(MovieNight $movieNight): void
+    public function updateMovieNightMovie(?MovieNight $movieNight): void
     {
-        if ($movieNight->getVoting()->getMovies()) {
+        if ($movieNight !== null) {
             $nextMovieId = $this->getVotedMovieId($movieNight);
             $movieNight->setMovie($this->getDoctrine()->getRepository(Movie::class)->find($nextMovieId));
             $manager = $this->getDoctrine()->getManager();
