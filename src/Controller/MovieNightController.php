@@ -83,16 +83,13 @@ class MovieNightController extends AbstractController
      */
     public function editMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
-        $manager = $this->getDoctrine()->getManager();
-        $movieNight = $manager->getRepository(MovieNight::class)->find($id);
+        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($id);
 
-        // check if event was found in database -> flash message if not and redirection
         if ($movieNight === null) {
             $this->addFlash('warning', 'Termin wurde nicht gefunden');
             return $this->redirectToRoute('list_movienight');
         }
 
-        // create form and hand data from object to it
         $editForm = $this->createForm(EditMovieNightType::class, $movieNight);
         $editForm->handleRequest($request);
 
@@ -120,15 +117,9 @@ class MovieNightController extends AbstractController
      */
     public function deleteMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
-        $manager = $this->getDoctrine()->getManager();
+        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($id);
 
-        $movieNight = $manager->getRepository(MovieNight::class)->find($id);
-
-        // check if event exists and it's in the future, empty form if event passed
-        if ($movieNight === null ||
-            $movieNight->getDate()->format('Y.m.d') < date('Y.m.d') ||
-            ($movieNight->getDate()->format('Y.m.d') <= date('Y.m.d') &&
-                $movieNight->getTime()->format('H:i') <= date('H:i'))) {
+        if ($movieNight === null) {
             $this->addFlash('warning', 'Termin nicht gefunden');
             return $this->redirectToRoute('list_movienight');
         }
@@ -145,9 +136,6 @@ class MovieNightController extends AbstractController
         ]);
     }
 
-    /*
-     *  - voting page
-     */
     /**
      * @param VotingService $votingService
      * @param $mid
@@ -160,17 +148,11 @@ class MovieNightController extends AbstractController
     {
         $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->find($mnid);
 
-        if ($movienight) {
-            $voting = $movienight->getVoting();
-            $result = $votingService->getVotingResult($voting->getId());
+        $result = $votingService->getResult($mnid);
 
-            if (isset($mid, $voting)) {
-                $votingService->vote($voting, $mid);
-                return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
-            }
-
-        } else {
-            $result = null;
+        if (isset($mid)) {
+            $votingService->vote($mnid, $mid);
+            return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
         }
 
         return $this->render('movie_night/voting.html.twig', [

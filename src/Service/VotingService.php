@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\MovieNight;
 use App\Entity\Vote;
@@ -12,16 +10,16 @@ use App\Entity\Movie;
 
 class VotingService extends AbstractController
 {
-    /*
-     *  -
+    /**
+     * @param $votingId
+     * @return array|null
      */
-    public function getVotingResult($votingId) : ?array
+    public function getVotingResult($votingId): ?array
     {
         // Get voting by id
         $result['voting'] = $this->getDoctrine()->getManager()->getRepository(Voting::class)->getVoting($votingId);
 
-        if($result['voting'])
-        {
+        if ($result['voting']) {
             $result['votes'] = $this->getVotes($result['voting']);
             return $result;
         }
@@ -29,18 +27,16 @@ class VotingService extends AbstractController
         return null;
     }
 
-    /*
-     *  - vote
+    /**
+     * @param $mnid
+     * @param $mid
      */
-    public function vote(Voting $voting, $mid) : void
+    public function vote($mnid, $mid): void
     {
-        if(!$this->hasVoted($voting->getVotes()))
-        {
-            foreach($voting->getMovies() as $movie)
-            {
-                dump($movie);
-                if($movie->getId() ===(int)$mid)
-                {
+        $voting = $this->getDoctrine()->getRepository(MovieNight::class)->find($mnid)->getVoting();
+        if (!$this->hasVoted($voting->getVotes())) {
+            foreach ($voting->getMovies() as $movie) {
+                if ($movie->getId() === (int)$mid) {
                     $vote = new Vote();
                     $vote->setUser($this->getUser());
                     $vote->setMovie($movie);
@@ -56,19 +52,17 @@ class VotingService extends AbstractController
         }
     }
 
-    /*
-     *  - checks if user already voted and add flash message
+    /**
+     * @param $votes
+     * @return bool
      */
-    private function hasVoted($votes) : bool
+    private function hasVoted($votes): bool
     {
         $user = $this->getUser();
 
-        if($votes)
-        {
-            foreach($votes as $vote)
-            {
-                if($user === $vote->getUser())
-                {
+        if ($votes) {
+            foreach ($votes as $vote) {
+                if ($user === $vote->getUser()) {
                     $this->addFlash('warning', 'Sie haben bereits abgestimmt');
                     return true;
                 }
@@ -78,22 +72,19 @@ class VotingService extends AbstractController
         return false;
     }
 
-    /*
-     *  - creates array
-     *  - array key => movie id
-     *  - value => number of votes for movie
+    /**
+     * @param Voting $voting
+     * @return array
      */
-    private function getVotes(Voting $voting) : array
+    private function getVotes(Voting $voting): array
     {
         $votes = [];
 
-        foreach ($voting->getMovies() as $movie)
-        {
+        foreach ($voting->getMovies() as $movie) {
             $votes[$movie->getId()] = 0;
         }
 
-        foreach ($voting->getVotes() as $vote)
-        {
+        foreach ($voting->getVotes() as $vote) {
             $votes[$vote->getMovie()->getId()]++;
         }
 
@@ -104,14 +95,16 @@ class VotingService extends AbstractController
      *  - delete all votes in given voting for given movie
      *  - in case a movie gets removed from voting
      */
-    public function deleteVotes(Voting $voting, Movie $movie) : void
+    /**
+     * @param Voting $voting
+     * @param Movie $movie
+     */
+    public function deleteVotes(Voting $voting, Movie $movie): void
     {
         $votes = $voting->getVotes();
 
-        foreach ($votes as $vote)
-        {
-            if($vote->getMovie() === $movie)
-            {
+        foreach ($votes as $vote) {
+            if ($vote->getMovie() === $movie) {
                 $voting->removeVote($vote);
             }
         }
@@ -120,37 +113,74 @@ class VotingService extends AbstractController
         $this->getDoctrine()->getManager()->flush();
     }
 
-    public function getVotedMovieId(MovieNight $movieNight) : ?int
+    /**
+     * @param MovieNight $movieNight
+     * @return int|null
+     */
+    public function getVotedMovieId(MovieNight $movieNight): ?int
     {
         $votes = [];
 
-        foreach ($movieNight->getVoting()->getMovies() as $movie)
-        {
+        foreach ($movieNight->getVoting()->getMovies() as $movie) {
             $votes[$movie->getId()] = 0;
         }
 
-        foreach ($movieNight->getVoting()->getVotes() as $vote)
-        {
+        foreach ($movieNight->getVoting()->getVotes() as $vote) {
             $votes[$vote->getMovie()->getId()]++;
         }
 
-        if($votes)
-        {
+        if ($votes) {
             return array_keys($votes, max($votes))[0];
         }
 
         return null;
     }
 
-    public function updateMovieNightMovie(MovieNight $movieNight) : void
+    /**
+     * @param MovieNight $movieNight
+     */
+    public function updateMovieNightMovie(MovieNight $movieNight): void
     {
-        if($movieNight->getVoting()->getMovies())
-        {
+        if ($movieNight->getVoting()->getMovies()) {
             $nextMovieId = $this->getVotedMovieId($movieNight);
             $movieNight->setMovie($this->getDoctrine()->getRepository(Movie::class)->find($nextMovieId));
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($movieNight);
             $manager->flush();
         }
+    }
+
+    /**
+     * @param $mnid
+     * @return array|null
+     */
+    public function getResult($mnid): ?array
+    {
+        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($mnid);
+
+        if ($movieNight) {
+            $voting = $movieNight->getVoting();
+            return $this->getVotingResult($voting->getId());
+        }
+        $this->addFlash('warning', 'Filmabend nicht gefunden!');
+        return null;
+    }
+
+    /**
+     * @param $vid
+     * @return array
+     */
+    public function getMovies($vid): array
+    {
+        $movienight = [
+            'movienight' => null,
+            'movies' => null
+        ];
+
+        if ($vid) {
+
+        }
+
+        return $movienight;
     }
 }
