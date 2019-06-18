@@ -1,0 +1,37 @@
+<ul class="nav navbar-nav">
+    <li class="nav-item  dropdown">
+        <a class="nav-link dropdown-toggle pointer" id="movienightDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
+            {{ 'navigation.movienight'|trans }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="movienightDropdown">
+            <a class="dropdown-item" href="{{ path('list_movienight') }}">
+                Alle Termine
+            </a>
+            <a class="dropdown-item" href="{{ path('movie_night') }}">
+                Erstellen
+            </a>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled not-active"  title="One day...">
+            <i class="fab fa-d-and-d" aria-hidden="true"></i>
+            {{ 'navigation.gamenight'|trans }}
+        </a>
+    </li>
+</ul>
+<ul class="nav navbar-nav ml-md-auto">
+    <li class="nav-item">
+        <a href="{{ path('app_register') }}" class="nav-link">
+            <i class="fas fa-users-cog"></i>
+            Nutzer anlegen
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ path('app_logout') }}" class="nav-link">
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+            {{ 'navigation.logout'|trans }}
+        </a>
+    </li>
+</ul>

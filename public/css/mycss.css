@@ -2,6 +2,11 @@
     margin-top: 20px;
 }
 
+.margin-top-only {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
 .margin-top-5 {
     margin-top: 10px;
 }
@@ -69,4 +74,14 @@
 .vote-score {
     height: 100%;
     padding: 6px 0px;
+}
+
+.not-active {
+    pointer-events: stroke;
+    cursor: pointer;
+    visibility: visible;
+}
+
+.pointer {
+    cursor: pointer;
 }
