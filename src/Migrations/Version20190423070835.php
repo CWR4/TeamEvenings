@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190521083802 extends AbstractMigration
+final class Version20190423070835 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,10 +22,7 @@ final class Version20190521083802 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE movie_night ADD movie_id_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE movie_night ADD CONSTRAINT FK_6F98150B10684CB FOREIGN KEY (movie_id_id) REFERENCES movie (id)');
-        $this->addSql('CREATE INDEX IDX_6F98150B10684CB ON movie_night (movie_id_id)');
-        $this->addSql('ALTER TABLE movie CHANGE poster poster VARCHAR(255) DEFAULT NULL');
+        $this->addSql('CREATE TABLE movies (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, imdb_id VARCHAR(255) NOT NULL, year VARCHAR(255) NOT NULL, runtime VARCHAR(255) DEFAULT NULL, poster LONGBLOB DEFAULT NULL, plot VARCHAR(1000) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
     }
 
     public function down(Schema $schema) : void
@@ -33,9 +30,6 @@ final class Version20190521083802 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE movie CHANGE poster poster VARCHAR(512) DEFAULT NULL COLLATE utf8mb4_unicode_ci');
-        $this->addSql('ALTER TABLE movie_night DROP FOREIGN KEY FK_6F98150B10684CB');
-        $this->addSql('DROP INDEX IDX_6F98150B10684CB ON movie_night');
-        $this->addSql('ALTER TABLE movie_night DROP movie_id_id');
+        $this->addSql('DROP TABLE movies');
     }
 }
