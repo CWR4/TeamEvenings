@@ -9,18 +9,17 @@
 
         <div class="row justify-content-center">
 
-            {% if movienights %}
+            {% if is_granted('ROLE_ADMIN') or movienights[0].voting.movies is not empty %}
 
                 <table class="table mytable table-hover">
 
                     <thead>
                     <tr>
-                        <th scope="col">Termin</th>
+                        <th scope="col" class="tab-date">Termin</th>
                         <th scope="colgroup" colspan="3" class="text-center">Filme</th>
                         <th scope="col" class="align-self-end text-center">Aktion</th>
                     </tr>
                     </thead>
-
                     <tbody>
 
                     {% for movienight in movienights %}
@@ -39,27 +38,22 @@
 
                                 {% if movienight.voting.movies is empty %}
 
-                                    <td colspan="3" class="align-middle">Keine Filme vorgeschlagen!</td>
+                                    <td colspan="3" class="align-middle text-center">Keine Filme vorgeschlagen!</td>
 
                                 {% else %}
 
                                     {% for i in 0..2 %}
                                         {% if  movienight.voting.movies[i] is defined %}
-
                                             <td class="tab-content-3 text-center align-middle">
                                                 <img src="{{ movienight.voting.movies[i].poster }}" class="tab-poster">
                                                 <br/>
                                                 {{ movienight.voting.movies[i].title }}
                                             </td>
-
                                         {% else %}
-
                                             <td class="tab-content-3">
                                                 &nbsp;
                                             </td>
-
                                         {% endif %}
-
                                     {% endfor %}
 
                                 {% endif %}
