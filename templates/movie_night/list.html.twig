@@ -6,13 +6,9 @@
 
     <!-- list of all movienights if any are planned (as a table) -->
     <div class="container margin-top-20">
-
         <div class="row justify-content-center">
-
-            {% if is_granted('ROLE_ADMIN') or movienights[0].voting.movies is not empty %}
-
+            {% if (is_granted('ROLE_ADMIN') and movienights is not empty) or (movienights is not empty and movienights[0].voting.movies is not empty) %}
                 <table class="table mytable table-hover">
-
                     <thead>
                     <tr>
                         <th scope="col" class="tab-date">Termin</th>
@@ -21,13 +17,9 @@
                     </tr>
                     </thead>
                     <tbody>
-
                     {% for movienight in movienights %}
-
                         {% if movienight.voting.movies is not empty or is_granted('ROLE_ADMIN') %}
-
                             <tr>
-
                                 <td class="align-middle">
                                     {{ movienight.date|date('d.m.Y') }}
                                     <br/>
@@ -35,13 +27,9 @@
                                     <br/>
                                     {{ movienight.location }}
                                 </td>
-
                                 {% if movienight.voting.movies is empty %}
-
                                     <td colspan="3" class="align-middle text-center">Keine Filme vorgeschlagen!</td>
-
                                 {% else %}
-
                                     {% for i in 0..2 %}
                                         {% if  movienight.voting.movies[i] is defined %}
                                             <td class="tab-content-3 text-center align-middle">
@@ -55,11 +43,9 @@
                                             </td>
                                         {% endif %}
                                     {% endfor %}
-
                                 {% endif %}
-
+                                {% if is_granted('ROLE_ADMIN') or movienight.voting.movies|length > 1 %}
                                 <td class="tab-button align-middle">
-
                                     {% if movienight.voting.movies is not empty and movienight.voting.movies|length > 1 %}
                                         <a href="{{ path('voting', {'mnid': movienight.id}) }}">
                                             <button class="btn btn-sm btn-secondary btn-spacing">
@@ -67,9 +53,7 @@
                                             </button>
                                         </a>
                                     {% endif %}
-
                                     {% if is_granted('ROLE_ADMIN') %}
-
                                         <a href="{{ path('edit_movienight', {'id': movienight.id}) }}">
                                             <button class="btn btn-sm btn-secondary btn-spacing">
                                                 Termin
@@ -85,34 +69,27 @@
                                                 Löschen
                                             </button>
                                         </a>
-
                                     {% endif %}
-
                                 </td>
+                                {% else%}
+                                    <td class="tab-button">
 
+                                    </td>
+                                {% endif %}
                             </tr>
-
                         {% endif %}
-
                     {% endfor %}
-
                     </tbody>
-
                 </table>
-
             {% else %}
-
                 <div class="container text-center">
                     <h3>Keine Filmabende geplant</h3>
                 </div>
                 <div class="container text-center margin-top-20">
                     <i class="far fa-sad-tear fa-3x"></i>
                 </div>
-
             {% endif %}
-
         </div>
-
     </div>
 
 {% endblock %}

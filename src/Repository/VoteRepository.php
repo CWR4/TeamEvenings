@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Vote;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -45,5 +46,15 @@ class VoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
             ;
+    }
+
+    public function deleteVotes(User $user): void
+    {
+        $this->createQueryBuilder('vote')
+            ->delete()
+            ->where('vote.User = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
     }
 }

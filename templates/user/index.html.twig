@@ -3,18 +3,41 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="container margin-top-20">
+        <div class="row justify-content-center">
+            <table class="table mytable table-hover col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            Nutzername
+                        </th>
+                        <th scope="col" class="col-lg-auto tab-button text-center">
+                            Aktion
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td class="align-middle">
+                            {{ user.username }}
+                        </td>
+                        <td class="align-middle">
+                            <button class="btn btn-sm btn-secondary btn-margin tab-button">
+                                Bearbeiten
+                            </button>
+                            <a href="{{ path('delete_user', {'userid': user.id}) }}">
+                                <button class="btn btn-sm btn-outline-secondary btn-margin tab-button">
+                                    Löschen
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/chrischan/PhpstormProjects/SymfonyProjects/TeamEvenings/src/Controller/UserController.php'|file_link(0) }}">src/Controller/UserController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/chrischan/PhpstormProjects/SymfonyProjects/TeamEvenings/templates/user/index.html.twig'|file_link(0) }}">templates/user/index.html.twig</a></code></li>
-    </ul>
-</div>
 {% endblock %}

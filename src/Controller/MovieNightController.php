@@ -61,6 +61,8 @@ class MovieNightController extends AbstractController
 
         $movienights = $manager->findAllByDateAsc();
 
+        dump($movienights);
+
         return $this->render('movie_night/list.html.twig', [
             'movienights' => $movienights,
         ]);
