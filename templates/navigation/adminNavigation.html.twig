@@ -22,11 +22,22 @@
     </li>
 </ul>
 <ul class="nav navbar-nav ml-md-auto">
-    <li class="nav-item">
-        <a href="{{ path('app_register') }}" class="nav-link">
-            <i class="fas fa-users-cog"></i>
-            Nutzer anlegen
+    <li class="nav-item  dropdown">
+        <a class="nav-link dropdown-toggle pointer" id="userAdministrationDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            Nutzerverwaltung
         </a>
+        <div class="dropdown-menu" aria-labelledby="userAdministrationDropdown">
+            <a href="{{ path('app_register') }}" class="dropdown-item">
+                <i class="fas fa-user-plus"></i>
+                Nutzer anlegen
+            </a>
+            <a href="{{ path('app_register') }}" class="dropdown-item">
+                <i class="fas fa-users-cog"></i>
+                Nutzer bearbeiten
+            </a>
+        </div>
     </li>
     <li class="nav-item">
         <a href="{{ path('app_logout') }}" class="nav-link">
