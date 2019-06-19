@@ -20,13 +20,12 @@ class UserFixtures extends Fixture
     {
         $userAdmin = new User();
         $userAdmin->setUsername('CWR');
-        $userAdmin->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+        $userAdmin->setRoles(['ROLE_ADMIN']);
         $passwordAdmin = $this->encoder->encodePassword($userAdmin, '4');
         $userAdmin->setPassword($passwordAdmin);
 
         $userDummy = new User();
         $userDummy->setUsername('user1');
-        $userDummy->setRoles(['ROLE_USER']);
         $passwordDummy = $this->encoder->encodePassword($userDummy, 'user1');
         $userDummy->setPassword($passwordDummy);
 
