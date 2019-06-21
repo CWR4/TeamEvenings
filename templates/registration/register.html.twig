@@ -6,21 +6,25 @@
 
     <div class="container margin-top-20 text-center">
         <div class="row justify-content-center">
-            <div class="jumbotron col-lg-4 col-lg-offset-4">
-                <h3>Nutzer anlegen</h3>
-                {{ form_start(registrationForm) }}
-                <div class="row margin-top-20 justify-content-center">
-                    Nutzername
-                    {{ form_errors(registrationForm.username) }}
-                    {{ form_widget(registrationForm.username, {'attr': {'style': 'text-align: center;'}}) }}
+            <div class="card">
+                <div class="card-header">
+                    <h3>Nutzer anlegen</h3>
                 </div>
-                <div class="row margin-top-20 justify-content-center" style="text-align: center;">
-                    Passwort
-                    {{ form_errors(registrationForm.plainPassword) }}
-                    {{ form_widget(registrationForm.plainPassword, {'attr': {'style': 'text-align: center;'}}) }}
+                <div class="card-body">
+                    {{ form_start(registrationForm) }}
+                    <div class="row justify-content-center">
+                        Nutzername
+                        {{ form_errors(registrationForm.username) }}
+                        {{ form_widget(registrationForm.username, {'attr': {'style': 'text-align: center; width: 80%;'}}) }}
+                    </div>
+                    <div class="row margin-top-20 justify-content-center" style="text-align: center;">
+                        Passwort
+                        {{ form_errors(registrationForm.plainPassword) }}
+                        {{ form_widget(registrationForm.plainPassword, {'attr': {'style': 'text-align: center; width: 80%;'}}) }}
+                    </div>
+                    <button class="btn btn-sm btn-secondary margin-top-20 tab-button">Anlegen</button>
+                    {{ form_end(registrationForm) }}
                 </div>
-                <button class="btn btn-secondary margin-top-20">Anlegen</button>
-                {{ form_end(registrationForm) }}
             </div>
         </div>
     </div>
