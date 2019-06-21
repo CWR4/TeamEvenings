@@ -21,13 +21,14 @@
                             {{ user.username }}
                         </td>
                         <td class="tab-button text-center">
-                            <a href="#">
+                            <a href="{{ path('change_username', {'user': user.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button">
                                     Ändern
                                 </button>
                             </a>
                         </td>
                     </tr>
+                    {% if user.roles[0] != 'ROLE_ADMIN' %}
                     <tr>
                         <th class="align-middle">
                             Rolle
@@ -47,6 +48,7 @@
                             </a>
                         </td>
                     </tr>
+                    {% endif %}
                     <tr>
                         <th colspan="2" class="align-middle">
                             Passwort

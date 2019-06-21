@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Vote;
+use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -73,6 +74,37 @@ class UserController extends AbstractController
     {
         return $this->render('user/editUser.html.twig', [
             'user' => $id
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     * @Route("/user/changeusername/{user<\d+>?0}", name="change_username")
+     */
+    public function changeUsername(Request $request, User $user): Response
+    {
+        $form = $this->createForm(ChangeUsernameType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $manager = $this->getDoctrine()->getManager();
+
+            $user->setUsername($form->getData()->getUsername());
+
+            $manager->persist($user);
+            $manager->flush();
+
+            $this->addFlash('success', 'Nutzername geändert!');
+
+            return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+        }
+
+        return $this->render('user/changeUsername.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
         ]);
     }
 }
