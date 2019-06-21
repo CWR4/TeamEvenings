@@ -107,4 +107,17 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     * @Route("/user/changerole/{user<\d+>?}", name="change_role")
+     */
+    public function changeRole(Request $request, User $user): Response
+    {
+        return $this->render('user/changeRole.html.twig', [
+            'user' => $user,
+        ]);
+    }
 }
