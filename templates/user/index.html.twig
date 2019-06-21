@@ -28,22 +28,21 @@
                         </td>
                         <td class="align-middle">
                             {% if user.roles is not empty %}
-                                {% for role in user.roles %}
-                                    {% if role == 'ROLE_ADMIN' %}
-                                        Administrator
-                                    {% endif %}
-                                    <br/>
-                                {% endfor %}
+                                {% if user.roles[0] == 'ROLE_ADMIN' %}
+                                    Administrator
+                                {% endif %}
                             {% else %}
                                 Standardnutzer
                             {% endif %}
                         </td>
                         <td class="align-middle">
-                            <button class="btn btn-sm btn-secondary btn-margin tab-button">
-                                Bearbeiten
-                            </button>
+                            <a href="{{ path('edit_user', {'id': user.id}) }}">
+                                <button class="btn btn-sm btn-secondary btn-margin tab-button">
+                                    Bearbeiten
+                                </button>
+                            </a>
                             {% if app.user.id != user.id %}
-                                <a href="{{ path('delete_user', {'userid': user.id}) }}">
+                                <a href="{{ path('delete_user', {'userId': user.id}) }}">
                                     <button class="btn btn-sm btn-outline-secondary btn-margin tab-button">
                                         Löschen
                                     </button>

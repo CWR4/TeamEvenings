@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        <div class="card">
+            <div class="card-header text-center">
+                Wollen sie diesen Nutzer wirklich löschen?
+            </div>
+            <div class="card-body">
+
+                {{ form_start(form) }}
+                <div class="row justify-content-between">
+                    <button type="submit" class="btn btn-sm btn-danger tab-button">
+                        Löschen!
+                    </button>
+                    <a href="{{ path('all_user') }}">
+                        <button type="button" class="btn btn-sm btn-secondary tab-button">
+                            Abbruch
+                        </button>
+                    </a>
+                </div>
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

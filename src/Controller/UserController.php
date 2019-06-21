@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Vote;
+use App\Form\DeleteUserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,29 +26,49 @@ class UserController extends AbstractController
     {
         $users = $this->getDoctrine()->getRepository(User::class)->getAllUser();
 
-        dump($users);
-
         return $this->render('user/index.html.twig', [
             'users' => $users,
         ]);
     }
 
     /**
+     * @param Request $request
+     * @param $userId
      * @return Response
-     * @Route("/deleteuser/{userid<\d+>?}", name="delete_user")
+     * @Route("/deleteuser/{userId<\d+>?}", name="delete_user")
      */
-    public function deleteUser($userid): Response
+    public function deleteUser(Request $request, $userId): Response
     {
-        if($userid !== null)
+        $deleteForm = $this->createForm(DeleteUserType::class);
+        $deleteForm->handleRequest($request);
+
+        if($deleteForm->isSubmitted())
         {
             $manager = $this->getDoctrine()->getManager();
-            $user = $this->getDoctrine()->getRepository(User::class)->find($userid);
+            $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
             $this->getDoctrine()->getRepository(Vote::class)->deleteVotes($user);
             $manager->remove($user);
             $manager->flush();
             $this->addFlash('success', 'Nutzer gelöscht');
+
+            return $this->redirectToRoute('all_user');
         }
 
-        return $this->redirectToRoute('all_user');
+        return $this->render('user/deleteUser.html.twig', [
+            'form' => $deleteForm->createView(),
+        ]);
+
+    }
+
+    /**
+     * @param User $id
+     * @return Response
+     * @Route("/user/edit/{id<\d+>?}", name="edit_user")
+     */
+    public function editUser(User $id): Response
+    {
+        return $this->render('user/editUser.html.twig', [
+            'user' => $id
+        ]);
     }
 }
