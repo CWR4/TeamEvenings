@@ -7,6 +7,7 @@ use App\Entity\Vote;
 use App\Form\DeleteUserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,12 +41,13 @@ class UserController extends AbstractController
     public function deleteUser(Request $request, $userId): Response
     {
         $deleteForm = $this->createForm(DeleteUserType::class);
+        $deleteForm->add('id', HiddenType::class, ['data' => $userId]);
         $deleteForm->handleRequest($request);
 
         if($deleteForm->isSubmitted())
         {
             $manager = $this->getDoctrine()->getManager();
-            $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+            $user = $this->getDoctrine()->getRepository(User::class)->find($deleteForm->getData());
             $this->getDoctrine()->getRepository(Vote::class)->deleteVotes($user);
             $manager->remove($user);
             $manager->flush();
