@@ -27,10 +27,8 @@
                             {{ user.username }}
                         </td>
                         <td class="align-middle">
-                            {% if user.roles is not empty %}
-                                {% if user.roles[0] == 'ROLE_ADMIN' %}
-                                    Administrator
-                                {% endif %}
+                            {% if user.roles is not empty and user.roles[0] == 'ROLE_ADMIN' %}
+                                Administrator
                             {% else %}
                                 Standardnutzer
                             {% endif %}

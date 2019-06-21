@@ -40,6 +40,7 @@ class UserController extends AbstractController
      */
     public function deleteUser(Request $request, $userId): Response
     {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $deleteForm = $this->createForm(DeleteUserType::class);
         $deleteForm->add('id', HiddenType::class, ['data' => $userId]);
         $deleteForm->handleRequest($request);
@@ -58,6 +59,7 @@ class UserController extends AbstractController
 
         return $this->render('user/deleteUser.html.twig', [
             'form' => $deleteForm->createView(),
+            'user' => $user,
         ]);
 
     }
