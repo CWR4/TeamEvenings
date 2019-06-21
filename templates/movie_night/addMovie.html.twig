@@ -49,10 +49,14 @@
 
                                 <td class="tab-button justify-content-center align-middle">
                                     <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id, 'mid': movie.id}) }}">
-                                        <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                                        <button class="btn btn-sm btn-secondary tab-button btn-spacing">
+                                            Film
+                                        </button>
                                     </a>
                                     <a href="{{ path('deleteMovieFromVoting', {'vid': movienight.voting.id, 'mid': movie.id}) }}">
-                                        <button class="btn btn-sm tab-button btn-spacing">Löschen</button>
+                                        <button class="btn btn-sm btn-outline-secondary tab-button btn-spacing">
+                                            Löschen
+                                        </button>
                                     </a>
                                 </td>
                             </tr>

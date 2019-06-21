@@ -9,7 +9,7 @@
         <div class="card text-center">
             <form method="post">
                 <div class="card-header">
-                    <h1 class="h3 font-weight-normal">{{ 'login.message'|trans }}</h1>
+                    <h3 class="h3 font-weight-normal no-margin">{{ 'login.message'|trans }}</h3>
                 </div>
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

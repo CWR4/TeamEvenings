@@ -8,24 +8,27 @@
     <div class="container margin-top-20">
         <div class="row justify-content-around">
             <div class="col-lg-5 text-center">
-                <div class="jumbotron text-align-center">
-                    <h3>Nächster Filmabend:</h3>
-                    <hr/>
-                    {{ form_start(form) }}
-                    <div class="row justify-content-center margin-top-20">
-                        {{ form_widget(form.date) }}
+                <div class="card text-align-center">
+                    <div class="card-header">
+                        <h3 class="no-margin">Nächster Filmabend:</h3>
                     </div>
-                    <div class="row justify-content-center margin-top-20">
-                        {{ form_widget(form.time) }}
-                    </div>
-                    <div class="row justify-content-center margin-top-20">
-                        {{ form_widget(form.location) }}
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                        <div class="row justify-content-center">
+                            {{ form_widget(form.date) }}
+                        </div>
+                        <div class="row justify-content-center margin-top-20">
+                            {{ form_widget(form.time) }}
+                        </div>
+                        <div class="row justify-content-center margin-top-20">
+                            {{ form_widget(form.location) }}
+                        </div>
+                        <button type="submit" class="margin-top-20 btn btn-secondary">
+                            Termin erstellen
+                        </button>
                         {{ form_rest(form) }}
+                        {{ form_end(form) }}
                     </div>
-                    <button type="submit" class="margin-top-20 btn btn-secondary">
-                        Termin erstellen
-                    </button>
-                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
