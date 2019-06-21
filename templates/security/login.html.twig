@@ -6,34 +6,34 @@
 
     <!-- Login form -->
     <div class="row justify-content-center margin-top-20 margin-top-only">
-        <div class="jumbotron text-center">
+        <div class="card text-center">
             <form method="post">
-                <h1 class="h3 mb-3 font-weight-normal">{{ 'login.message'|trans }}</h1>
-
+                <div class="card-header">
+                    <h1 class="h3 font-weight-normal">{{ 'login.message'|trans }}</h1>
+                </div>
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
+                <div class="card-body">
+                    <p>
+                        <label for="inputUsername" class="sr-only">{{ 'login.username'|trans }}</label>
+                        <input type="text" value="{{ last_username }}" name="username" id="inputUsername"
+                               class="form-control" placeholder="{{ 'login.username'|trans }}" required autofocus>
+                    </p>
+                    <p>
+                        <label for="inputPassword" class="sr-only">{{ 'login.password'|trans }}</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control"
+                               placeholder="{{ 'login.password'|trans }}" required>
+                    </p>
 
-                <hr class="my-4">
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
 
-                <p>
-                    <label for="inputUsername" class="sr-only">{{ 'login.username'|trans }}</label>
-                    <input type="text" value="{{ last_username }}" name="username" id="inputUsername"
-                           class="form-control" placeholder="{{ 'login.username'|trans }}" required autofocus>
-                </p>
-                <p>
-                    <label for="inputPassword" class="sr-only">{{ 'login.password'|trans }}</label>
-                    <input type="password" name="password" id="inputPassword" class="form-control"
-                           placeholder="{{ 'login.password'|trans }}" required>
-                </p>
-
-                <input type="hidden" name="_csrf_token"
-                       value="{{ csrf_token('authenticate') }}"
-                >
-
-                <button class="btn btn-md btn-primary" type="submit">
-                    {{ 'login.signin'|trans }}
-                </button>
+                    <button class="btn btn-md btn-primary" type="submit">
+                        {{ 'login.signin'|trans }}
+                    </button>
+                </div>
             </form>
         </div>
     </div>
