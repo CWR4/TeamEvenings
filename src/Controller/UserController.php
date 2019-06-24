@@ -147,6 +147,7 @@ class UserController extends AbstractController
      * @param User $user
      * @return Response
      * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
+     * @TODO Eventuell diese Maske für alle Nutzer erreichbar machen und Admins immer erlauben das Passwort zu ändern.
      */
     public function changePassword(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
     {
