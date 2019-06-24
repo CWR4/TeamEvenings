@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Vote;
+use App\Form\ChangePasswordType;
 use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
 use App\Form\SetUserRoleType;
@@ -133,6 +134,28 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/changeRole.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
+     */
+    public function changePassword(Request $request, User $user): Response
+    {
+        $form = $this->createForm(ChangePasswordType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            dump('Yessir');
+            dump($form->getData());
+        }
+
+        return $this->render('user/changePassword.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
         ]);

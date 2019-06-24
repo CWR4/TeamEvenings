@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}MovieTime! - Nutzer anlegen{% endblock %}
 
 {% block body %}
 
@@ -24,7 +24,14 @@
                         {{ form_errors(registrationForm.plainPassword) }}
                         {{ form_widget(registrationForm.plainPassword, {'attr': {'style': 'text-align: center; width: 80%;'}}) }}
                     </div>
-                    <button class="btn btn-sm btn-secondary margin-top-20 tab-button">Anlegen</button>
+                    <button class="btn btn-sm btn-secondary margin-top-20 tab-button">
+                        Anlegen
+                    </button>
+                    <a href="{{ path('all_user') }}">
+                        <button type="button" class="btn btn-sm btn-outline-secondary margin-top-20 tab-button">
+                            Abbruch
+                        </button>
+                    </a>
                     {{ form_end(registrationForm) }}
                 </div>
             </div>

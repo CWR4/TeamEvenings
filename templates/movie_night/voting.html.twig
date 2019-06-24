@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    Abstimmen{% if movienight %} - {{ movienight.date|date('d.m.Y') }}  - {{ movienight.time|date('H:i') }}{% endif %}
+{% endblock %}
+
 {% block body %}
 
     <div class="container text-center margin-top-20">
