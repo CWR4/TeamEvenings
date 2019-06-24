@@ -144,6 +144,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @param UserPasswordEncoderInterface $encoder
      * @param Request $request
      * @param User $user
      * @return Response
