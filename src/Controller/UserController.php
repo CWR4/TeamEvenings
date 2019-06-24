@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use function Sodium\add;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -166,10 +167,9 @@ class UserController extends AbstractController
 
                 return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
             }
-            else
-            {
-                dump('Passwort falsch');
-            }
+
+            dump('Passwort falsch');
+            $form->get('password')->addError(new FormError('Passwort falsch!'));
         }
 
         return $this->render('user/changePassword.html.twig', [
