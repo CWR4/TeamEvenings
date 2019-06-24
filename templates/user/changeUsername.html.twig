@@ -12,16 +12,11 @@
             </div>
             <div class="card-body text-center">
                 {{ user.username }}
-
                 <hr class="my-3" />
-
                 Neuer Nutzername:
-
                 {{ form_start(form) }}
-
                 {{ form_errors(form.username) }}
                 {{ form_widget(form.username, {'attr': {'style': 'text-align: center;'}}) }}
-
                 <button type="submit" class="btn btn-sm btn-secondary margin-top-20 tab-button">
                     Speichern
                 </button>
@@ -30,7 +25,6 @@
                         Abbruch
                     </button>
                 </a>
-
                 {{ form_rest(form) }}
                 {{ form_end(form) }}
             </div>

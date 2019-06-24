@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Vote;
 use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
+use App\Form\SetUserRoleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -116,8 +117,24 @@ class UserController extends AbstractController
      */
     public function changeRole(Request $request, User $user): Response
     {
+        $form = $this->createForm(SetUserRoleType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted())
+        {
+            $user->setRoles([$form->getData()['roles']]);
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($user);
+            $manager->flush();
+
+            $this->addFlash('success', 'Rolle erfolgreich geändert!');
+
+            return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+        }
+
         return $this->render('user/changeRole.html.twig', [
             'user' => $user,
+            'form' => $form->createView(),
         ]);
     }
 }

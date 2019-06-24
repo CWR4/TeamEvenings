@@ -23,9 +23,14 @@
                         <div class="row justify-content-center margin-top-20">
                             {{ form_widget(form.location) }}
                         </div>
-                        <button type="submit" class="margin-top-20 btn btn-secondary">
+                        <button type="submit" class="margin-top-20 btn btn-sm btn-secondary">
                             Termin erstellen
                         </button>
+                        <a href="{{ path('list_movienight') }}">
+                            <button type="button" class="btn btn-sm btn-outline-secondary margin-top-20 tab-button">
+                                Abbruch
+                            </button>
+                        </a>
                         {{ form_rest(form) }}
                         {{ form_end(form) }}
                     </div>

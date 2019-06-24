@@ -26,6 +26,7 @@ class UserFixtures extends Fixture
 
         $userDummy = new User();
         $userDummy->setUsername('user1');
+        $userDummy->setRoles(['ROLE_USER']);
         $passwordDummy = $this->encoder->encodePassword($userDummy, 'user1');
         $userDummy->setPassword($passwordDummy);
 
