@@ -7,8 +7,10 @@ use App\Entity\MovieNight;
 use App\Form\AddMovieType;
 use App\Form\MovieFormType;
 use App\Service\OmdbService;
+use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,9 +30,18 @@ class OmdbController extends AbstractController
      *  - store movie in database
      */
     /**
-     * @Route("/omdb/{mnid<\d+>?}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
+     * @param OmdbService $omdbService
+     * @param VotingService $votingService
+     * @param Request $request
+     * @param PaginationService $paginationService
+     * @param $mid
+     * @param $page
+     * @param $title
+     * @param $mnid
+     * @return Response
+     * @Route("/omdb/{mnid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function addOmdbMovie(OmdbService $omdbService, Request $request, PaginationService $paginationService, $page, $title, $mnid) : Response
+    public function addOmdbMovie(OmdbService $omdbService, VotingService $votingService, Request $request, PaginationService $paginationService, $mid, $page, $title, $mnid) : Response
     {
         // Get movienight from db
         $manager = $this->getDoctrine()->getManager();
@@ -41,14 +52,14 @@ class OmdbController extends AbstractController
         $form->handleRequest($request);
 
         // Set parameters for pagination and api call
-        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page];
+        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page, 'mid' => $mid];
 
         // Set variables to null, so they won't show if not needed
         $movies = null;
         $pagination = null;
 
         // Check if form was submitted and valid OR title is set in url
-        if(($form->isSubmitted() && $form->isValid()) || isset($title))
+        if( isset($title) || ($form->isSubmitted() && $form->isValid()))
         {
             // If form was submitted get new movie title from form and set current page to 1 (for API call)
             if($form->isSubmitted())
@@ -92,6 +103,7 @@ class OmdbController extends AbstractController
 
         // Create form to add movie to event
         $addForm = $this->createForm(AddMovieType::class);
+        $addForm->add('mid', HiddenType::class, ['data' => $mid]);
         $addForm->handleRequest($request);
 
         // Check if form was send
@@ -105,20 +117,27 @@ class OmdbController extends AbstractController
             if($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID()))
             {
                 $movie = $this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
-                $movie->addMovieNight($movienight);
+                $movie->addVoting($movienight->getVoting());
             }
             else
             {
-                $movienight->setMovie($movie);
+                $movienight->getVoting()->addMovie($movie);
+            }
+
+            if(!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null))
+            {
+                $oldmovie = $manager->getRepository(Movie::class)->find($mid);
+                $movienight->getVoting()->removeMovie($oldmovie);
+                $votingService->deleteVotes($movienight->getVoting(), $oldmovie);
             }
 
             $manager->persist($movie);
-            $manager->persist($movienight);
+            $manager->persist($movienight->getVoting());
             $manager->flush();
 
             $this->addFlash('success', 'Film erfolgreich hinzugefügt');
 
-            return $this->redirectToRoute('list_movienight');
+            return $this->redirectToRoute('addMovie', ['vid' => $movienight->getVoting()->getId()]);
         }
 
         return $this->render('omdb/index.html.twig', [

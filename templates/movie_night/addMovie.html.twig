@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime! - Film hinzufügen{% endblock %}
+
+{% block body %}
+
+    <div class="container margin-top-20">
+
+        {% if movienight %}
+            <div class="text-center">
+                <h4>
+                    Filme für
+                </h4>
+                <h3>
+                    {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
+                </h3>
+            </div>
+        {% endif %}
+
+        <!-- list of all movienights if any are planned (as a table) -->
+        <div class="container margin-top-20">
+            <div class="row justify-content-center">
+                <table class="table mytable table-hover">
+                    <thead>
+                    <tr>
+                        <th colspan="2">Film</th>
+                        <th class="text-center">Bearbeiten</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if movies is not empty %}
+                        {% for movie in movies %}
+                            <tr>
+                                <td class="tab-poster align-middle text-center">
+                                    {% if(movie.poster == 'N/A') %}
+                                        <i class="{{ 'af.logo.movie'|trans }} fa-3x tab-poster" aria-hidden="true"></i>
+                                    {% else %}
+                                        <img class="tab-poster" src="{{ movie.poster }}">
+                                    {% endif %}
+
+                                </td>
+                                <td class="align-middle">
+                                    {{ movie.title }}
+                                    <br>
+                                    {{ movie.year }}
+                                    <br>
+                                    {{ movie.runtime }}
+                                </td>
+
+                                <td class="tab-button justify-content-center align-middle">
+                                    <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id, 'mid': movie.id}) }}">
+                                        <button class="btn btn-sm btn-secondary tab-button btn-spacing">
+                                            Film
+                                        </button>
+                                    </a>
+                                    <a href="{{ path('deleteMovieFromVoting', {'vid': movienight.voting.id, 'mid': movie.id}) }}">
+                                        <button class="btn btn-sm btn-outline-secondary tab-button btn-spacing">
+                                            Löschen
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if movies|length < 3 %}
+                            <tr>
+                                <td colspan="2" class="align-middle">
+                                    Weiteren Film hinzufügen
+                                </td>
+                                <td class="tab-button justify-content-center align-middle">
+                                    <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id}) }}">
+                                        <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="align-middle">
+                                Bisher kein Film eingeplant.
+                            </td>
+                            <td class="tab-button justify-content-center align-middle">
+                                <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id}) }}">
+                                    <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieNightRepository")
@@ -36,29 +37,34 @@ class MovieNight
      */
     private $movie;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Voting", inversedBy="movieNight", cascade={"persist", "remove"})
+     */
+    private $voting;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(DateTimeInterface $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getTime(): ?\DateTimeInterface
+    public function getTime(): ?DateTimeInterface
     {
         return $this->time;
     }
 
-    public function setTime(\DateTimeInterface $time): self
+    public function setTime(DateTimeInterface $time): self
     {
         $this->time = $time;
 
@@ -85,6 +91,18 @@ class MovieNight
     public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
+
+        return $this;
+    }
+
+    public function getVoting(): ?Voting
+    {
+        return $this->voting;
+    }
+
+    public function setVoting(?Voting $voting): self
+    {
+        $this->voting = $voting;
 
         return $this;
     }

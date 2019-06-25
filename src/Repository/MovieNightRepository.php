@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\MovieNight;
+use App\Entity\Voting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -41,15 +41,18 @@ class MovieNightRepository extends ServiceEntityRepository
     /*
      *  - retrieve next movienight or null if none planned
      */
-    public function getNextMovienight()  : ?MovieNight
+    public function getNextMovienight($offset = 0)  : ?MovieNight
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date >= :currentdate')
+            ->andWhere('m.date = :currentdate')
             ->setParameter('currentdate', date('Y-m-d'))
             ->andWhere('m.time > :currenttime')
             ->setParameter('currenttime', date('H:i', time() - 900))
+            ->orWhere('m.date > :currentdate')
+            ->setParameter('currentdate', date('Y-m-d'))
             ->orderBy('m.date', 'ASC')
             ->addOrderBy('m.time', 'ASC')
+            ->setFirstResult($offset)
             ->setMaxResults(1)
             ->getQuery()
         ;

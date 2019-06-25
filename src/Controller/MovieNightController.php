@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Movie;
 use App\Entity\MovieNight;
-use App\Form\DeleteMovienightType;
+use App\Entity\Voting;
 use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use App\Service\MovieNightService;
+use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,9 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class MovieNightController
  * @package App\Controller
- * @IsGranted("ROLE_USER")
  */
-
 class MovieNightController extends AbstractController
 {
     /*
@@ -25,34 +26,21 @@ class MovieNightController extends AbstractController
      *  - date, time and location
      */
     /**
+     * @param Request $request
+     * @param MovieNightService $movieNightService
+     * @return Response
      * @Route("/movienight/create", name="movie_night")
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function createMovieNight(Request $request) : Response
+    public function createMovieNight(Request $request, MovieNightService $movieNightService): Response
     {
-        $manager = $this->getDoctrine()->getManager();
+        $movieNight = new MovieNight();
 
-        $movienight = new MovieNight();
-        $dateform = $this->createForm(MovieNightType::class, $movienight);
+        $dateform = $this->createForm(MovieNightType::class, $movieNight);
         $dateform->handleRequest($request);
 
-        if($dateform->isSubmitted() && $dateform->isValid())
-        {
-            if($movienight->getDate()->format('Y.m.d') < date('Y.m.d'))
-            {
-                $this->addFlash('warning', 'Datum ist vergangen!');
-            }
-            elseif($movienight->getDate()->format('d.m.Y') ===  date('d.m.Y') && $movienight->getTime()->format('H:i') < date('H:i', time() - 900))
-            {
-                $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
-            }
-            else
-            {
-                $manager->persist($movienight);
-                $manager->flush();
-                $this->addFlash('success', 'Termin erstellt!');
-
-                return $this->redirectToRoute('list_movienight');
-            }
+        if ($movieNightService->createMovieNight($dateform, $movieNight)) {
+            return $this->redirectToRoute('list_movienight');
         }
 
         return $this->render('movie_night/index.html.twig', [
@@ -65,15 +53,16 @@ class MovieNightController extends AbstractController
      */
     /**
      * @Route("/movienight/all", name="list_movienight")
+     * @IsGranted("ROLE_USER")
      */
-    public function listAll() : Response
+    public function listAll(): Response
     {
         $manager = $this->getDoctrine()->getRepository(MovieNight::class);
 
-        $dates = $manager->findAllByDateAsc();
+        $movienights = $manager->findAllByDateAsc();
 
         return $this->render('movie_night/list.html.twig', [
-            'dates' => $dates
+            'movienights' => $movienights,
         ]);
     }
 
@@ -85,47 +74,27 @@ class MovieNightController extends AbstractController
      *  - checks if date and time are in the future
      */
     /**
+     * @param Request $request
+     * @param MovieNightService $movieNightService
+     * @param $id
+     * @return Response
      * @Route("/movienight/edit/{id<\d+>}", name="edit_movienight")
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function editMovieNight(Request $request, $id) : Response
+    public function editMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
-        $manager = $this->getDoctrine()->getManager();
-        $movieNight = $manager->getRepository(MovieNight::class)->find($id);
+        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($id);
 
-        // check if event was found in database -> flash message if not and redirection
-        if($movieNight === null)
-        {
+        if ($movieNight === null) {
             $this->addFlash('warning', 'Termin wurde nicht gefunden');
             return $this->redirectToRoute('list_movienight');
         }
 
-        // create form and hand data from object to it
         $editForm = $this->createForm(EditMovieNightType::class, $movieNight);
         $editForm->handleRequest($request);
 
-        // check if form is submitted and valid
-        if($editForm->isSubmitted() && $editForm->isValid())
-        {
-            // check date has passed
-            if($movieNight->getDate()->format('Y.m.d') < date('Y.m.d'))
-            {
-                $this->addFlash('warning', 'Datum ist vergangen!');
-            }
-            // check if time has passed if date is today
-            elseif($movieNight->getDate()->format('d.m.Y') ===  date('d.m.Y') && $movieNight->getTime()->format('H:i') < date('H:i', time() - 900))
-            {
-                $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
-            }
-            // else save object to database, redirect and show flash message
-            else
-            {
-                $manager->persist($movieNight);
-                $manager->flush();
-
-                $this->addFlash('success', 'Termin erfolgreich geändert');
-
-                return $this->redirectToRoute('list_movienight');
-            }
+        if ($movieNightService->editMovieNight($editForm, $movieNight)) {
+            return $this->redirectToRoute('list_movienight');
         }
 
         return $this->render('movie_night/edit.html.twig', [
@@ -140,38 +109,25 @@ class MovieNightController extends AbstractController
      */
     /**
      * @param Request $request
+     * @param MovieNightService $movieNightService
      * @param $id
      * @return Response
      * @Route("/movienight/delete/{id<\d+>?}", name="delete_movienight")
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteMovieNight(Request $request, $id) : Response
+    public function deleteMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
-        $manager = $this->getDoctrine()->getManager();
+        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($id);
 
-        $date = $manager->getRepository(MovieNight::class)->find($id);
-
-        // check if event exists and it's in the future, empty form if event passed
-        if($date === null ||
-            $date->getDate()->format('Y.m.d') <= date('Y.m.d') ||
-            ($date->getDate()->format('Y.m.d') <= date('Y.m.d') &&
-            $date->getTime()->format('H:i') <= date('H:i')))
-        {
-            $form = $this->createForm(MovieNightType::class);
+        if ($movieNight === null) {
             $this->addFlash('warning', 'Termin nicht gefunden');
-        }
-        else
-        {
-            $form = $this->createForm(MovieNightType::class, $date);
+            return $this->redirectToRoute('list_movienight');
         }
 
+        $form = $this->createForm(MovieNightType::class, $movieNight);
         $form->handleRequest($request);
 
-        // check if submitted and delete if so
-        if($form->isSubmitted())
-        {
-            $manager->remove($date);
-            $manager->flush();
-
+        if ($movieNightService->deleteMovieNight($form, $movieNight)) {
             return $this->redirectToRoute('list_movienight');
         }
 
@@ -180,4 +136,68 @@ class MovieNightController extends AbstractController
         ]);
     }
 
+    /**
+     * @param VotingService $votingService
+     * @param $mid
+     * @param $mnid
+     * @return Response
+     * @Route("/movienight/voting/{mnid<\d+>?}/{mid<\d+>?}", name="voting")
+     * @IsGranted("ROLE_USER")
+     */
+    public function voting(VotingService $votingService, $mnid, $mid): Response
+    {
+        $movienight = $this->getDoctrine()->getRepository(MovieNight::class)->find($mnid);
+
+        $result = $votingService->getResult($mnid);
+
+        if (isset($mid)) {
+            $votingService->vote($mnid, $mid);
+            return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
+        }
+
+        return $this->render('movie_night/voting.html.twig', [
+            'result' => $result,
+            'movienight' => $movienight
+        ]);
+    }
+
+    /*
+     *  - page to connect movies to voting / movienight
+     */
+    /**
+     * @param VotingService $votingService
+     * @param $vid
+     * @return Response
+     * @Route("/movienight/addMovie/{vid<\d+>?}", name="addMovie")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function addMovieToVoting( VotingService $votingService, $vid): Response
+    {
+        $movienight = $votingService->getMovieAndMovienight($vid);
+
+        if($movienight['movienight'] === null) {
+            $this->addFlash('warning', 'Filmabend wurde nicht gefunden');
+            return $this->redirectToRoute('list_movienight');
+        }
+
+        return $this->render('movie_night/addMovie.html.twig', [
+            'movies' => $movienight['movies'],
+            'movienight' => $movienight['movienight'],
+        ]);
+    }
+
+    /**
+     * @param $vid
+     * @param $mid
+     * @param VotingService $votingService
+     * @return Response
+     * @Route("/movienight/deleteMovie/{vid<\d+>?}/{mid<\d+>?}", name="deleteMovieFromVoting")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function deleteMovieFromVoting(VotingService $votingService, Voting $vid, Movie $mid): Response
+    {
+        $votingService->deleteMovieFromVoting($vid, $mid);
+
+        return $this->redirectToRoute('addMovie', ['vid' => $vid->getId()]);
+    }
 }

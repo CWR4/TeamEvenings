@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime! - Nutzername ändern{% endblock %}
+
+{% block body %}
+
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        <div class="card text-center">
+            <div class="card-header">
+                <h3 class="h3 font-weight-normal no-margin">
+                    Nutzername ändern:
+                </h3>
+            </div>
+            <div class="card-body text-center">
+                {{ user.username }}
+                <hr class="my-3" />
+                Neuer Nutzername:
+                {{ form_start(form) }}
+                {{ form_errors(form.username) }}
+                {{ form_widget(form.username, {'attr': {'style': 'text-align: center;'}}) }}
+                <button type="submit" class="btn btn-sm btn-secondary margin-top-20 tab-button">
+                    Speichern
+                </button>
+                <a href="{{ path('edit_user', {'id': user.id}) }}">
+                    <button type="button" class="btn btn-sm btn-outline-secondary margin-top-20 tab-button">
+                        Abbruch
+                    </button>
+                </a>
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

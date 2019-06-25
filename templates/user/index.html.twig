@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime! - Nutzerverwaltung{% endblock %}
+
+{% block body %}
+
+    <div class="container margin-top-20">
+        <div class="row justify-content-center">
+            <table class="table mytable table-hover col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
+                <thead>
+                <tr>
+                    <th scope="col" class="tab-button col-lg-auto">
+                        Nutzername
+                    </th>
+                    <th>
+                        Rolle
+                    </th>
+                    <th scope="col" class="col-lg-auto tab-button text-center">
+                        Aktion
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td class="align-middle">
+                            {{ user.username }}
+                        </td>
+                        <td class="align-middle">
+                            {% if user.roles is not empty and user.roles[0] == 'ROLE_ADMIN' %}
+                                Administrator
+                            {% else %}
+                                Standardnutzer
+                            {% endif %}
+                        </td>
+                        <td class="align-middle">
+                            <a href="{{ path('edit_user', {'id': user.id}) }}">
+                                <button class="btn btn-sm btn-secondary btn-margin tab-button">
+                                    Bearbeiten
+                                </button>
+                            </a>
+                            {% if app.user.id != user.id %}
+                                <a href="{{ path('delete_user', {'userId': user.id}) }}">
+                                    <button class="btn btn-sm btn-outline-secondary btn-margin tab-button">
+                                        Löschen
+                                    </button>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

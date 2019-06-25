@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Abstimmen{% if movienight %} - {{ movienight.date|date('d.m.Y') }}  - {{ movienight.time|date('H:i') }}{% endif %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container text-center margin-top-20">
+        {% if movienight %}
+            <h4>Abstimmen für</h4>
+            <h3>
+                {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
+            </h3>
+        {% endif %}
+
+        {% if result %}
+            <!-- Show menu -->
+            <div class="row margin-top-20">
+                {% for movie in result.voting.movies %}
+                    <div class="col">
+                        <div class="card card-top">
+                            <div class="card-header">
+                                <h4 class="card-title h4 no-margin">
+                                    {{ movie.title }}
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <img src="{{ movie.poster }}" class="vote-poster" alt="N/A">
+                                <p class="card-text margin-top-5">
+                                    {{ movie.plot }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Show votes and vote button -->
+            <div class="row">
+                {% for movie in result.voting.movies %}
+                    <div class="col">
+                        <div class="card card-bot">
+                            <div class="row justify-content-between">
+                                <div class="col-3">
+                                    <div class="border border-secondary rounded text-secondary align-content-center vote-score">
+                                        {{ result.votes[movie.id] }}
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <a href="{{ path('voting', {'mnid': result.voting.movienight.id,'mid': movie.id}) }}">
+                                        <button class="btn btn-outline-secondary" style="width: 100%; padding: 6px 0;">
+                                            Vote!
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
