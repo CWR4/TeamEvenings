@@ -38,12 +38,18 @@ class Voting
      */
     private $movieNight;
 
+    /**
+     * Voting constructor.
+     */
     public function __construct()
     {
         $this->movies = new ArrayCollection();
         $this->votes = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -57,6 +63,11 @@ class Voting
         return $this->movies;
     }
 
+    /**
+     * @param Movie $movie add movie to voting
+     *
+     * @return Voting
+     */
     public function addMovie(Movie $movie): self
     {
         if (!$this->movies->contains($movie)) {
@@ -66,6 +77,11 @@ class Voting
         return $this;
     }
 
+    /**
+     * @param Movie $movie remove movie from voting
+     *
+     * @return Voting
+     */
     public function removeMovie(Movie $movie): self
     {
         if ($this->movies->contains($movie)) {
@@ -83,6 +99,11 @@ class Voting
         return $this->votes;
     }
 
+    /**
+     * @param Vote $vote add vote to voting
+     *
+     * @return Voting
+     */
     public function addVote(Vote $vote): self
     {
         if (!$this->votes->contains($vote)) {
@@ -93,6 +114,11 @@ class Voting
         return $this;
     }
 
+    /**
+     * @param Vote $vote remove vote from voting
+     *
+     * @return Voting
+     */
     public function removeVote(Vote $vote): self
     {
         if ($this->votes->contains($vote)) {
@@ -106,11 +132,19 @@ class Voting
         return $this;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getOpen(): ?bool
     {
         return $this->open;
     }
 
+    /**
+     * @param bool $open open or close
+     *
+     * @return Voting
+     */
     public function setOpen(bool $open): self
     {
         $this->open = $open;
@@ -118,11 +152,19 @@ class Voting
         return $this;
     }
 
+    /**
+     * @return MovieNight|null
+     */
     public function getMovieNight(): ?MovieNight
     {
         return $this->movieNight;
     }
 
+    /**
+     * @param MovieNight|null $movieNight set relation to movienight
+     *
+     * @return Voting
+     */
     public function setMovieNight(?MovieNight $movieNight): self
     {
         $this->movieNight = $movieNight;
