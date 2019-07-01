@@ -20,57 +20,84 @@ class Vote
      * @ORM\ManyToOne(targetEntity="App\Entity\Voting", inversedBy="votes")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Voting;
+    private $voting;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Movie;
+    private $movie;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $User;
+    private $user;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return Voting|null
+     */
     public function getVoting(): ?Voting
     {
-        return $this->Voting;
+        return $this->voting;
     }
 
-    public function setVoting(?Voting $Voting): self
+    /**
+     * @param Voting|null $voting set relation to voting
+     *
+     * @return Vote
+     */
+    public function setVoting(?Voting $voting): self
     {
-        $this->Voting = $Voting;
+        $this->voting = $voting;
 
         return $this;
     }
 
+    /**
+     * @return Movie|null
+     */
     public function getMovie(): ?Movie
     {
-        return $this->Movie;
+        return $this->movie;
     }
 
-    public function setMovie(?Movie $Movie): self
+    /**
+     * @param Movie|null $movie set movie relation
+     *
+     * @return Vote
+     */
+    public function setMovie(?Movie $movie): self
     {
-        $this->Movie = $Movie;
+        $this->movie = $movie;
 
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(?User $User): self
+    /**
+     * @param User|null $user set user
+     *
+     * @return Vote
+     */
+    public function setUser(?User $user): self
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
