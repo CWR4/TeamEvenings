@@ -21,7 +21,7 @@ class Movie
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Title;
+    private $title;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -31,22 +31,22 @@ class Movie
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Year;
+    private $year;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $Runtime;
+    private $runtime;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $Poster;
+    private $poster;
 
     /**
      * @ORM\Column(type="string", length=1000, nullable=true)
      */
-    private $Plot;
+    private $plot;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\MovieNight", mappedBy="movie")
@@ -58,34 +58,56 @@ class Movie
      */
     private $votings;
 
+    /**
+     * Movie constructor.
+     */
     public function __construct()
     {
         $this->movieNights = new ArrayCollection();
         $this->votings = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
-        return $this->Title;
+        return $this->title;
     }
 
-    public function setTitle(string $Title): self
+    /**
+     * @param string $title title of movie
+     *
+     * @return Movie
+     */
+    public function setTitle(string $title): self
     {
-        $this->Title = $Title;
+        $this->title = $title;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getImdbID(): ?string
     {
         return $this->imdbID;
     }
 
+    /**
+     * @param string $imdbID Id in api database
+     *
+     * @return Movie
+     */
     public function setImdbID(string $imdbID): self
     {
         $this->imdbID = $imdbID;
@@ -93,50 +115,82 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getYear(): ?string
     {
-        return $this->Year;
+        return $this->year;
     }
 
-    public function setYear(string $Year): self
+    /**
+     * @param string $year Year of publishing
+     *
+     * @return Movie
+     */
+    public function setYear(string $year): self
     {
-        $this->Year = $Year;
+        $this->year = $year;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getRuntime(): ?string
     {
-        return $this->Runtime;
+        return $this->runtime;
     }
 
-    public function setRuntime(?string $Runtime): self
+    /**
+     * @param string|null $runtime movie duration
+     *
+     * @return Movie
+     */
+    public function setRuntime(?string $runtime): self
     {
-        $this->Runtime = $Runtime;
+        $this->runtime = $runtime;
 
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPoster()
     {
-        return $this->Poster;
+        return $this->poster;
     }
 
-    public function setPoster($Poster): self
+    /**
+     * @param mixed $poster hyperlink to poster
+     *
+     * @return Movie
+     */
+    public function setPoster($poster): self
     {
-        $this->Poster = $Poster;
+        $this->poster = $poster;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getPlot(): ?string
     {
-        return $this->Plot;
+        return $this->plot;
     }
 
-    public function setPlot(?string $Plot): self
+    /**
+     * @param string|null $plot movie plot
+     *
+     * @return Movie
+     */
+    public function setPlot(?string $plot): self
     {
-        $this->Plot = $Plot;
+        $this->plot = $plot;
 
         return $this;
     }
@@ -149,6 +203,11 @@ class Movie
         return $this->movieNights;
     }
 
+    /**
+     * @param MovieNight $movieNight connection to movienight
+     *
+     * @return Movie
+     */
     public function addMovieNight(MovieNight $movieNight): self
     {
         if (!$this->movieNights->contains($movieNight)) {
@@ -159,6 +218,11 @@ class Movie
         return $this;
     }
 
+    /**
+     * @param MovieNight $movieNight remove movienight connection
+     *
+     * @return Movie
+     */
     public function removeMovieNight(MovieNight $movieNight): self
     {
         if ($this->movieNights->contains($movieNight)) {
@@ -180,6 +244,11 @@ class Movie
         return $this->votings;
     }
 
+    /**
+     * @param Voting $voting add relation to voting
+     *
+     * @return Movie
+     */
     public function addVoting(Voting $voting): self
     {
         if (!$this->votings->contains($voting)) {
@@ -190,6 +259,11 @@ class Movie
         return $this;
     }
 
+    /**
+     * @param Voting $voting remove voting relation
+     *
+     * @return Movie
+     */
     public function removeVoting(Voting $voting): self
     {
         if ($this->votings->contains($voting)) {
