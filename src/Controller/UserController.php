@@ -30,7 +30,7 @@ class UserController extends AbstractController
      */
     public function listAll(): Response
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->getAllUser();
+        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->getAllUser();
 
         return $this->render('user/index.html.twig', [
             'users' => $users,

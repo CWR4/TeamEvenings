@@ -6,6 +6,7 @@ use App\Entity\MovieNight;
 use App\Entity\Voting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Exception;
 
 /**
  * Class MovieNightService
@@ -83,6 +84,8 @@ class MovieNightService extends AbstractController
     }
 
     /**
+     * @throws Exception
+     *
      * @return MovieNight|null
      */
     public function getNextMovieNight(): ?MovieNight

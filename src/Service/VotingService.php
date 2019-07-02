@@ -7,6 +7,7 @@ use App\Entity\Vote;
 use App\Entity\Voting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Movie;
+use Exception;
 
 /**
  * Class VotingService
@@ -15,6 +16,8 @@ class VotingService extends AbstractController
 {
     /**
      * @param int $votingId voting id
+     *
+     * @throws Exception
      *
      * @return array|null
      */
@@ -119,6 +122,8 @@ class VotingService extends AbstractController
 
     /**
      * @param int $mnid movienight id
+     *
+     * @throws Exception
      *
      * @return array|null
      */

@@ -15,10 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Exception;
 
 /**
  * Class OmdbController
  * @IsGranted("ROLE_USER")
+ *
+ * @todo fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
  */
 
 class OmdbController extends AbstractController
@@ -37,6 +40,8 @@ class OmdbController extends AbstractController
      * @param int               $page              current page
      * @param string            $title             title of movie as string
      * @param int               $mnid              movienight id
+     *
+     * @throws Exception
      *
      * @return Response
      *

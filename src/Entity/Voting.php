@@ -19,7 +19,7 @@ class Voting
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", inversedBy="votings")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", inversedBy="votings", cascade={"persist"})
      */
     private $movies;
 

@@ -2,9 +2,8 @@
 
 namespace App\Service;
 
-use PHPUnit\Util\Json;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Movie;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class OmdbService
@@ -13,8 +12,6 @@ class OmdbService extends AbstractController
 {
     // Base url for retrieving all data
     private const BASE_URL_DATA = 'https://www.omdbapi.com/?apikey=';
-    // Base url for retrieving poster to movie
-    private const BASE_URL_POSTER = 'https://img.omdbapi.com/?apikey=';
 
     /*
      *  Search in open movie database for movie by title
@@ -85,19 +82,15 @@ class OmdbService extends AbstractController
      *  Convert omdb results from json to movie array
      */
     /**
-     * @param $json
+     * @param array $json associative array with movies
      *
      * @return array
      */
-    public function getResultsAsEntities($json) : array
+    public function getResultsAsEntities(array $json) : array
     {
         $movies = [];
-
-        dump($json);
-
         foreach ($json as $movie) {
             $m = new Movie();
-
             $m->setTitle($movie['Title']);
             $m->setImdbID($movie['imdbID']);
             $m->setYear($movie['Year']);

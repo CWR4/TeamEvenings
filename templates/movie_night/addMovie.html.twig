@@ -48,7 +48,7 @@
                                 </td>
 
                                 <td class="tab-button justify-content-center align-middle">
-                                    <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id, 'mid': movie.id}) }}">
+                                    <a href="{{ path('omdb', {'mnid': movienight.id, 'mid': movie.id}) }}">
                                         <button class="btn btn-sm btn-secondary tab-button btn-spacing">
                                             Film
                                         </button>
@@ -67,7 +67,7 @@
                                     Weiteren Film hinzufügen
                                 </td>
                                 <td class="tab-button justify-content-center align-middle">
-                                    <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id}) }}">
+                                    <a href="{{ path('omdb', {'mnid': movienight.id}) }}">
                                         <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                                     </a>
                                 </td>
