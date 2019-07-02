@@ -7,6 +7,7 @@ use App\Entity\MovieNight;
 use App\Form\AddMovieType;
 use App\Form\MovieFormType;
 use App\Service\OmdbService;
+use App\Service\PaginationService;
 use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,11 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\PaginationService;
 
 /**
  * Class OmdbController
- * @package App\Controller
  * @IsGranted("ROLE_USER")
  */
 
@@ -30,15 +29,17 @@ class OmdbController extends AbstractController
      *  - store movie in database
      */
     /**
-     * @param OmdbService $omdbService
-     * @param VotingService $votingService
-     * @param Request $request
-     * @param PaginationService $paginationService
-     * @param $mid
-     * @param $page
-     * @param $title
-     * @param $mnid
+     * @param OmdbService       $omdbService       dependency injection
+     * @param VotingService     $votingService     dependency injection
+     * @param Request           $request           http request
+     * @param PaginationService $paginationService dependency injection
+     * @param int               $mid               movie id
+     * @param int               $page              current page
+     * @param string            $title             title of movie as string
+     * @param int               $mnid              movienight id
+     *
      * @return Response
+     *
      * @Route("/omdb/{mnid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
     public function addOmdbMovie(OmdbService $omdbService, VotingService $votingService, Request $request, PaginationService $paginationService, $mid, $page, $title, $mnid) : Response
@@ -59,11 +60,9 @@ class OmdbController extends AbstractController
         $pagination = null;
 
         // Check if form was submitted and valid OR title is set in url
-        if( isset($title) || ($form->isSubmitted() && $form->isValid()))
-        {
+        if (isset($title) || ($form->isSubmitted() && $form->isValid())) {
             // If form was submitted get new movie title from form and set current page to 1 (for API call)
-            if($form->isSubmitted())
-            {
+            if ($form->isSubmitted()) {
                 $parameters['title'] = urlencode($form->get('Title')->getData());
                 $parameters['page'] = 1;
             }
@@ -72,31 +71,22 @@ class OmdbController extends AbstractController
             $result = $omdbService->searchByTitle($parameters);
 
             // Check if movies found and if pagination is needed
-            if($result['Response'] === 'True' && $result['totalResults'] > 10)
-            {
+            if ($result['Response'] === 'True' && $result['totalResults'] > 10) {
                 $paginationService->createPagination('omdb', $parameters, $result['totalResults']);
                 $pagination = $paginationService->getPaginationLinks();
             }
 
             // Check for errors and create flash message
-            if($result['Response'] === 'False')
-            {
-                if($result['Error'] === 'Too many results.')
-                {
+            // else: Not enough movies found for pagination
+            if ($result['Response'] === 'False') {
+                if ($result['Error'] === 'Too many results.') {
                     $this->addFlash('warning', 'Zu viele Ergebnisse. Bitte spezifizieren.');
-                }
-                elseif($result['Error'] === 'Movie not found!')
-                {
+                } elseif ($result['Error'] === 'Movie not found!') {
                     $this->addFlash('warning', 'Kein Film gefunden.');
-                }
-                else
-                {
+                } else {
                     $this->addFlash('warning', $result['Error']);
                 }
-            }
-            // Not enough movies found for pagination
-            else
-            {
+            } else {
                 $movies = $omdbService->getResultsAsEntities($result['Search']);
             }
         }
@@ -107,25 +97,20 @@ class OmdbController extends AbstractController
         $addForm->handleRequest($request);
 
         // Check if form was send
-        if($addForm->isSubmitted())
-        {
+        if ($addForm->isSubmitted()) {
             // Get movie information from omdb
             $movieid = $addForm->getData()['movieid'];
             $movie = $omdbService->getDataById($movieid);
 
             // Check if movie already exist in db
-            if($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID()))
-            {
+            if ($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID())) {
                 $movie = $this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
                 $movie->addVoting($movienight->getVoting());
-            }
-            else
-            {
+            } else {
                 $movienight->getVoting()->addMovie($movie);
             }
 
-            if(!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null))
-            {
+            if (!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null)) {
                 $oldmovie = $manager->getRepository(Movie::class)->find($mid);
                 $movienight->getVoting()->removeMovie($oldmovie);
                 $votingService->deleteVotes($movienight->getVoting(), $oldmovie);
@@ -149,5 +134,4 @@ class OmdbController extends AbstractController
             'date' => $movienight,
         ]);
     }
-
 }

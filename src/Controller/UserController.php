@@ -19,13 +19,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserController
- * @package App\Controller
  * @IsGranted("ROLE_ADMIN")
  */
 class UserController extends AbstractController
 {
     /**
      * @return Response
+     *
      * @Route("/user", name="all_user")
      */
     public function listAll(): Response
@@ -38,9 +38,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param $userId
+     * @param Request $request http request for form
+     * @param int     $userId  user id
+     *
      * @return Response
+     *
      * @Route("/deleteuser/{userId<\d+>?}", name="delete_user")
      */
     public function deleteUser(Request $request, $userId): Response
@@ -50,8 +52,7 @@ class UserController extends AbstractController
         $deleteForm->add('id', HiddenType::class, ['data' => $userId]);
         $deleteForm->handleRequest($request);
 
-        if($deleteForm->isSubmitted())
-        {
+        if ($deleteForm->isSubmitted()) {
             $manager = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()->getRepository(User::class)->find($deleteForm->getData());
             $this->getDoctrine()->getRepository(Vote::class)->deleteVotes($user);
@@ -66,25 +67,28 @@ class UserController extends AbstractController
             'form' => $deleteForm->createView(),
             'user' => $user,
         ]);
-
     }
 
     /**
-     * @param User $id
+     * @param User $id user as parameter
+     *
      * @return Response
+     *
      * @Route("/user/edit/{id<\d+>?}", name="edit_user")
      */
     public function editUser(User $id): Response
     {
         return $this->render('user/editUser.html.twig', [
-            'user' => $id
+            'user' => $id,
         ]);
     }
 
     /**
-     * @param Request $request
-     * @param User $user
+     * @param Request $request http request for form
+     * @param User    $user    user as parameter
+     *
      * @return Response
+     *
      * @Route("/user/changeusername/{user<\d+>?0}", name="change_username")
      */
     public function changeUsername(Request $request, User $user): Response
@@ -92,8 +96,7 @@ class UserController extends AbstractController
         $form = $this->createForm(ChangeUsernameType::class);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $manager = $this->getDoctrine()->getManager();
 
             $user->setUsername($form->getData()->getUsername());
@@ -113,9 +116,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param User $user
+     * @param Request $request http request for form
+     * @param User    $user    user as parameter
+     *
      * @return Response
+     *
      * @Route("/user/changerole/{user<\d+>?}", name="change_role")
      */
     public function changeRole(Request $request, User $user): Response
@@ -123,8 +128,7 @@ class UserController extends AbstractController
         $form = $this->createForm(SetUserRoleType::class);
         $form->handleRequest($request);
 
-        if($form->isSubmitted())
-        {
+        if ($form->isSubmitted()) {
             $user->setRoles([$form->getData()['roles']]);
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($user);
@@ -142,11 +146,14 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param UserPasswordEncoderInterface $encoder
-     * @param Request $request
-     * @param User $user
+     * @param UserPasswordEncoderInterface $encoder dependency injection
+     * @param Request                      $request http request for form
+     * @param User                         $user    user as parameter
+     *
      * @return Response
+     *
      * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
+     *
      * @TODO Eventuell diese Maske für alle Nutzer erreichbar machen und Admins immer, ohne Eingabe des alten Passwortes, erlauben das Passwort zu ändern.
      */
     public function changePassword(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
@@ -154,9 +161,8 @@ class UserController extends AbstractController
         $form = $this->createForm(ChangePasswordType::class);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-            if($encoder->isPasswordValid($user, $form->getData()->getPassword()))
-            {
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($encoder->isPasswordValid($user, $form->getData()->getPassword())) {
                 $user->setPassword($encoder->encodePassword($user, $form->get('newPassword')->getData()));
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($user);
@@ -166,8 +172,6 @@ class UserController extends AbstractController
 
                 return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
             }
-
-            dump('Passwort falsch');
             $form->get('password')->addError(new FormError('Passwort falsch!'));
         }
 

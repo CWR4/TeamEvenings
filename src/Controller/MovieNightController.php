@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Entity\Voting;
-use App\Form\MovieNightType;
 use App\Form\EditMovieNightType;
+use App\Form\MovieNightType;
 use App\Service\MovieNightService;
 use App\Service\VotingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class MovieNightController
- * @package App\Controller
  */
 class MovieNightController extends AbstractController
 {
@@ -26,10 +25,13 @@ class MovieNightController extends AbstractController
      *  - date, time and location
      */
     /**
-     * @param Request $request
-     * @param MovieNightService $movieNightService
+     * @param Request           $request           http request
+     * @param MovieNightService $movieNightService dependency injection
+     *
      * @return Response
+     *
      * @Route("/movienight/create", name="movie_night")
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function createMovieNight(Request $request, MovieNightService $movieNightService): Response
@@ -44,7 +46,7 @@ class MovieNightController extends AbstractController
         }
 
         return $this->render('movie_night/index.html.twig', [
-            'form' => $dateform->createView()
+            'form' => $dateform->createView(),
         ]);
     }
 
@@ -53,7 +55,10 @@ class MovieNightController extends AbstractController
      */
     /**
      * @Route("/movienight/all", name="list_movienight")
+     *
      * @IsGranted("ROLE_USER")
+     *
+     * @return Response
      */
     public function listAll(): Response
     {
@@ -74,19 +79,23 @@ class MovieNightController extends AbstractController
      *  - checks if date and time are in the future
      */
     /**
-     * @param Request $request
-     * @param MovieNightService $movieNightService
-     * @param $id
+     * @param Request           $request           http request
+     * @param MovieNightService $movieNightService dependency injection
+     * @param int               $id                movienight id
+     *
      * @return Response
+     *
      * @Route("/movienight/edit/{id<\d+>}", name="edit_movienight")
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function editMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
         $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($id);
 
-        if ($movieNight === null) {
+        if (null === $movieNight) {
             $this->addFlash('warning', 'Termin wurde nicht gefunden');
+
             return $this->redirectToRoute('list_movienight');
         }
 
@@ -98,7 +107,7 @@ class MovieNightController extends AbstractController
         }
 
         return $this->render('movie_night/edit.html.twig', [
-            'form' => $editForm->createView()
+            'form' => $editForm->createView(),
         ]);
     }
 
@@ -108,19 +117,23 @@ class MovieNightController extends AbstractController
      *  - loaded with data from existing object
      */
     /**
-     * @param Request $request
-     * @param MovieNightService $movieNightService
-     * @param $id
+     * @param Request           $request           http request
+     * @param MovieNightService $movieNightService dependency injection
+     * @param int               $id                movienight id
+     *
      * @return Response
+     *
      * @Route("/movienight/delete/{id<\d+>?}", name="delete_movienight")
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function deleteMovieNight(Request $request, MovieNightService $movieNightService, $id): Response
     {
         $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->find($id);
 
-        if ($movieNight === null) {
+        if (null === $movieNight) {
             $this->addFlash('warning', 'Termin nicht gefunden');
+
             return $this->redirectToRoute('list_movienight');
         }
 
@@ -137,11 +150,14 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @param VotingService $votingService
-     * @param $mid
-     * @param $mnid
+     * @param VotingService $votingService dependency injection
+     * @param int           $mnid          movienight id
+     * @param int           $mid           movie id
+     *
      * @return Response
+     *
      * @Route("/movienight/voting/{mnid<\d+>?}/{mid<\d+>?}", name="voting")
+     *
      * @IsGranted("ROLE_USER")
      */
     public function voting(VotingService $votingService, $mnid, $mid): Response
@@ -152,12 +168,13 @@ class MovieNightController extends AbstractController
 
         if (isset($mid)) {
             $votingService->vote($mnid, $mid);
+
             return $this->redirectToRoute('voting', ['mnid' => $movienight->getId()]);
         }
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
-            'movienight' => $movienight
+            'movienight' => $movienight,
         ]);
     }
 
@@ -165,18 +182,22 @@ class MovieNightController extends AbstractController
      *  - page to connect movies to voting / movienight
      */
     /**
-     * @param VotingService $votingService
-     * @param $vid
+     * @param VotingService $votingService dependency injection
+     * @param int           $vid           voting id
+     *
      * @return Response
+     *
      * @Route("/movienight/addMovie/{vid<\d+>?}", name="addMovie")
+     *
      * @IsGranted("ROLE_ADMIN")
      */
-    public function addMovieToVoting( VotingService $votingService, $vid): Response
+    public function addMovieToVoting(VotingService $votingService, $vid): Response
     {
         $movienight = $votingService->getMovieAndMovienight($vid);
 
-        if($movienight['movienight'] === null) {
+        if (null === $movienight['movienight']) {
             $this->addFlash('warning', 'Filmabend wurde nicht gefunden');
+
             return $this->redirectToRoute('list_movienight');
         }
 
@@ -187,11 +208,14 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @param $vid
-     * @param $mid
-     * @param VotingService $votingService
+     * @param VotingService $votingService dependency injection
+     * @param Voting        $vid           voting
+     * @param Movie         $mid           movie
+     *
      * @return Response
+     *
      * @Route("/movienight/deleteMovie/{vid<\d+>?}/{mid<\d+>?}", name="deleteMovieFromVoting")
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function deleteMovieFromVoting(VotingService $votingService, Voting $vid, Movie $mid): Response
