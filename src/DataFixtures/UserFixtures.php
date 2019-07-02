@@ -7,16 +7,26 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class UserFixtures
+ */
 class UserFixtures extends Fixture
 {
     private $encoder;
 
+    /**
+     * UserFixtures constructor.
+     * @param UserPasswordEncoderInterface $encoder dependency injection
+     */
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
     }
 
-    public function load(ObjectManager $manager)
+    /**
+     * @param ObjectManager $manager dependency injection
+     */
+    public function load(ObjectManager $manager): void
     {
         $userAdmin = new User();
         $userAdmin->setUsername('CWR');
