@@ -6,7 +6,6 @@ use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Entity\Voting;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 /**
  * Class MovieTest
