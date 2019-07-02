@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\MovieNight;
-use App\Entity\Voting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -15,6 +15,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class MovieNightRepository extends ServiceEntityRepository
 {
+    /**
+     * MovieNightRepository constructor.
+     * @param RegistryInterface $registry dependency injection
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, MovieNight::class);
@@ -23,6 +27,9 @@ class MovieNightRepository extends ServiceEntityRepository
     /*
      *  - retrieve all future movienights
      *  - ordered ascending by date
+     */
+    /**
+     * @return array
      */
     public function findAllByDateAsc()  : array
     {
@@ -40,6 +47,13 @@ class MovieNightRepository extends ServiceEntityRepository
 
     /*
      *  - retrieve next movienight or null if none planned
+     */
+    /**
+     * @param int $offset offset = next movienight
+     *
+     * @return MovieNight|null
+     *
+     * @throws NonUniqueResultException
      */
     public function getNextMovienight($offset = 0)  : ?MovieNight
     {

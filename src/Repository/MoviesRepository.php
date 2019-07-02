@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use phpDocumentor\Reflection\Types\This;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -16,6 +16,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class MoviesRepository extends ServiceEntityRepository
 {
+    /**
+     * MoviesRepository constructor.
+     * @param RegistryInterface $registry dependency injection
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Movie::class);
@@ -23,6 +27,13 @@ class MoviesRepository extends ServiceEntityRepository
 
     /*
      *  - retrieve movie by imdb ID or null if not found
+     */
+    /**
+     * @param int $id online movie database id of movie
+     *
+     * @return Movie|null
+     *
+     * @throws NonUniqueResultException
      */
     public function findByImdbId($id) : ?Movie
     {

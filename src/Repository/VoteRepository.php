@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\Vote;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -15,12 +16,24 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class VoteRepository extends ServiceEntityRepository
 {
+    /**
+     * VoteRepository constructor.
+     * @param RegistryInterface $registry dependency injection
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Vote::class);
     }
 
     // Returns number of votes in voting for one movie
+    /**
+     * @param int $votingId voting id
+     * @param int $movieId  movie id
+     *
+     * @return int
+     *
+     * @throws NonUniqueResultException
+     */
     public function numVotes($votingId, $movieId) : int
     {
         return $this->createQueryBuilder('vote')
@@ -34,20 +47,9 @@ class VoteRepository extends ServiceEntityRepository
         ;
     }
 
-    // Find out if logged in User already voted
-    public function hasVoted($votingId, $user) : ?Vote
-    {
-        return $this->createQueryBuilder('vote')
-            ->andWhere('vote.Voting = :vid')
-            ->setParameter('vid', $votingId)
-            ->andWhere('vote.User = :user')
-            ->setParameter('user', $user)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult()
-            ;
-    }
-
+    /**
+     * @param User $user user as parameter
+     */
     public function deleteVotes(User $user): void
     {
         $this->createQueryBuilder('vote')
