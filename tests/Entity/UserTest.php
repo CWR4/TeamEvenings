@@ -24,6 +24,8 @@ class UserTest extends TestCase
 
     /**
      * Test set / get roles.
+     *
+     * @ToDo finish test. Problem: Roles here won't be overwritten like in database.
      */
     public function testCanSetAndGetRoles(): void
     {
