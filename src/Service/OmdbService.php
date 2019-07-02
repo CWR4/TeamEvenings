@@ -2,10 +2,13 @@
 
 namespace App\Service;
 
+use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Movie;
 
-
+/**
+ * Class OmdbService
+ */
 class OmdbService extends AbstractController
 {
     // Base url for retrieving all data
@@ -16,7 +19,12 @@ class OmdbService extends AbstractController
     /*
      *  Search in open movie database for movie by title
      */
-    public function searchByTitle($parameters) : array
+    /**
+     * @param array $parameters array with parameters omdb search
+     *
+     * @return array
+     */
+    public function searchByTitle(array $parameters) : array
     {
         // Build request url
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&s=' . $parameters['title'] . '&page=' . $parameters['page'] . '&type=movie';
@@ -41,6 +49,11 @@ class OmdbService extends AbstractController
      *  Retrieve all movie data from omdb
      *  - returns movie entity
      */
+    /**
+     * @param int $id movie id in online database
+     *
+     * @return Movie|null
+     */
     public function getDataById($id) : ?Movie
     {
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&i=' . $id;
@@ -52,7 +65,7 @@ class OmdbService extends AbstractController
 
         $response = json_decode($response, true);
 
-        if($response['Response'] === 'True') {
+        if ($response['Response'] === 'True') {
             $m = new Movie();
 
             $m->setTitle($response['Title']);
@@ -61,9 +74,7 @@ class OmdbService extends AbstractController
             $m->setPoster($response['Poster']);
             $m->setPlot($response['Plot']);
             $m->setRuntime($response['Runtime']);
-        }
-        else
-        {
+        } else {
             $m = null;
         }
 
@@ -73,12 +84,18 @@ class OmdbService extends AbstractController
     /*
      *  Convert omdb results from json to movie array
      */
+    /**
+     * @param $json
+     *
+     * @return array
+     */
     public function getResultsAsEntities($json) : array
     {
         $movies = [];
 
-        foreach ($json as $movie)
-        {
+        dump($json);
+
+        foreach ($json as $movie) {
             $m = new Movie();
 
             $m->setTitle($movie['Title']);
