@@ -24,7 +24,7 @@ class Voting
     private $movies;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="Voting", orphanRemoval=true, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="voting", orphanRemoval=true, fetch="EAGER")
      */
     private $votes;
 
