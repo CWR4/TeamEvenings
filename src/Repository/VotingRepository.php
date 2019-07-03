@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Voting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -14,11 +15,22 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class VotingRepository extends ServiceEntityRepository
 {
+    /**
+     * VotingRepository constructor.
+     * @param RegistryInterface $registry dependency injection
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Voting::class);
     }
 
+    /**
+     * @param int $votingId voting id
+     *
+     * @return Voting|null
+     *
+     * @throws NonUniqueResultException
+     */
     public function getVoting($votingId) : ?Voting
     {
         return $this->createQueryBuilder('voting')

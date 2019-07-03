@@ -6,32 +6,17 @@ use App\Entity\MovieNight;
 use App\Entity\Voting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Exception;
 
+/**
+ * Class MovieNightService
+ */
 class MovieNightService extends AbstractController
 {
     /**
-     * @param FormInterface $form
-     * @param MovieNight $movieNight
-     * @return bool
-     */
-    private function validateMovieNightForm(FormInterface $form, MovieNight $movieNight): bool
-    {
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($movieNight->getDate() !== null && $movieNight->getDate()->format('Y.m.d') < date('Y.m.d')) {
-                $this->addFlash('warning', 'Datum ist vergangen!');
-            } elseif ($movieNight->getDate()->format('d.m.Y') === date('d.m.Y')
-                && $movieNight->getTime()->format('H:i') < date('H:i', time() - 900)) {
-                $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param MovieNight $movieNight
+     * @param FormInterface $form       dependency injection for form interface -> validation
+     * @param MovieNight    $movieNight movienight as parameter
+     *
      * @return bool
      */
     public function createMovieNight(FormInterface $form, MovieNight $movieNight): bool
@@ -52,12 +37,14 @@ class MovieNightService extends AbstractController
 
             return true;
         }
+
         return false;
     }
 
     /**
-     * @param FormInterface $form
-     * @param MovieNight $movieNight
+     * @param FormInterface $form       dependency injection for form interface -> validation
+     * @param MovieNight    $movieNight movienight as parameter
+     *
      * @return bool
      */
     public function editMovieNight(FormInterface $form, MovieNight $movieNight): bool
@@ -72,38 +59,66 @@ class MovieNightService extends AbstractController
 
             return true;
         }
+
         return false;
     }
 
     /**
-     * @param FormInterface $form
-     * @param MovieNight $movieNight
+     * @param FormInterface $form       dependency injection for form interface -> validation
+     * @param MovieNight    $movieNight movienight as parameter
+     *
      * @return bool
      */
     public function deleteMovieNight(FormInterface $form, MovieNight $movieNight): bool
     {
-        if($form->isSubmitted())
-        {
+        if ($form->isSubmitted()) {
             $manager = $this->getDoctrine()->getManager();
             $manager->remove($movieNight);
             $manager->flush();
             $this->addFlash('success', 'Termin erfolgreich gelöscht!');
+
             return true;
         }
+
         return false;
     }
 
     /**
+     * @throws Exception
+     *
      * @return MovieNight|null
      */
     public function getNextMovieNight(): ?MovieNight
     {
         $i = 0;
-        do{
+        do {
             $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight($i);
             $i++;
-        } while ( isset($movieNight) && $movieNight->getVoting() !== null && $movieNight->getVoting()->getMovies()->isEmpty());
+        } while (isset($movieNight) && $movieNight->getVoting() !== null && $movieNight->getVoting()->getMovies()->isEmpty());
 
         return $movieNight;
+    }
+
+    /**
+     * @param FormInterface $form       dependency injection for form interface -> validation
+     * @param MovieNight    $movieNight movienight as parameter
+     *
+     * @return bool
+     */
+    private function validateMovieNightForm(FormInterface $form, MovieNight $movieNight): bool
+    {
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($movieNight->getDate() !== null && $movieNight->getDate()->format('Y.m.d') < date('Y.m.d')) {
+                $this->addFlash('warning', 'Datum ist vergangen!');
+            } elseif ($movieNight->getTime()
+                && $movieNight->getDate()->format('d.m.Y') === date('d.m.Y')
+                && $movieNight->getTime()->format('H:i') < date('H:i', time() - 900)) {
+                $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
+            } else {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

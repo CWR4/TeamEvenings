@@ -54,7 +54,7 @@ class Movie
     private $movieNights;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Voting", mappedBy="movies")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Voting", mappedBy="movies", cascade={"persist"})
      */
     private $votings;
 

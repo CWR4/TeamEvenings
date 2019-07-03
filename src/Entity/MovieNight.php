@@ -131,9 +131,9 @@ class MovieNight
     }
 
     /**
-     * @return Voting|null
+     * @return Voting
      */
-    public function getVoting(): ?Voting
+    public function getVoting(): Voting
     {
         return $this->voting;
     }

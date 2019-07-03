@@ -19,7 +19,7 @@ class Voting
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", inversedBy="votings")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", inversedBy="votings", cascade={"persist"})
      */
     private $movies;
 
@@ -153,9 +153,9 @@ class Voting
     }
 
     /**
-     * @return MovieNight|null
+     * @return MovieNight
      */
-    public function getMovieNight(): ?MovieNight
+    public function getMovieNight(): MovieNight
     {
         return $this->movieNight;
     }
