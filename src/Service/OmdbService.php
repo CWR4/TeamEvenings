@@ -3,7 +3,10 @@
 namespace App\Service;
 
 use App\Entity\Movie;
+use App\Entity\MovieNight;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
+use Exception;
 
 /**
  * Class OmdbService
@@ -49,9 +52,9 @@ class OmdbService extends AbstractController
     /**
      * @param int $id movie id in online database
      *
-     * @return Movie|null
+     * @return Movie
      */
-    public function getDataById($id) : ?Movie
+    public function getDataById($id) : Movie
     {
         $requestUrl = self::BASE_URL_DATA . getenv('OMDB_API_KEY') . '&i=' . $id;
 
@@ -100,5 +103,49 @@ class OmdbService extends AbstractController
         }
 
         return $movies;
+    }
+
+    /**
+     * @param VotingService $votingService dependency injection
+     * @param FormInterface $addForm       to add movie to movienight and database
+     * @param MovieNight    $movienight    to edit
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    public function processAddForm(VotingService $votingService, FormInterface $addForm, MovieNight $movienight): bool
+    {
+        if ($addForm->isSubmitted()) {
+            // Get movie information from omdb
+            $movieid = $addForm->getData()['movieid'];
+            $movie = $this->getDataById($movieid);
+
+            $manager = $this->getDoctrine()->getManager();
+
+            // Check if movie already exist in db
+            if ($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID())) {
+                $movie = $manager->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
+                $movie->addVoting($movienight->getVoting());
+            } else {
+                $movienight->getVoting()->addMovie($movie);
+            }
+
+            if (!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null)) {
+                $oldmovie = $this->getDoctrine()->getRepository(Movie::class)->find($addForm->getData()['mid']);
+                $movienight->getVoting()->removeMovie($oldmovie);
+                $votingService->deleteVotes($movienight->getVoting(), $oldmovie);
+            }
+
+            $manager->persist($movie);
+            $manager->persist($movienight->getVoting());
+            $manager->flush();
+
+            $this->addFlash('success', 'Film erfolgreich hinzugefügt');
+
+            return true;
+        }
+
+        return false;
     }
 }

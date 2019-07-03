@@ -102,32 +102,8 @@ class OmdbController extends AbstractController
         $addForm->add('mid', HiddenType::class, ['data' => $mid]);
         $addForm->handleRequest($request);
 
-        // Check if form was send
-        if ($addForm->isSubmitted()) {
-            // Get movie information from omdb
-            $movieid = $addForm->getData()['movieid'];
-            $movie = $omdbService->getDataById($movieid);
-
-            // Check if movie already exist in db
-            if ($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID())) {
-                $movie = $this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
-                $movie->addVoting($movienight->getVoting());
-            } else {
-                $movienight->getVoting()->addMovie($movie);
-            }
-
-            if (!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null)) {
-                $oldmovie = $manager->getRepository(Movie::class)->find($mid);
-                $movienight->getVoting()->removeMovie($oldmovie);
-                $votingService->deleteVotes($movienight->getVoting(), $oldmovie);
-            }
-
-            $manager->persist($movie);
-            $manager->persist($movienight->getVoting());
-            $manager->flush();
-
-            $this->addFlash('success', 'Film erfolgreich hinzugefügt');
-
+        // Check if form was send and process it
+        if ($omdbService->processAddForm($votingService, $addForm, $movienight)) {
             return $this->redirectToRoute('addMovie', ['vid' => $movienight->getVoting()->getId()]);
         }
 
