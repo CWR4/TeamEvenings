@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Form\AddMovieType;
 use App\Form\MovieFormType;
@@ -21,7 +20,9 @@ use Exception;
  * Class OmdbController
  * @IsGranted("ROLE_USER")
  *
- * @todo fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
+ * @FIXME fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
+ *
+ * @todo pass title to template to write it into the search field
  * @todo needs refactoring -> put more stuff to service -> empty this shit out
  */
 

@@ -148,4 +148,11 @@ class OmdbService extends AbstractController
 
         return false;
     }
+
+    /**
+     *
+     */
+    public function doStuff(): void
+    {
+    }
 }

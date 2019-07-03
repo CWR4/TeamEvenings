@@ -34,9 +34,9 @@ class MovieNightRepository extends ServiceEntityRepository
     public function findAllByDateAsc()  : array
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date > :currentdate or (m.time > :currenttime and m.date = :currentdate)')
-            ->setParameter('currentdate', date('Y-m-d'))
-            ->setParameter('currenttime', date('H:i', time()-900))
+            ->andWhere('m.date > :currentDate or (m.time > :currentTime and m.date = :currentDate)')
+            ->setParameter('currentDate', date('Y-m-d'))
+            ->setParameter('currentTime', date('H:i', time()-900))
             ->orderBy('m.date', 'ASC')
             ->addOrderBy('m.time', 'ASC')
             ->getQuery()
@@ -58,12 +58,12 @@ class MovieNightRepository extends ServiceEntityRepository
     public function getNextMovienight($offset = 0)  : ?MovieNight
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date = :currentdate')
-            ->setParameter('currentdate', date('Y-m-d'))
-            ->andWhere('m.time > :currenttime')
-            ->setParameter('currenttime', date('H:i', time() - 900))
-            ->orWhere('m.date > :currentdate')
-            ->setParameter('currentdate', date('Y-m-d'))
+            ->andWhere('m.date = :currentDate')
+            ->setParameter('currentDate', date('Y-m-d'))
+            ->andWhere('m.time > :currentTime')
+            ->setParameter('currentTime', date('H:i', time() - 900))
+            ->orWhere('m.date > :currentDate')
+            ->setParameter('currentDate', date('Y-m-d'))
             ->orderBy('m.date', 'ASC')
             ->addOrderBy('m.time', 'ASC')
             ->setFirstResult($offset)

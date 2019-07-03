@@ -120,7 +120,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
 
     /**
      * @param Request        $request     http request for form
-     * @param TokenInterface $token       dependency injectin for csrfToken
+     * @param TokenInterface $token       dependency injection for csrfToken
      * @param string         $providerKey no idea yet
      *
      * @return RedirectResponse|Response|null
