@@ -20,8 +20,7 @@ use Exception;
  * Class OmdbController
  * @IsGranted("ROLE_USER")
  *
- * @FIXME fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
- *
+ * @todo fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
  * @todo pass title to template to write it into the search field
  * @todo needs refactoring -> put more stuff to service -> empty this shit out
  */
@@ -63,40 +62,11 @@ class OmdbController extends AbstractController
         $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page, 'mid' => $mid];
 
         // Set variables to null, so they won't show if not needed
-        $movies = null;
-        $pagination = null;
+        $movies = [];
+        $pagination = [];
 
-        // Check if form was submitted and valid OR title is set in url
-        if (isset($title) || ($form->isSubmitted() && $form->isValid())) {
-            // If form was submitted get new movie title from form and set current page to 1 (for API call)
-            if ($form->isSubmitted()) {
-                $parameters['title'] = urlencode($form->get('Title')->getData());
-                $parameters['page'] = 1;
-            }
-
-            // API call
-            $result = $omdbService->searchByTitle($parameters);
-
-            // Check if movies found and if pagination is needed
-            if ($result['Response'] === 'True' && $result['totalResults'] > 10) {
-                $paginationService->createPagination('omdb', $parameters, $result['totalResults']);
-                $pagination = $paginationService->getPaginationLinks();
-            }
-
-            // Check for errors and create flash message
-            // else: Not enough movies found for pagination
-            if ($result['Response'] === 'False') {
-                if ($result['Error'] === 'Too many results.') {
-                    $this->addFlash('warning', 'Zu viele Ergebnisse. Bitte spezifizieren.');
-                } elseif ($result['Error'] === 'Movie not found!') {
-                    $this->addFlash('warning', 'Kein Film gefunden.');
-                } else {
-                    $this->addFlash('warning', $result['Error']);
-                }
-            } else {
-                $movies = $omdbService->getResultsAsEntities($result['Search']);
-            }
-        }
+        // Process form, get pagination and movies
+        $omdbService->processAndUpdateOmdbRequest($paginationService, $form, $parameters, $pagination, $movies);
 
         // Create form to add movie to event
         $addForm = $this->createForm(AddMovieType::class);

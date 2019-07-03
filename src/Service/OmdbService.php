@@ -150,9 +150,43 @@ class OmdbService extends AbstractController
     }
 
     /**
-     *
+     * @param PaginationService $paginationService pagination service
+     * @param FormInterface     $form              search form
+     * @param array             $parameters        reference for pagination links
+     * @param array             $pagination        reference for pagination links
+     * @param array             $movies            reference for movies
      */
-    public function doStuff(): void
+    public function processAndUpdateOmdbRequest(PaginationService $paginationService, FormInterface $form, array &$parameters, array &$pagination, array &$movies): void
     {
+        if (isset($parameters['title']) || ($form->isSubmitted() && $form->isValid())) {
+            // If form was submitted get new movie title from form and set current page to 1 (for API call)
+            if ($form->isSubmitted()) {
+                $parameters['title'] = urlencode($form->get('Title')->getData());
+                $parameters['page'] = 1;
+            }
+
+            // API call
+            $result = $this->searchByTitle($parameters);
+
+            // Check if movies found and if pagination is needed
+            if ($result['Response'] === 'True' && $result['totalResults'] > 10) {
+                $paginationService->createPagination('omdb', $parameters, $result['totalResults']);
+                $pagination = $paginationService->getPaginationLinks();
+            }
+
+            // Check for errors and create flash message
+            // else: Not enough movies found for pagination
+            if ($result['Response'] === 'False') {
+                if ($result['Error'] === 'Too many results.') {
+                    $this->addFlash('warning', 'Zu viele Ergebnisse. Bitte spezifizieren.');
+                } elseif ($result['Error'] === 'Movie not found!') {
+                    $this->addFlash('warning', 'Kein Film gefunden.');
+                } else {
+                    $this->addFlash('warning', $result['Error']);
+                }
+            } else {
+                $movies = $this->getResultsAsEntities($result['Search']);
+            }
+        }
     }
 }
