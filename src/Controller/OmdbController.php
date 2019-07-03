@@ -19,8 +19,6 @@ use Exception;
 /**
  * Class OmdbController
  * @IsGranted("ROLE_USER")
- *
- * @todo fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
  */
 
 class OmdbController extends AbstractController

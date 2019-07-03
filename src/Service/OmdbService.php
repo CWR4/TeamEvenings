@@ -126,6 +126,11 @@ class OmdbService extends AbstractController
             // Check if movie already exist in db
             if ($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID())) {
                 $movie = $manager->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
+                if (in_array($movie, $movienight->getVoting()->getMovies()->toArray(), false)) {
+                    $this->addFlash('warning', 'Film bereits zugeordnet!');
+
+                    return true;
+                }
                 $movie->addVoting($movienight->getVoting());
             } else {
                 $movienight->getVoting()->addMovie($movie);
