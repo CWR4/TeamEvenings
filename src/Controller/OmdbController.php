@@ -21,8 +21,6 @@ use Exception;
  * @IsGranted("ROLE_USER")
  *
  * @todo fix issue where you delete movie from a voting by replacing it with already existing one. adapt flash message.
- * @todo pass title to template to write it into the search field
- * @todo needs refactoring -> put more stuff to service -> empty this shit out
  */
 
 class OmdbController extends AbstractController
@@ -82,7 +80,7 @@ class OmdbController extends AbstractController
             'form' => $form->createView(),
             'movies' => $movies,
             'pagination' => $pagination,
-            'title' => urldecode($title),
+            'title' => urldecode($parameters['title']),
             'addform' => $addForm->createView(),
             'date' => $movienight,
         ]);
