@@ -63,9 +63,9 @@ class Vote
     }
 
     /**
-     * @return Movie|null
+     * @return Movie
      */
-    public function getMovie(): ?Movie
+    public function getMovie(): Movie
     {
         return $this->movie;
     }

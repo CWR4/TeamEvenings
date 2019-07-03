@@ -15,16 +15,16 @@ use Exception;
 class VotingService extends AbstractController
 {
     /**
-     * @param int $votingId voting id
+     * @param Voting $voting parameter
      *
      * @throws Exception
      *
      * @return array|null
      */
-    public function getVotingResult($votingId): ?array
+    public function getVotingResult($voting): ?array
     {
         // Get voting by id
-        $result['voting'] = $this->getDoctrine()->getManager()->getRepository(Voting::class)->getVoting($votingId);
+        $result['voting'] = $voting;
 
         if ($result['voting']) {
             $result['votes'] = $this->getVotes($result['voting']);
@@ -42,7 +42,7 @@ class VotingService extends AbstractController
     public function vote($mnid, $mid): void
     {
         $voting = $this->getDoctrine()->getRepository(MovieNight::class)->find($mnid)->getVoting();
-        if (!$this->hasVoted($voting->getVotes())) {
+        if ($voting && !$this->hasVoted($voting->getVotes())) {
             foreach ($voting->getMovies() as $movie) {
                 if ($movie->getId() === (int) $mid) {
                     $vote = new Vote();
@@ -91,16 +91,18 @@ class VotingService extends AbstractController
     {
         $votes = [];
 
-        foreach ($movieNight->getVoting()->getMovies() as $movie) {
-            $votes[$movie->getId()] = 0;
-        }
+        if ($movieNight->getVoting()) {
+            foreach ($movieNight->getVoting()->getMovies() as $movie) {
+                $votes[$movie->getId()] = 0;
+            }
 
-        foreach ($movieNight->getVoting()->getVotes() as $vote) {
-            ++$votes[$vote->getMovie()->getId()];
-        }
+            foreach ($movieNight->getVoting()->getVotes() as $vote) {
+                ++$votes[$vote->getMovie()->getId()];
+            }
 
-        if ($votes) {
-            return array_keys($votes, max($votes))[0];
+            if ($votes) {
+                return array_keys($votes, max($votes))[0];
+            }
         }
 
         return null;
@@ -134,7 +136,7 @@ class VotingService extends AbstractController
         if ($movieNight) {
             $voting = $movieNight->getVoting();
 
-            return $this->getVotingResult($voting->getId());
+            return $this->getVotingResult($voting);
         }
         $this->addFlash('warning', 'Filmabend nicht gefunden!');
 

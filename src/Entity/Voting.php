@@ -153,9 +153,9 @@ class Voting
     }
 
     /**
-     * @return MovieNight|null
+     * @return MovieNight
      */
-    public function getMovieNight(): ?MovieNight
+    public function getMovieNight(): MovieNight
     {
         return $this->movieNight;
     }

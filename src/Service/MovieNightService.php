@@ -110,7 +110,8 @@ class MovieNightService extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($movieNight->getDate() !== null && $movieNight->getDate()->format('Y.m.d') < date('Y.m.d')) {
                 $this->addFlash('warning', 'Datum ist vergangen!');
-            } elseif ($movieNight->getDate()->format('d.m.Y') === date('d.m.Y')
+            } elseif ($movieNight->getTime()
+                && $movieNight->getDate()->format('d.m.Y') === date('d.m.Y')
                 && $movieNight->getTime()->format('H:i') < date('H:i', time() - 900)) {
                 $this->addFlash('warning', 'Zeitpunkt ist vergangen!');
             } else {

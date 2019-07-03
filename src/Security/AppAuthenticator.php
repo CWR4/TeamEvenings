@@ -74,10 +74,12 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
-        $request->getSession()->set(
-            Security::LAST_USERNAME,
-            $credentials['username']
-        );
+        if ($request->getSession()) {
+            $request->getSession()->set(
+                Security::LAST_USERNAME,
+                $credentials['username']
+            );
+        }
 
         return $credentials;
     }
