@@ -19,7 +19,6 @@ class BaseController extends AbstractController
      *  - displays next event
      */
     /**
-     * @param VotingService     $votingService     dependency injection
      * @param MovieNightService $movieNightService dependency injection
      *
      * @throws Exception
@@ -28,14 +27,18 @@ class BaseController extends AbstractController
      *
      * @Route("/", name="base")
      */
-    public function index(VotingService $votingService, MovieNightService $movieNightService) : Response
+    public function index(MovieNightService $movieNightService) : Response
     {
         $movieNight = $movieNightService->getNextMovieNight();
-
-        $votingService->updateMovieNightMovie($movieNight);
+        if ($movieNight) {
+            $movie = $movieNight->getVotedMovie();
+        } else {
+            $movie = null;
+        }
 
         return $this->render('base/index.html.twig', [
             'movienight' => $movieNight,
+            'movie' => $movie,
         ]);
     }
 }

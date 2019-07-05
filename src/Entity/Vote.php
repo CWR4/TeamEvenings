@@ -17,12 +17,6 @@ class Vote
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Voting", inversedBy="votes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $voting;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -35,31 +29,17 @@ class Vote
     private $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\MovieNight", inversedBy="votes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $movieNight;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Voting|null
-     */
-    public function getVoting(): ?Voting
-    {
-        return $this->voting;
-    }
-
-    /**
-     * @param Voting|null $voting set relation to voting
-     *
-     * @return Vote
-     */
-    public function setVoting(?Voting $voting): self
-    {
-        $this->voting = $voting;
-
-        return $this;
     }
 
     /**
@@ -98,6 +78,18 @@ class Vote
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getMovieNight(): ?MovieNight
+    {
+        return $this->movieNight;
+    }
+
+    public function setMovieNight(?MovieNight $movieNight): self
+    {
+        $this->movieNight = $movieNight;
 
         return $this;
     }

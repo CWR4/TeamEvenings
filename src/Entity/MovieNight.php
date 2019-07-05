@@ -3,7 +3,13 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
+use phpDocumentor\Reflection\Types\This;
+use function Symfony\Component\Debug\Tests\testHeader;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieNightRepository")
@@ -18,7 +24,12 @@ class MovieNight
     private $id;
 
     /**
+     * @var \DateTimeInterface
+     *
      * @ORM\Column(type="date")
+     *
+     * @Assert\NotBlank()
+     * @Assert\Date()
      */
     private $date;
 
@@ -29,18 +40,29 @@ class MovieNight
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank()
      */
     private $location;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="movieNights")
+     * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="movieNight", orphanRemoval=true)
      */
-    private $movie;
+    private $votes;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Voting", inversedBy="movieNight", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="movieNights", cascade={"persist"})
      */
-    private $voting;
+    private $movies;
+
+    /**
+     * MovieNight constructor.
+     */
+    public function __construct()
+    {
+        $this->votes = new ArrayCollection();
+        $this->movies = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -111,42 +133,107 @@ class MovieNight
     }
 
     /**
+     * @return Collection|Vote[]
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    /**
+     * @param Vote $vote add to movie night
+     *
+     * @return MovieNight
+     */
+    public function addVote(Vote $vote): self
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes[] = $vote;
+            $vote->setMovieNight($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Vote $vote remove from movie night
+     *
+     * @return MovieNight
+     */
+    public function removeVote(Vote $vote): self
+    {
+        if ($this->votes->contains($vote)) {
+            $this->votes->removeElement($vote);
+            // set the owning side to null (unless already changed)
+            if ($vote->getMovieNight() === $this) {
+                $vote->setMovieNight(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Movie[]
+     */
+    public function getMovies(): Collection
+    {
+        return $this->movies;
+    }
+
+    /**
+     * @param Movie $movie movie
+     *
+     * @return MovieNight
+     */
+    public function addMovie(Movie $movie): self
+    {
+        if (!$this->movies->contains($movie)) {
+            $this->movies[] = $movie;
+            $movie->addMovieNight($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Movie $movie movie
+     *
+     * @return MovieNight
+     */
+    public function removeMovie(Movie $movie): self
+    {
+        if ($this->movies->contains($movie)) {
+            $this->movies->removeElement($movie);
+            $movie->removeMovieNight($this);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Movie|null
      */
-    public function getMovie(): ?Movie
+    public function getVotedMovie(): ?Movie
     {
-        return $this->movie;
-    }
+        $votes = [];
 
-    /**
-     * @param Movie|null $movie set movie for movienight
-     *
-     * @return MovieNight
-     */
-    public function setMovie(?Movie $movie): self
-    {
-        $this->movie = $movie;
+        foreach ($this->getMovies() as $movie) {
+            $votes[$movie->getId()] = 0;
+        }
 
-        return $this;
-    }
+        foreach ($this->getVotes() as $vote) {
+            ++$votes[$vote->getMovie()->getId()];
+        }
 
-    /**
-     * @return Voting
-     */
-    public function getVoting(): Voting
-    {
-        return $this->voting;
-    }
+        if ($votes) {
+            foreach ($this->getMovies() as $movie) {
+                if ($movie->getId() === array_keys($votes, max($votes))[0]) {
+                    return $movie;
+                }
+            }
+        }
 
-    /**
-     * @param Voting|null $voting set voting for movienight
-     *
-     * @return MovieNight
-     */
-    public function setVoting(?Voting $voting): self
-    {
-        $this->voting = $voting;
-
-        return $this;
+        return null;
     }
 }

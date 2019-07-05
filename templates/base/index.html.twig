@@ -19,22 +19,22 @@
                     </div>
                     <div class="card-body">
                     <!-- Show movie if was selected -->
-                    {% if movienight.movie != null %}
+                    {% if movie != null %}
                         <div class="row margin-top-20">
                             <div class="col-4 text-center">
-                                <img style="width: 150px" src="{{ movienight.movie.poster }}">
+                                <img style="width: 150px" src="{{ movie.poster }}">
                             </div>
                             <div class="col-8">
                                 <div class="row">
                                     <h4>
-                                        {{ movienight.movie.title }}
+                                        {{ movie.title }}
                                     </h4>
                                 </div>
                                 <div class="row margin-top-5">
-                                    {{ movienight.movie.plot }}
+                                    {{ movie.plot }}
                                 </div>
                                 <div class="row margin-top-20">
-                                    {{ movienight.movie.runtime }}
+                                    {{ movie.runtime }}
                                 </div>
                             </div>
                         </div>

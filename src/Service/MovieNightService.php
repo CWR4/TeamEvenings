@@ -23,15 +23,7 @@ class MovieNightService extends AbstractController
     {
         if ($form->isSubmitted() && $form->isValid() && $this->validateMovieNightForm($form, $movieNight)) {
             $manager = $this->getDoctrine()->getManager();
-
-            $voting = new Voting();
-            $voting->setOpen(true);
-
-            $movieNight->setVoting($voting);
-
-            $manager->persist($voting);
             $manager->persist($movieNight);
-
             $manager->flush();
             $this->addFlash('success', 'Termin erstellt!');
 
@@ -51,8 +43,6 @@ class MovieNightService extends AbstractController
     {
         if ($form->isSubmitted() && $form->isValid() && $this->validateMovieNightForm($form, $movieNight)) {
             $manager = $this->getDoctrine()->getManager();
-
-            $manager->persist($movieNight);
             $manager->flush();
 
             $this->addFlash('success', 'Termin erfolgreich geändert');
@@ -94,7 +84,7 @@ class MovieNightService extends AbstractController
         do {
             $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight($i);
             $i++;
-        } while (isset($movieNight) && $movieNight->getVoting() !== null && $movieNight->getVoting()->getMovies()->isEmpty());
+        } while (isset($movieNight) && $movieNight->getMovies()->isEmpty());
 
         return $movieNight;
     }

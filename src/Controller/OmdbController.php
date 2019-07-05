@@ -33,29 +33,25 @@ class OmdbController extends AbstractController
      * @param VotingService     $votingService     dependency injection
      * @param Request           $request           http request
      * @param PaginationService $paginationService dependency injection
-     * @param int               $mid               movie id
+     * @param int               $movie             movie id
      * @param int               $page              current page
      * @param string            $title             title of movie as string
-     * @param int               $mnid              movienight id
+     * @param MovieNight        $movieNight        movienight
      *
      * @throws Exception
      *
      * @return Response
      *
-     * @Route("/omdb/{mnid<\d+>?}/{mid<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
+     * @Route("/omdb/{movieNight<\d+>?}/{movie<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function addOmdbMovie(OmdbService $omdbService, VotingService $votingService, Request $request, PaginationService $paginationService, $mid, $page, $title, $mnid) : Response
+    public function addOmdbMovie(OmdbService $omdbService, VotingService $votingService, Request $request, PaginationService $paginationService, $movie, $page, $title, MovieNight $movieNight) : Response
     {
-        // Get movienight from db
-        $manager = $this->getDoctrine()->getManager();
-        $movienight = $manager->getRepository(MovieNight::class)->find($mnid);
-
         // Create form for movie search
         $form = $this->createForm(MovieFormType::class);
         $form->handleRequest($request);
 
         // Set parameters for pagination and api call
-        $parameters = ['mnid' => $mnid, 'title' => $title, 'page' => $page, 'mid' => $mid];
+        $parameters = ['movieNight' => $movieNight->getId(), 'title' => $title, 'page' => $page, 'movie' => $movie];
 
         // Set variables to null, so they won't show if not needed
         $movies = [];
@@ -66,12 +62,12 @@ class OmdbController extends AbstractController
 
         // Create form to add movie to event
         $addForm = $this->createForm(AddMovieType::class);
-        $addForm->add('mid', HiddenType::class, ['data' => $mid]);
+        $addForm->add('mid', HiddenType::class, ['data' => $movie]);
         $addForm->handleRequest($request);
 
         // Check if form was send and process it
-        if ($omdbService->processAddForm($votingService, $addForm, $movienight)) {
-            return $this->redirectToRoute('addMovie', ['vid' => $movienight->getVoting()->getId()]);
+        if ($omdbService->processAddForm($votingService, $addForm, $movieNight)) {
+            return $this->redirectToRoute('movie_night_addMovie', ['movieNight' => $movieNight->getId()]);
         }
 
         return $this->render('omdb/index.html.twig', [
@@ -80,7 +76,7 @@ class OmdbController extends AbstractController
             'pagination' => $pagination,
             'title' => urldecode($parameters['title']),
             'addform' => $addForm->createView(),
-            'date' => $movienight,
+            'date' => $movieNight,
         ]);
     }
 }
