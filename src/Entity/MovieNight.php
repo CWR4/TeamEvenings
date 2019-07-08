@@ -2,13 +2,10 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-use phpDocumentor\Reflection\Types\This;
-use function Symfony\Component\Debug\Tests\testHeader;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,21 +19,6 @@ class MovieNight
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @var \DateTimeInterface
-     *
-     * @ORM\Column(type="date")
-     *
-     * @Assert\NotBlank()
-     * @Assert\Date()
-     */
-    private $date;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    private $time;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -56,6 +38,13 @@ class MovieNight
     private $movies;
 
     /**
+     * @ORM\Column(type="datetime")
+     *
+     * @Assert\GreaterThanOrEqual("now")
+     */
+    private $dateAndTime;
+
+    /**
      * MovieNight constructor.
      */
     public function __construct()
@@ -70,46 +59,6 @@ class MovieNight
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getDate(): ?DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTimeInterface $date set date of movienight
-     *
-     * @return MovieNight
-     */
-    public function setDate(DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getTime(): ?DateTimeInterface
-    {
-        return $this->time;
-    }
-
-    /**
-     * @param DateTimeInterface $time set time of movienight
-     *
-     * @return MovieNight
-     */
-    public function setTime(DateTimeInterface $time): self
-    {
-        $this->time = $time;
-
-        return $this;
     }
 
     /**
@@ -235,5 +184,17 @@ class MovieNight
         }
 
         return null;
+    }
+
+    public function getDateAndTime(): ?\DateTimeInterface
+    {
+        return $this->dateAndTime;
+    }
+
+    public function setDateAndTime(\DateTimeInterface $dateAndTime): self
+    {
+        $this->dateAndTime = $dateAndTime;
+
+        return $this;
     }
 }

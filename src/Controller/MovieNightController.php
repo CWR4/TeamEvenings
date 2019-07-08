@@ -57,8 +57,7 @@ class MovieNightController extends AbstractController
      *  - form for creating a new event
      *  - date, time and location
      *
-     * @param Request           $request           http request
-     * @param MovieNightService $movieNightService dependency injection
+     * @param Request $request http request
      *
      * @return Response
      *
@@ -66,19 +65,20 @@ class MovieNightController extends AbstractController
      *
      * @IsGranted("ROLE_ADMIN")
      */
-    public function createMovieNight(Request $request, MovieNightService $movieNightService): Response
+    public function createMovieNight(Request $request): Response
     {
         $movieNight = new MovieNight();
+        $createMovieNightForm = $this->createForm(MovieNightType::class, $movieNight);
+        $createMovieNightForm->handleRequest($request);
+        if ($createMovieNightForm->isSubmitted() && $createMovieNightForm->isValid()) {
+            $this->manager->persist($movieNight);
+            $this->manager->flush();
 
-        $dateform = $this->createForm(MovieNightType::class, $movieNight);
-        $dateform->handleRequest($request);
-
-        if ($movieNightService->createMovieNight($dateform, $movieNight)) {
             return $this->redirectToRoute('movie_night_list_all');
         }
 
         return $this->render('movie_night/index.html.twig', [
-            'form' => $dateform->createView(),
+            'form' => $createMovieNightForm->createView(),
         ]);
     }
 
@@ -94,12 +94,10 @@ class MovieNightController extends AbstractController
      */
     public function listAll(): Response
     {
-        $movienights = $this->getDoctrine()->getRepository(MovieNight::class)->findAllByDateAsc();
-
-        $this->logger->debug('Debug');
+        $movieNights = $this->getDoctrine()->getRepository(MovieNight::class)->findAllByDateAsc();
 
         return $this->render('movie_night/list.html.twig', [
-            'movienights' => $movienights,
+            'movienights' => $movieNights,
         ]);
     }
 

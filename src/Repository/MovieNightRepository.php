@@ -34,11 +34,9 @@ class MovieNightRepository extends ServiceEntityRepository
     public function findAllByDateAsc()  : array
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date > :currentDate or (m.time > :currentTime and m.date = :currentDate)')
-            ->setParameter('currentDate', date('Y-m-d'))
-            ->setParameter('currentTime', date('H:i', time()-900))
-            ->orderBy('m.date', 'ASC')
-            ->addOrderBy('m.time', 'ASC')
+            ->andWhere('m.dateAndTime >= :currentDateAndTime')
+            ->setParameter('currentDateAndTime', date('Y-m-d H:i'))
+            ->orderBy('m.dateAndTime', 'ASC')
             ->getQuery()
         ;
 
@@ -58,14 +56,9 @@ class MovieNightRepository extends ServiceEntityRepository
     public function getNextMovienight($offset = 0)  : ?MovieNight
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date = :currentDate')
-            ->setParameter('currentDate', date('Y-m-d'))
-            ->andWhere('m.time > :currentTime')
-            ->setParameter('currentTime', date('H:i', time() - 900))
-            ->orWhere('m.date > :currentDate')
-            ->setParameter('currentDate', date('Y-m-d'))
-            ->orderBy('m.date', 'ASC')
-            ->addOrderBy('m.time', 'ASC')
+            ->andWhere('m.dateAndTime >= :currentDateAndTime')
+            ->setParameter('currentDateAndTime', date('Y-m-d H:i'))
+            ->orderBy('m.dateAndTime', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults(1)
             ->getQuery()

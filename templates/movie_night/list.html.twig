@@ -21,9 +21,9 @@
                         {% if movienight.movies is not empty or is_granted('ROLE_ADMIN') %}
                             <tr>
                                 <td class="align-middle">
-                                    {{ movienight.date|date('d.m.Y') }}
+                                    {{ movienight.dateAndTime | date('d.m.Y') }}
                                     <br/>
-                                    {{ movienight.time|date('H:i') }}
+                                    {{ movienight.dateAndTime | date('H:i') }}
                                     <br/>
                                     {{ movienight.location }}
                                 </td>
