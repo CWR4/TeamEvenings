@@ -82,11 +82,19 @@ class Vote
         return $this;
     }
 
+    /**
+     * @return MovieNight|null
+     */
     public function getMovieNight(): ?MovieNight
     {
         return $this->movieNight;
     }
 
+    /**
+     * @param MovieNight|null $movieNight movienight
+     *
+     * @return Vote
+     */
     public function setMovieNight(?MovieNight $movieNight): self
     {
         $this->movieNight = $movieNight;

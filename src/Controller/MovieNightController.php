@@ -65,8 +65,10 @@ class MovieNightController extends AbstractController
     public function createMovieNight(Request $request): Response
     {
         $movieNight = new MovieNight();
+
         $createMovieNightForm = $this->createForm(MovieNightType::class, $movieNight);
         $createMovieNightForm->handleRequest($request);
+
         if ($createMovieNightForm->isSubmitted() && $createMovieNightForm->isValid()) {
             $this->manager->persist($movieNight);
             $this->manager->flush();
@@ -185,7 +187,7 @@ class MovieNightController extends AbstractController
     /**
      *  - page to connect movies to voting / movienight
      *
-     * @Route("addMovie/{movieNight<\d+>?}", name="addMovie")
+     * @Route("addMovie/{movieNight}", name="add_movie")
      *
      * @IsGranted("ROLE_ADMIN")
      *
@@ -195,12 +197,6 @@ class MovieNightController extends AbstractController
      */
     public function addMovieToMovieNight(MovieNight $movieNight): Response
     {
-        if (null === $movieNight) {
-            $this->addFlash('warning', 'Filmabend wurde nicht gefunden');
-
-            return $this->redirectToRoute('movie_night_list_all');
-        }
-
         return $this->render('movie_night/addMovie.html.twig', [
             'movies' => $movieNight->getMovies(),
             'movienight' => $movieNight,
@@ -208,7 +204,7 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @Route("deleteMovie/{movieNight<\d+>?}/{movie<\d+>?}", name="deleteMovieFromVoting")
+     * @Route("deleteMovie/{movieNight}/{movie}", name="delete_movie")
      *
      * @IsGranted("ROLE_ADMIN")
      *
@@ -222,6 +218,6 @@ class MovieNightController extends AbstractController
     {
         $votingService->deleteMovieFromMovieNight($movieNight, $movie);
 
-        return $this->redirectToRoute('movie_night_addMovie', ['movieNight' => $movieNight->getId()]);
+        return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
     }
 }

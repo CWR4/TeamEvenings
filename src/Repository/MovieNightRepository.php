@@ -47,20 +47,17 @@ class MovieNightRepository extends ServiceEntityRepository
      *  - retrieve next movienight or null if none planned
      */
     /**
-     * @param int $offset offset = next movienight
-     *
      * @return MovieNight|null
      *
      * @throws NonUniqueResultException
      */
-    public function getNextMovienight($offset = 0)  : ?MovieNight
+    public function getNextMovienight()  : ?MovieNight
     {
         $qb = $this->createQueryBuilder('m')
             ->andWhere('m.dateAndTime >= :currentDateAndTime')
             ->setParameter('currentDateAndTime', date('Y-m-d H:i'))
+            ->andWhere('m.movies is not empty')
             ->orderBy('m.dateAndTime', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults(1)
             ->getQuery()
         ;
 

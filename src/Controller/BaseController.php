@@ -2,34 +2,32 @@
 
 namespace App\Controller;
 
-use App\Service\MovieNightService;
-use App\Service\VotingService;
+use App\Entity\MovieNight;
+
+use Exception;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Exception;
 
 /**
  * Class BaseController
  */
 class BaseController extends AbstractController
 {
-    /*
+    /**
      *  - landing page
      *  - displays next event
-     */
-    /**
-     * @param MovieNightService $movieNightService dependency injection
+     *
+     * @Route("/", name="base")
      *
      * @throws Exception
      *
      * @return Response
-     *
-     * @Route("/", name="base")
      */
-    public function index(MovieNightService $movieNightService) : Response
+    public function index() : Response
     {
-        $movieNight = $movieNightService->getNextMovieNight();
+        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
         if ($movieNight) {
             $movie = $movieNight->getVotedMovie();
         } else {

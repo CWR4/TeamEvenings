@@ -91,7 +91,7 @@ class OmdbController extends AbstractController
 
         // Check if form was send and process it
         if ($this->omdbService->processAddForm($this->votingService, $addForm, $movieNight)) {
-            return $this->redirectToRoute('movie_night_addMovie', ['movieNight' => $movieNight->getId()]);
+            return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
         }
 
         return $this->render('omdb/index.html.twig', [
