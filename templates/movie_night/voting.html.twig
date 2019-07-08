@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Abstimmen{% if movienight %} - {{ movienight.date|date('d.m.Y') }}  - {{ movienight.time|date('H:i') }}{% endif %}
+    Abstimmen{% if movienight %} - {{ movienight.dateAndTime|date('d.m.Y') }}  - {{ movienight.dateAndTime|date('H:i') }}{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -10,7 +10,7 @@
         {% if movienight %}
             <h4>Abstimmen für</h4>
             <h3>
-                {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
+                {{ movienight.dateAndTime|date('d.m.Y') }} - {{ movienight.dateAndTime|date('H:i') }}
             </h3>
         {% endif %}
 

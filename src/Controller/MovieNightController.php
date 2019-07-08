@@ -154,7 +154,7 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @Route("voting/{movieNight<\d+>?}/{movie<\d+>?}", name="voting")
+     * @Route("voting/{movieNight}/{movie<\d+>?}", name="voting")
      *
      * @IsGranted("ROLE_USER")
      *

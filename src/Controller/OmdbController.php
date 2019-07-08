@@ -23,28 +23,52 @@ use Exception;
 
 class OmdbController extends AbstractController
 {
-    /*
+    /**
+     * @var OmdbService
+     */
+    private $omdbService;
+
+    /**
+     * @var VotingService
+     */
+    private $votingService;
+
+    /**
+     * @var PaginationService
+     */
+    private $paginationService;
+
+    /**
+     * OmdbController constructor.
+     * @param OmdbService       $omdbService       dependency injection
+     * @param VotingService     $votingService     dependency injection
+     * @param PaginationService $paginationService dependency injection
+     */
+    public function __construct(OmdbService $omdbService, VotingService $votingService, PaginationService $paginationService)
+    {
+        $this->omdbService = $omdbService;
+        $this->votingService = $votingService;
+        $this->paginationService = $paginationService;
+    }
+
+    /**
      *  - search movie in open movie database
      *  - relate movie to movienight
      *  - store movie in database
-     */
-    /**
-     * @param OmdbService       $omdbService       dependency injection
-     * @param VotingService     $votingService     dependency injection
-     * @param Request           $request           http request
-     * @param PaginationService $paginationService dependency injection
-     * @param int               $movie             movie id
-     * @param int               $page              current page
-     * @param string            $title             title of movie as string
-     * @param MovieNight        $movieNight        movienight
+     *
+     * @param Request    $request    http request
+     * @param MovieNight $movieNight movienight
+     * @param int        $movie      movie id
+     * @param int        $page       current page
+     * @param string     $title      title of movie as string
      *
      * @throws Exception
      *
      * @return Response
      *
-     * @Route("/omdb/{movieNight<\d+>?}/{movie<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
+     * @Route("/omdb/{movieNight}/{movie<\d+>?0}/{title<.*?>?}/{page<\d+>?1}", name="omdb")
      */
-    public function addOmdbMovie(OmdbService $omdbService, VotingService $votingService, Request $request, PaginationService $paginationService, $movie, $page, $title, MovieNight $movieNight) : Response
+    public function addOmdbMovie(Request $request, MovieNight $movieNight, $movie, $page, $title) : Response
     {
         // Create form for movie search
         $form = $this->createForm(MovieFormType::class);
@@ -58,7 +82,7 @@ class OmdbController extends AbstractController
         $pagination = [];
 
         // Process form, get pagination and movies
-        $omdbService->processAndUpdateOmdbRequest($paginationService, $form, $parameters, $pagination, $movies);
+        $this->omdbService->processAndUpdateOmdbRequest($this->paginationService, $form, $parameters, $pagination, $movies);
 
         // Create form to add movie to event
         $addForm = $this->createForm(AddMovieType::class);
@@ -66,7 +90,7 @@ class OmdbController extends AbstractController
         $addForm->handleRequest($request);
 
         // Check if form was send and process it
-        if ($omdbService->processAddForm($votingService, $addForm, $movieNight)) {
+        if ($this->omdbService->processAddForm($this->votingService, $addForm, $movieNight)) {
             return $this->redirectToRoute('movie_night_addMovie', ['movieNight' => $movieNight->getId()]);
         }
 
