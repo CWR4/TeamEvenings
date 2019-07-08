@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Entity\MovieNight;
-use App\Entity\Voting;
-use App\Form\EditMovieNightType;
 use App\Form\MovieNightType;
 use App\Service\MovieNightService;
 use App\Service\VotingService;
@@ -82,10 +80,9 @@ class MovieNightController extends AbstractController
         ]);
     }
 
-    /*
-     *  - overview of all movienights planned, only future ones.
-     */
     /**
+     * - overview of all movienights planned, only future ones.
+     *
      * @Route("all", name="list_all")
      *
      * @IsGranted("ROLE_USER")
@@ -103,14 +100,11 @@ class MovieNightController extends AbstractController
 
     /**
      *  - form for editing movienight date, time location
-     *  - same as creating, except buttons
      *  - loaded with data from existing object
      *  - button save and abort
-     *  - checks if date and time are in the future
      *
-     * @param Request           $request           http request
-     * @param MovieNightService $movieNightService dependency injection
-     * @param MovieNight        $movieNight        movienight id
+     * @param Request    $request    http request
+     * @param MovieNight $movieNight movienight id
      *
      * @return Response
      *
@@ -118,23 +112,24 @@ class MovieNightController extends AbstractController
      *
      * @IsGranted("ROLE_ADMIN")
      */
-    public function editMovieNight(Request $request, MovieNightService $movieNightService, MovieNight $movieNight): Response
+    public function editMovieNight(Request $request, MovieNight $movieNight): Response
     {
-        $editForm = $this->createForm(EditMovieNightType::class, $movieNight);
-        $editForm->handleRequest($request);
+        $editMovieNightForm = $this->createForm(MovieNightType::class, $movieNight);
+        $editMovieNightForm->handleRequest($request);
 
-        if ($movieNightService->editMovieNight($editForm, $movieNight)) {
+        if ($editMovieNightForm->isSubmitted() && $editMovieNightForm->isValid()) {
+            $this->manager->flush();
+
             return $this->redirectToRoute('movie_night_list_all');
         }
 
         return $this->render('movie_night/edit.html.twig', [
-            'form' => $editForm->createView(),
+            'form' => $editMovieNightForm->createView(),
         ]);
     }
 
     /*
      *  - form for deleting movienight date
-     *  - same as creating, except buttons
      *  - loaded with data from existing object
      */
     /**
