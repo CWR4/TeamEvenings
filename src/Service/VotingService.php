@@ -69,11 +69,10 @@ class VotingService extends AbstractController
         }
     }
 
-    /*
-     *  - delete all votes in given voting for given movie
-     *  - in case a movie gets removed from voting
-     */
     /**
+     *  - delete all votes in given movienight for given movie
+     *  - in case a movie gets removed from voting
+     *
      * @param MovieNight $movieNight as parameter
      * @param Movie      $movie      delete votes for movie in voting
      */
@@ -87,44 +86,6 @@ class VotingService extends AbstractController
             }
         }
         $this->manager->flush();
-    }
-
-    /**
-     * @param MovieNight $movieNight current movienight as parameter
-     *
-     * @return int|null
-     */
-    public function getVotedMovieId(MovieNight $movieNight): ?int
-    {
-        $votes = [];
-
-        foreach ($movieNight->getMovies() as $movie) {
-            $votes[$movie->getId()] = 0;
-        }
-
-        foreach ($movieNight->getVotes() as $vote) {
-            ++$votes[$vote->getMovie()->getId()];
-        }
-
-        if ($votes) {
-            return array_keys($votes, max($votes))[0];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param MovieNight $movieNight current movienight as parameter
-     */
-    public function updateMovieNightMovie(?MovieNight $movieNight): void
-    {
-        if (null !== $movieNight) {
-            $nextMovieId = $this->getVotedMovieId($movieNight);
-            $movieNight->setMovie($this->getDoctrine()->getRepository(Movie::class)->find($nextMovieId));
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($movieNight);
-            $manager->flush();
-        }
     }
 
     /**
