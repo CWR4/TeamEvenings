@@ -65,7 +65,7 @@ class MovieNightService extends AbstractController
             $manager = $this->getDoctrine()->getManager();
             $manager->remove($movieNight);
             $manager->flush();
-            $this->addFlash('success', 'Termin erfolgreich gelöscht!');
+
 
             return true;
         }
