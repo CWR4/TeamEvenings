@@ -18,9 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class OmdbController
- * @IsGranted("ROLE_ADMIN)
+ * @IsGranted("ROLE_ADMIN")
  */
-
 class OmdbController extends AbstractController
 {
     /**

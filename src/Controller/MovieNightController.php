@@ -10,6 +10,7 @@ use App\Service\VotingService;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 
 use Psr\Log\LoggerInterface;
@@ -202,6 +203,8 @@ class MovieNightController extends AbstractController
      *
      * @param MovieNight  $movieNight movienight
      * @param string|null $imdbId     omdb movie id
+     *
+     * @throws NonUniqueResultException
      *
      * @return Response
      */
