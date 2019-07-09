@@ -164,17 +164,21 @@ class OmdbService extends AbstractController
         $movie = $manager->getRepository(Movie::class)->findByImdbId($imdbId);
 
         // Check if movie already exist in db
-        if (null !== $movie) {
-            if (in_array($movie, $movieNight->getMovies()->toArray(), true)) {
-                $this->addFlash('warning', 'Film bereits zugeordnet!');
-            }
-            $movie->addMovieNight($movieNight);
+        if (3 >= $movieNight->getMovies()->count()) {
+            $this->addFlash('warning', 'Es stehen bereits 3 Filme zur Auswahl!');
         } else {
-            $movie = $this->getDataById($imdbId);
-            $movieNight->addMovie($movie);
-            $manager->persist($movie);
-            $this->addFlash('success', 'Film erfolgreich hinzugefügt');
+            if (null !== $movie) {
+                if (in_array($movie, $movieNight->getMovies()->toArray(), true)) {
+                    $this->addFlash('warning', 'Film bereits zugeordnet!');
+                }
+                $movie->addMovieNight($movieNight);
+            } else {
+                $movie = $this->getDataById($imdbId);
+                $movieNight->addMovie($movie);
+                $manager->persist($movie);
+                $this->addFlash('success', 'Film erfolgreich hinzugefügt');
+            }
+            $manager->flush();
         }
-        $manager->flush();
     }
 }

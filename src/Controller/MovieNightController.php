@@ -116,7 +116,7 @@ class MovieNightController extends AbstractController
      *  - loaded with data from existing object
      *  - button save and abort
      *
-     * @Route("edit/{movieNight}", name="edit")
+     * @Route("{movieNight}/edit", name="edit")
      *
      * @IsGranted("ROLE_ADMIN")
      *
@@ -147,7 +147,7 @@ class MovieNightController extends AbstractController
      *  - form for deleting movienight date
      *  - loaded with data from existing object
      *
-     * @Route("delete/{movieNight}", name="delete")
+     * @Route("{movieNight}/delete", name="delete")
      *
      * @IsGranted("ROLE_ADMIN")
      *
@@ -166,7 +166,7 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @Route("voting/{movieNight}/{movie<\d+>?}", name="voting")
+     * @Route("{movieNight}/voting/{movie<\d+>?}", name="voting")
      *
      * @IsGranted("ROLE_USER")
      *
@@ -197,7 +197,7 @@ class MovieNightController extends AbstractController
     /**
      *  - page to connect movies to voting / movienight
      *
-     * @Route("addMovie/{movieNight}/{imdbId?}", name="add_movie")
+     * @Route("{movieNight}/addMovie/{imdbId?}", name="add_movie")
      *
      * @IsGranted("ROLE_ADMIN")
      *
@@ -223,7 +223,7 @@ class MovieNightController extends AbstractController
     }
 
     /**
-     * @Route("deleteMovie/{movieNight}/{movie}", name="delete_movie")
+     * @Route("{movieNight}/deleteMovie/{movie}", name="delete_movie")
      *
      * @IsGranted("ROLE_ADMIN")
      *
