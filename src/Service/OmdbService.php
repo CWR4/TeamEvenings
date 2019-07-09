@@ -4,9 +4,9 @@ namespace App\Service;
 
 use App\Entity\Movie;
 use App\Entity\MovieNight;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
-use Exception;
 
 /**
  * Class OmdbService
@@ -106,55 +106,6 @@ class OmdbService extends AbstractController
     }
 
     /**
-     * @param VotingService $votingService dependency injection
-     * @param FormInterface $addForm       to add movie to movienight and database
-     * @param MovieNight    $movieNight    to edit
-     *
-     * @throws Exception
-     *
-     * @return bool
-     */
-    public function processAddForm(VotingService $votingService, FormInterface $addForm, MovieNight $movieNight): bool
-    {
-        if ($addForm->isSubmitted()) {
-            // Get movie information from omdb
-            $movieid = $addForm->getData()['movieid'];
-            $movie = $this->getDataById($movieid);
-
-            $manager = $this->getDoctrine()->getManager();
-
-            // Check if movie already exist in db
-            if ($this->getDoctrine()->getRepository(Movie::class)->findByImdbId($movie->getImdbID())) {
-                $movie = $manager->getRepository(Movie::class)->findByImdbId($movie->getImdbID());
-                if (in_array($movie, $movieNight->getMovies()->toArray(), false)) {
-                    $this->addFlash('warning', 'Film bereits zugeordnet!');
-
-                    return true;
-                }
-                $movie->addMovieNight($movieNight);
-            } else {
-                $movieNight->addMovie($movie);
-            }
-
-            if (!($addForm->getData()['mid'] === '0' || $addForm->getData()['mid'] === null)) {
-                $oldmovie = $this->getDoctrine()->getRepository(Movie::class)->find($addForm->getData()['mid']);
-                $movieNight->removeMovie($oldmovie);
-                $votingService->deleteVotes($movieNight, $oldmovie);
-            }
-
-            $manager->persist($movie);
-            $manager->persist($movieNight);
-            $manager->flush();
-
-            $this->addFlash('success', 'Film erfolgreich hinzugefügt');
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param PaginationService $paginationService pagination service
      * @param FormInterface     $form              search form
      * @param array             $parameters        reference for pagination links
@@ -193,5 +144,33 @@ class OmdbService extends AbstractController
                 $movies = $this->getResultsAsEntities($result['Search']);
             }
         }
+    }
+
+    /**
+     * @param MovieNight $movieNight movienight
+     * @param string     $imdbId     omdb movie id
+     *
+     * @return void
+     */
+    public function addMovie(MovieNight $movieNight, string $imdbId): void
+    {
+        // Get movie information from omdb
+        $manager = $this->getDoctrine()->getManager();
+
+        $movie = $manager->getRepository(Movie::class)->findByImdbId($imdbId);
+
+        // Check if movie already exist in db
+        if (null !== $movie) {
+            if (in_array($movie, $movieNight->getMovies()->toArray(), true)) {
+                $this->addFlash('warning', 'Film bereits zugeordnet!');
+            }
+            $movie->addMovieNight($movieNight);
+        } else {
+            $movie = $this->getDataById($imdbId);
+            $movieNight->addMovie($movie);
+            $manager->persist($movie);
+            $this->addFlash('success', 'Film erfolgreich hinzugefügt');
+        }
+        $manager->flush();
     }
 }

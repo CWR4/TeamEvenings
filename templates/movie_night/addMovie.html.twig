@@ -48,11 +48,6 @@
                                 </td>
 
                                 <td class="tab-button justify-content-center align-middle">
-                                    <a href="{{ path('omdb', {'movieNight': movienight.id, 'movie': movie.id}) }}">
-                                        <button class="btn btn-sm btn-secondary tab-button btn-spacing">
-                                            Film
-                                        </button>
-                                    </a>
                                     <a href="{{ path('movie_night_delete_movie', {'movieNight': movienight.id, 'movie': movie.id}) }}">
                                         <button class="btn btn-sm btn-outline-secondary tab-button btn-spacing">
                                             Löschen

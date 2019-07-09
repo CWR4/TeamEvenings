@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Form\MovieNightType;
+use App\Service\OmdbService;
 use App\Service\VotingService;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -39,15 +40,22 @@ class MovieNightController extends AbstractController
     private $logger;
 
     /**
+     * @var OmdbService
+     */
+    private $omdbService;
+
+    /**
      * MovieNightController constructor.
      *
-     * @param ObjectManager   $manager for db requests
-     * @param LoggerInterface $logger  for writing logs
+     * @param ObjectManager   $manager     for db requests
+     * @param LoggerInterface $logger      for writing logs
+     * @param OmdbService     $omdbService for fetching data from omdb
      */
-    public function __construct(ObjectManager $manager, LoggerInterface $logger)
+    public function __construct(ObjectManager $manager, LoggerInterface $logger, OmdbService $omdbService)
     {
         $this->manager = $manager;
         $this->logger = $logger;
+        $this->omdbService = $omdbService;
     }
 
     /**
@@ -73,6 +81,7 @@ class MovieNightController extends AbstractController
             $this->manager->persist($movieNight);
             $this->manager->flush();
 
+            $this->logger->log('', 'Termin erstellt');
             $this->addFlash('success', 'Termin erfolgreich erstellt!');
 
             return $this->redirectToRoute('movie_night_list_all');
@@ -187,16 +196,23 @@ class MovieNightController extends AbstractController
     /**
      *  - page to connect movies to voting / movienight
      *
-     * @Route("addMovie/{movieNight}", name="add_movie")
+     * @Route("addMovie/{movieNight}/{imdbId?}", name="add_movie")
      *
      * @IsGranted("ROLE_ADMIN")
      *
      * @param MovieNight  $movieNight movienight
+     * @param string|null $imdbId     omdb movie id
      *
      * @return Response
      */
-    public function addMovieToMovieNight(MovieNight $movieNight): Response
+    public function addMovieToMovieNight(MovieNight $movieNight, ?string $imdbId): Response
     {
+        if ($imdbId) {
+            $this->omdbService->addMovie($movieNight, $imdbId);
+
+            return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
+        }
+
         return $this->render('movie_night/addMovie.html.twig', [
             'movies' => $movieNight->getMovies(),
             'movienight' => $movieNight,

@@ -8,7 +8,9 @@ use App\Form\ChangePasswordType;
 use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
 use App\Form\SetUserRoleType;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
@@ -24,9 +26,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * @return Response
-     *
      * @Route("/user", name="all_user")
+     *
+     * @return Response
      */
     public function listAll(): Response
     {
@@ -38,12 +40,12 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/deleteuser/{userId<\d+>?}", name="delete_user")
+     *
      * @param Request $request http request for form
      * @param int     $userId  user id
      *
      * @return Response
-     *
-     * @Route("/deleteuser/{userId<\d+>?}", name="delete_user")
      */
     public function deleteUser(Request $request, $userId): Response
     {
@@ -70,11 +72,11 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/edit/{id<\d+>?}", name="edit_user")
+     *
      * @param User $id user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/edit/{id<\d+>?}", name="edit_user")
      */
     public function editUser(User $id): Response
     {
@@ -84,12 +86,12 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/changeusername/{user<\d+>?0}", name="change_username")
+     *
      * @param Request $request http request for form
      * @param User    $user    user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/changeusername/{user<\d+>?0}", name="change_username")
      */
     public function changeUsername(Request $request, User $user): Response
     {
@@ -116,12 +118,12 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/changerole/{user<\d+>?}", name="change_role")
+     *
      * @param Request $request http request for form
      * @param User    $user    user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/changerole/{user<\d+>?}", name="change_role")
      */
     public function changeRole(Request $request, User $user): Response
     {
@@ -146,13 +148,13 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
+     *
      * @param UserPasswordEncoderInterface $encoder dependency injection
      * @param Request                      $request http request for form
      * @param User                         $user    user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
      *
      * @TODO Eventuell diese Maske für alle Nutzer erreichbar machen und Admins immer, ohne Eingabe des alten Passwortes, erlauben das Passwort zu ändern.
      */

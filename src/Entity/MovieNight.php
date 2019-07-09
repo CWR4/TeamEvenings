@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -186,12 +188,20 @@ class MovieNight
         return null;
     }
 
-    public function getDateAndTime(): ?\DateTimeInterface
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getDateAndTime(): ?DateTimeInterface
     {
         return $this->dateAndTime;
     }
 
-    public function setDateAndTime(\DateTimeInterface $dateAndTime): self
+    /**
+     * @param DateTimeInterface $dateAndTime value to set
+     *
+     * @return MovieNight
+     */
+    public function setDateAndTime(DateTimeInterface $dateAndTime): self
     {
         $this->dateAndTime = $dateAndTime;
 
