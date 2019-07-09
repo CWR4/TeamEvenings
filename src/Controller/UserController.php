@@ -21,12 +21,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserController
- * @IsGranted("ROLE_ADMIN")
+ *
+ * @Route("/user/", name="user_")
  */
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user", name="all_user")
+     * @Route("", name="all")
+     *
+     * @IsGranted("ROLE_ADMIN")
      *
      * @return Response
      */
@@ -40,18 +43,19 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/deleteuser/{userId<\d+>?}", name="delete_user")
+     * @Route("{user<\d+>?}/delete", name="delete")
+     *
+     * @IsGranted("ROLE_ADMIN")
      *
      * @param Request $request http request for form
-     * @param int     $userId  user id
+     * @param User    $user    user
      *
      * @return Response
      */
-    public function deleteUser(Request $request, $userId): Response
+    public function deleteUser(Request $request, User $user): Response
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $deleteForm = $this->createForm(DeleteUserType::class);
-        $deleteForm->add('id', HiddenType::class, ['data' => $userId]);
+        $deleteForm->add('id', HiddenType::class, ['data' => $user->getId()]);
         $deleteForm->handleRequest($request);
 
         if ($deleteForm->isSubmitted()) {
@@ -62,7 +66,7 @@ class UserController extends AbstractController
             $manager->flush();
             $this->addFlash('success', 'Nutzer gelöscht');
 
-            return $this->redirectToRoute('all_user');
+            return $this->redirectToRoute('user_all');
         }
 
         return $this->render('user/deleteUser.html.twig', [
@@ -72,21 +76,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/edit/{id<\d+>?}", name="edit_user")
+     * @Route("{user<\d+>?}/edit", name="edit")
      *
-     * @param User $id user as parameter
+     * @IsGranted("ROLE_ADMIN")
+     *
+     * @param User $user user as parameter
      *
      * @return Response
      */
-    public function editUser(User $id): Response
+    public function editUser(User $user): Response
     {
         return $this->render('user/editUser.html.twig', [
-            'user' => $id,
+            'user' => $user,
         ]);
     }
 
     /**
-     * @Route("/user/changeusername/{user<\d+>?0}", name="change_username")
+     * @Route("{user<\d+>?}/changeusername", name="change_username")
+     *
+     * @IsGranted("ROLE_ADMIN")
      *
      * @param Request $request http request for form
      * @param User    $user    user as parameter
@@ -108,7 +116,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Nutzername geändert!');
 
-            return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
         }
 
         return $this->render('user/changeUsername.html.twig', [
@@ -118,7 +126,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/changerole/{user<\d+>?}", name="change_role")
+     * @Route("{user<\d+>?}/changerole", name="change_role")
+     *
+     * @IsGranted("ROLE_ADMIN")
      *
      * @param Request $request http request for form
      * @param User    $user    user as parameter
@@ -138,7 +148,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Rolle erfolgreich geändert!');
 
-            return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
         }
 
         return $this->render('user/changeRole.html.twig', [
@@ -148,7 +158,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
+     * @Route("{user<\d+>?}/changepassword", name="change_password")
+     *
+     * @IsGranted("ROLE_USER")
      *
      * @param UserPasswordEncoderInterface $encoder dependency injection
      * @param Request                      $request http request for form
@@ -156,7 +168,7 @@ class UserController extends AbstractController
      *
      * @return Response
      *
-     * @TODO Eventuell diese Maske für alle Nutzer erreichbar machen und Admins immer, ohne Eingabe des alten Passwortes, erlauben das Passwort zu ändern.
+     * @TODO Bug fix!!
      */
     public function changePassword(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
     {
@@ -172,7 +184,7 @@ class UserController extends AbstractController
 
                 $this->addFlash('success', 'Passwort erfolgreich geändert!');
 
-                return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+                return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
             }
             $form->get('password')->addError(new FormError('Passwort falsch!'));
         }

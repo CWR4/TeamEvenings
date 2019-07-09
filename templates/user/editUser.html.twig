@@ -21,7 +21,7 @@
                             {{ user.username }}
                         </td>
                         <td class="tab-button text-center">
-                            <a href="{{ path('change_username', {'user': user.id}) }}">
+                            <a href="{{ path('user_change_username', {'user': user.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button">
                                     Ändern
                                 </button>
@@ -41,7 +41,7 @@
                             {% endif %}
                         </td>
                         <td class="tab-button text-center">
-                            <a href="{{ path('change_role', {'user': user.id}) }}">
+                            <a href="{{ path('user_change_role', {'user': user.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button">
                                     Ändern
                                 </button>
@@ -54,7 +54,7 @@
                             Passwort
                         </th>
                         <td class="tab-button text-center">
-                            <a href="{{ path('change_password', {'user': user.id}) }}">
+                            <a href="{{ path('user_change_password', {'user': user.id}) }}">
                                 <button class="btn btn-sm btn-secondary tab-button">
                                     Ändern
                                 </button>

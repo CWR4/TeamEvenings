@@ -7,7 +7,7 @@
     <!-- list of all movienights if any are planned (as a table) -->
     <div class="container margin-top-20">
         <div class="row justify-content-center">
-            {% if (is_granted('ROLE_ADMIN') and movienights is not empty) or (movienights is not empty and movienights[0].voting.movies is not empty) %}
+            {% if (is_granted('ROLE_ADMIN') and movienights is not empty) or (movienights is not empty and movienights[0].movies is not empty) %}
                 <table class="table mytable table-hover">
                     <thead>
                     <tr>
