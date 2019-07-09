@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\MovieNight;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
