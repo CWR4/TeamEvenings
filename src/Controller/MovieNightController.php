@@ -170,7 +170,7 @@ class MovieNightController extends AbstractController
      */
     public function voting(VotingService $votingService, MovieNight $movieNight, ?Movie $movie): Response
     {
-        $result = $votingService->getResult($movieNight);
+        $result = $votingService->getVotes($movieNight);
 
         if (isset($movie)) {
             $votingService->vote($movieNight, $movie);
@@ -180,7 +180,7 @@ class MovieNightController extends AbstractController
 
         return $this->render('movie_night/voting.html.twig', [
             'result' => $result,
-            'movienight' => $movieNight,
+            'movieNight' => $movieNight,
         ]);
     }
 
@@ -191,7 +191,7 @@ class MovieNightController extends AbstractController
      *
      * @IsGranted("ROLE_ADMIN")
      *
-     * @param MovieNight $movieNight movienight
+     * @param MovieNight  $movieNight movienight
      *
      * @return Response
      */
@@ -216,7 +216,11 @@ class MovieNightController extends AbstractController
      */
     public function deleteMovieFromMovieNight(VotingService $votingService, MovieNight $movieNight, Movie $movie): Response
     {
-        $votingService->deleteMovieFromMovieNight($movieNight, $movie);
+        $movieNight->removeMovie($movie);
+        $votingService->deleteVotes($movieNight, $movie);
+        $this->manager->flush();
+
+        $this->addFlash('success', 'Film erfolgreich entfernt!');
 
         return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
     }

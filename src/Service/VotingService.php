@@ -2,12 +2,13 @@
 
 namespace App\Service;
 
+use App\Entity\Movie;
 use App\Entity\MovieNight;
 use App\Entity\Vote;
+
 use Doctrine\Common\Persistence\ObjectManager;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Movie;
-use Exception;
 
 /**
  * Class VotingService
@@ -27,27 +28,6 @@ class VotingService extends AbstractController
     public function __construct(ObjectManager $manager)
     {
         $this->manager = $manager;
-    }
-
-    /**
-     * @param MovieNight $movieNight movienight
-     *
-     * @throws Exception
-     *
-     * @return array|null
-     */
-    public function getVotingResult(MovieNight $movieNight): ?array
-    {
-        // Get voting by id
-        $result['movieNight'] = $movieNight;
-
-        if ($result['movieNight']) {
-            $result['votes'] = $this->getVotes($result['movieNight']);
-
-            return $result;
-        }
-
-        return null;
     }
 
     /**
@@ -85,66 +65,26 @@ class VotingService extends AbstractController
                 $movieNight->removeVote($vote);
             }
         }
-        $this->manager->flush();
     }
 
     /**
      * @param MovieNight $movieNight movienight
-     *
-     * @throws Exception
-     *
-     * @return array|null
-     */
-    public function getResult(MovieNight $movieNight): ?array
-    {
-        if ($movieNight) {
-            return $this->getVotingResult($movieNight);
-        }
-        $this->addFlash('warning', 'Filmabend nicht gefunden!');
-
-        return null;
-    }
-
-    /**
-     * @param int $vid voting id
      *
      * @return array
      */
-    public function getMovieAndMovienight($vid): array
+    public function getVotes(MovieNight $movieNight): array
     {
-        $movienight = [
-            'movienight' => null,
-            'movies' => null,
-        ];
+        $votes = [];
 
-        if (null !== $vid) {
-            $movienight['movienight'] = $this->getDoctrine()->getRepository(Voting::class)->find($vid)->getMovieNight();
-            $movienight['movies'] = $movienight['movienight']->getVoting()->getMovies();
+        foreach ($movieNight->getMovies() as $movie) {
+            $votes[$movie->getId()] = 0;
         }
 
-        return $movienight;
-    }
+        foreach ($movieNight->getVotes() as $vote) {
+            ++$votes[$vote->getMovie()->getId()];
+        }
 
-    /**
-     * @param MovieNight $movieNight current voting as parameter
-     * @param Movie      $movie      movie as parameter
-     */
-    public function deleteMovieFromMovieNight(MovieNight $movieNight, Movie $movie): void
-    {
-        $movieNight->removeMovie($movie);
-        $this->deleteVotes($movieNight, $movie);
-        $this->manager->flush();
-
-        $this->addFlash('success', 'Film erfolgreich entfernt!');
-    }
-
-    /**
-     * @param MovieNight $movieNight movienight
-     *
-     * @return Movie|null
-     */
-    public function getMostVotedMovie(MovieNight $movieNight): ?Movie
-    {
+        return $votes;
     }
 
     /**
@@ -167,25 +107,5 @@ class VotingService extends AbstractController
         }
 
         return false;
-    }
-
-    /**
-     * @param MovieNight $movieNight movienight
-     *
-     * @return array
-     */
-    private function getVotes(MovieNight $movieNight): array
-    {
-        $votes = [];
-
-        foreach ($movieNight->getMovies() as $movie) {
-            $votes[$movie->getId()] = 0;
-        }
-
-        foreach ($movieNight->getVotes() as $vote) {
-            ++$votes[$vote->getMovie()->getId()];
-        }
-
-        return $votes;
     }
 }
