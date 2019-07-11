@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\Movie;
 use App\Entity\MovieNight;
 
-use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -152,7 +152,7 @@ class OmdbService extends AbstractController
      * @param MovieNight $movieNight movienight
      * @param string     $imdbId     omdb movie id
      *
-     * @throws NonUniqueResultException
+     * @throws Exception
      *
      * @return void
      */

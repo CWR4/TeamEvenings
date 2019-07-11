@@ -10,7 +10,6 @@ use App\Service\VotingService;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 
 use Psr\Log\LoggerInterface;
@@ -204,14 +203,19 @@ class MovieNightController extends AbstractController
      * @param MovieNight  $movieNight movienight
      * @param string|null $imdbId     omdb movie id
      *
-     * @throws NonUniqueResultException
+     * @throws Exception
      *
      * @return Response
      */
     public function addMovieToMovieNight(MovieNight $movieNight, ?string $imdbId): Response
     {
         if ($imdbId) {
-            $this->omdbService->addMovie($movieNight, $imdbId);
+            try {
+                $this->omdbService->addMovie($movieNight, $imdbId);
+            } catch (Exception $exception) {
+                $this->logger->error($exception);
+                $this->addFlash('error', 'Film konnte nicht hinzugefügt werden!');
+            }
 
             return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
         }
