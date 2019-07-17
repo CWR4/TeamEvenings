@@ -1,0 +1,91 @@
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-top-only {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.margin-top-5 {
+    margin-top: 10px;
+}
+
+.flash-width-300 {
+    width: 300px;
+}
+
+.tab-poster {
+    width: 50px;
+}
+
+.tab-button {
+    width: 120px;
+}
+
+.tab-date {
+    width: 120px;
+}
+
+.tab-content-3 {
+    width: 220px;
+}
+
+.jumbotron {
+    background-color: #E7E7E7;
+    border-radius: 20px;
+}
+
+.mytable {
+    width: 900px;
+}
+
+.btn-spacing {
+    margin: 2px 0px;
+    padding: 6px 0px;
+    width: 100%;
+}
+
+.btn-margin {
+    margin: 2px;
+}
+
+.btn-size-form {
+    width: 100px;
+}
+
+.card-top {
+    height: 100%;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.card-bot {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+    padding: 20px
+}
+
+.vote-poster {
+    height: 200px;
+}
+
+.vote-score {
+    height: 100%;
+    padding: 6px 0px;
+}
+
+.not-active {
+    pointer-events: stroke;
+    cursor: pointer;
+    visibility: visible;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.no-margin {
+    margin: 0px;
+}

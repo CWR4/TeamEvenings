@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: teamevening_nginx
+    image: nginx:stable-alpine
+    volumes:
+      - ./public:/srv/www/app/public
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    links:
+      - teamevening
+
+  teamevening:
+    container_name: teamevening
+    build:
+      context: .
+      dockerfile: ./docker/local/php_fpm/Dockerfile
+    env_file:
+      - .env
+      - .env.local
+    volumes:
+      - ./:/srv/www/app
+    working_dir: /srv/www/app
+    ports:
+      - 9000:9000
+    command: php-fpm -F # starts the fpm
+
+  database:
+    container_name: teamevening_database
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: db_password
+      MYSQL_DATABASE: db_name
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_password
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data: {}

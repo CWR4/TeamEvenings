@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime! - Nutzer anlegen{% endblock %}
+
+{% block body %}
+
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        <div class="card text-center">
+            <div class="card-header">
+                <h3 class="h3 font-weight-normal no-margin">
+                    Nutzer anlegen
+                </h3>
+            </div>
+            <div class="card-body text-center">
+                {{ form_start(registrationForm) }}
+                <div class="justify-content-center">
+                    Nutzername
+                    {{ form_errors(registrationForm.username) }}
+                    {{ form_widget(registrationForm.username, {'attr': {'style': 'text-align: center;'}}) }}
+                </div>
+                <div class="margin-top-20 justify-content-center">
+                    Passwort
+                    {{ form_errors(registrationForm.plainPassword) }}
+                    {{ form_widget(registrationForm.plainPassword, {'attr': {'style': 'text-align: center;'}}) }}
+                </div>
+                <button class="btn btn-sm btn-secondary margin-top-20 tab-button">
+                    Anlegen
+                </button>
+                <a href="{{ path('user_all') }}">
+                    <button type="button" class="btn btn-sm btn-outline-secondary margin-top-20 tab-button">
+                        Abbruch
+                    </button>
+                </a>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

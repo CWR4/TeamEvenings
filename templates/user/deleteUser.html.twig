@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime! - Nutzer löschen{% endblock %}
+
+{% block body %}
+
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        <div class="card">
+            <div class="card-header text-center font-weight-bold">
+                Wollen sie diesen Nutzer wirklich löschen?
+            </div>
+            <div class="card-body text-center">
+                {{ user.username }}
+                <br />
+                {% if user.roles is not empty and user.roles[0] == 'ROLE_ADMIN' %}
+                    Administrator
+                {% else %}
+                    Standardnutzer
+                {% endif %}
+
+                <hr class="my-3">
+
+                {{ form_start(form) }}
+                <div class="row justify-content-around">
+                    <button type="submit" class="btn btn-sm btn-danger tab-button">
+                        Löschen!
+                    </button>
+                    <a href="{{ path('user_all') }}">
+                        <button type="button" class="btn btn-sm btn-secondary tab-button">
+                            Abbruch
+                        </button>
+                    </a>
+                </div>
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

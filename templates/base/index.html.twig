@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime!{% endblock %}
+
+{% block body %}
+
+<!-- Overview off all planned movienights -->
+<div class="container margin-top-20">
+    <div class="row justify-content-center">
+        <!-- Show table if movienights are planned -->
+        {% if movienight != null %}
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class=" h3 text-center no-margin">
+                            {{ movienight.dateAndTime|date('d.m.Y') }} - {{ movienight.dateAndTime|date('H:i') }}
+                            - {{ movienight.location }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                    <!-- Show movie if was selected -->
+                    {% if movie != null %}
+                        <div class="row margin-top-20">
+                            <div class="col-4 text-center">
+                                <img style="width: 150px" src="{{ movie.poster }}">
+                            </div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <h4>
+                                        {{ movie.title }}
+                                    </h4>
+                                </div>
+                                <div class="row margin-top-5">
+                                    {{ movie.plot }}
+                                </div>
+                                <div class="row margin-top-20">
+                                    {{ movie.runtime }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Show message if movie hasn't been selected -->
+        {% else %}
+            <div class="row justify-content-center">
+                <h5>
+                    Es wurde noch kein Film ausgewählt!
+                </h5>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Else show message that nothing is planned -->
+{% else %}
+    <div class="col-lg-5 text-center">
+        <div class="jumbotron">
+            <i class="{{ 'af.logo.movie'|trans }} fa-10x" aria-hidden="true"></i>
+            <h3 class="margin-top-20">Kein Filmabend geplant <i class="far fa-frown"></i></h3>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

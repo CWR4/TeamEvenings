@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTime! - Termin erstellen!{% endblock %}
+
+{% block body %}
+
+    <!-- Form for creating a new movienight -->
+    <div class="container margin-top-20">
+        <div class="row justify-content-around">
+            <div class="col-lg-5 text-center">
+                <div class="card text-align-center">
+                    <div class="card-header">
+                        <h3 class="no-margin">Nächster Filmabend:</h3>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                        {{ form_errors(form.dateAndTime) }}
+                        <div class="row justify-content-center">
+                            {{ form_widget(form.dateAndTime.date)}}
+                        </div>
+                        <div class="row justify-content-center margin-top-20">
+                            {{ form_widget(form.dateAndTime.time) }}
+                        </div>
+                        <div class="row justify-content-center margin-top-20">
+                            {{ form_widget(form.location) }}
+                        </div>
+                        <button type="submit" class="margin-top-20 btn btn-sm btn-secondary">
+                            Termin erstellen
+                        </button>
+                        <a href="{{ path('movie_night_list_all') }}">
+                            <button type="button" class="btn btn-sm btn-outline-secondary margin-top-20 tab-button">
+                                Abbruch
+                            </button>
+                        </a>
+                        {{ form_rest(form) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
