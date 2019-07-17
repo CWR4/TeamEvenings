@@ -219,7 +219,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
-            $this->manager()->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'Passwort geändert!');
 

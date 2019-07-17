@@ -26,7 +26,6 @@ services:
     ports:
       - 9000:9000
     command: php-fpm -F # starts the fpm
-    user: ${USER_ID}:${GROUP_ID}
 
   database:
     container_name: teamevening_database
