@@ -3,7 +3,12 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieNightRepository")
@@ -18,29 +23,37 @@ class MovieNight
     private $id;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $date;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    private $time;
-
-    /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank()
      */
     private $location;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="movieNights")
+     * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="movieNight", orphanRemoval=true)
      */
-    private $movie;
+    private $votes;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Voting", inversedBy="movieNight", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="movieNights", cascade={"persist"})
      */
-    private $voting;
+    private $movies;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @Assert\GreaterThanOrEqual("now")
+     */
+    private $dateAndTime;
+
+    /**
+     * MovieNight constructor.
+     */
+    public function __construct()
+    {
+        $this->votes = new ArrayCollection();
+        $this->movies = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -48,46 +61,6 @@ class MovieNight
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getDate(): ?DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTimeInterface $date set date of movienight
-     *
-     * @return MovieNight
-     */
-    public function setDate(DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getTime(): ?DateTimeInterface
-    {
-        return $this->time;
-    }
-
-    /**
-     * @param DateTimeInterface $time set time of movienight
-     *
-     * @return MovieNight
-     */
-    public function setTime(DateTimeInterface $time): self
-    {
-        $this->time = $time;
-
-        return $this;
     }
 
     /**
@@ -111,41 +84,126 @@ class MovieNight
     }
 
     /**
-     * @return Movie|null
+     * @return Collection|Vote[]
      */
-    public function getMovie(): ?Movie
+    public function getVotes(): Collection
     {
-        return $this->movie;
+        return $this->votes;
     }
 
     /**
-     * @param Movie|null $movie set movie for movienight
+     * @param Vote $vote add to movie night
      *
      * @return MovieNight
      */
-    public function setMovie(?Movie $movie): self
+    public function addVote(Vote $vote): self
     {
-        $this->movie = $movie;
+        if (!$this->votes->contains($vote)) {
+            $this->votes[] = $vote;
+            $vote->setMovieNight($this);
+        }
 
         return $this;
     }
 
     /**
-     * @return Voting
-     */
-    public function getVoting(): Voting
-    {
-        return $this->voting;
-    }
-
-    /**
-     * @param Voting|null $voting set voting for movienight
+     * @param Vote $vote remove from movie night
      *
      * @return MovieNight
      */
-    public function setVoting(?Voting $voting): self
+    public function removeVote(Vote $vote): self
     {
-        $this->voting = $voting;
+        if ($this->votes->contains($vote)) {
+            $this->votes->removeElement($vote);
+            // set the owning side to null (unless already changed)
+            if ($vote->getMovieNight() === $this) {
+                $vote->setMovieNight(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Movie[]
+     */
+    public function getMovies(): Collection
+    {
+        return $this->movies;
+    }
+
+    /**
+     * @param Movie $movie movie
+     *
+     * @return MovieNight
+     */
+    public function addMovie(Movie $movie): self
+    {
+        if (!$this->movies->contains($movie)) {
+            $this->movies[] = $movie;
+            $movie->addMovieNight($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Movie $movie movie
+     *
+     * @return MovieNight
+     */
+    public function removeMovie(Movie $movie): self
+    {
+        if ($this->movies->contains($movie)) {
+            $this->movies->removeElement($movie);
+            $movie->removeMovieNight($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Movie|null
+     */
+    public function getVotedMovie(): ?Movie
+    {
+        $votes = [];
+
+        foreach ($this->getMovies() as $movie) {
+            $votes[$movie->getId()] = 0;
+        }
+
+        foreach ($this->getVotes() as $vote) {
+            ++$votes[$vote->getMovie()->getId()];
+        }
+
+        if ($votes) {
+            foreach ($this->getMovies() as $movie) {
+                if ($movie->getId() === array_keys($votes, max($votes))[0]) {
+                    return $movie;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getDateAndTime(): ?DateTimeInterface
+    {
+        return $this->dateAndTime;
+    }
+
+    /**
+     * @param DateTimeInterface $dateAndTime value to set
+     *
+     * @return MovieNight
+     */
+    public function setDateAndTime(DateTimeInterface $dateAndTime): self
+    {
+        $this->dateAndTime = $dateAndTime;
 
         return $this;
     }

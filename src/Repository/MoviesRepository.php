@@ -3,9 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Movie;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
+
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -25,15 +26,14 @@ class MoviesRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
-    /*
-     *  - retrieve movie by imdb ID or null if not found
-     */
     /**
+     *  - retrieve movie by imdb ID or null if not found
+     *
      * @param int $id online movie database id of movie
      *
-     * @return Movie|null
-     *
      * @throws NonUniqueResultException
+     *
+     * @return Movie|null
      */
     public function findByImdbId($id) : ?Movie
     {
@@ -41,7 +41,7 @@ class MoviesRepository extends ServiceEntityRepository
             ->andWhere('m.imdbID = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT)
+            ->getOneOrNullResult()
         ;
     }
 }

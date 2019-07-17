@@ -73,7 +73,7 @@ class PaginationService extends AbstractController
             } else {
                 $limit = $this->totalPages;
             }
-            for ($i = 1; $i <= $limit; $i++) {
+            for ($i = 1; $i <= $limit; ++$i) {
                 $parameters['page'] = $i;
                 $this->paginationLinks[$i] = $this->router->generate($route, $parameters);
             }
@@ -84,14 +84,14 @@ class PaginationService extends AbstractController
         } elseif ($this->page >= $this->totalPages-2) {
             $parameters['page'] = 1;
             $this->paginationLinks['&laquo;'] = $this->router->generate($route, $parameters);
-            for ($i = $this->totalPages-4; $i <= $this->totalPages; $i++) {
+            for ($i = $this->totalPages-4; $i <= $this->totalPages; ++$i) {
                 $parameters['page'] = $i;
                 $this->paginationLinks[$i] = $this->router->generate($route, $parameters);
             }
         } else {
             $parameters['page'] = 1;
             $this->paginationLinks['&laquo;'] = $this->router->generate($route, $parameters);
-            for ($i = $this->page-2; $i <= $this->page+2; $i++) {
+            for ($i = $this->page-2; $i <= $this->page+2; ++$i) {
                 $parameters['page'] = $i;
                 $this->paginationLinks[$i] = $this->router->generate($route, $parameters);
             }

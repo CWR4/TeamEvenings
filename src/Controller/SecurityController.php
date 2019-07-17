@@ -8,21 +8,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-/*
- *  Created by php bin/console make:auth
- *  - handles login
- */
 /**
  * Class SecurityController
+ *  Created by php bin/console make:auth
+ *  - handles login
  */
 class SecurityController extends AbstractController
 {
     /**
+     * @Route("/login", name="app_login")
+     *
      * @param AuthenticationUtils $authenticationUtils dependency injection
      *
      * @return Response
-     *
-     * @Route("/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils) : Response
     {
@@ -38,9 +36,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @return Response
-     *
      * @Route("/logout", name="app_logout")
+     *
+     * @return Response
      */
     public function logout() : Response
     {

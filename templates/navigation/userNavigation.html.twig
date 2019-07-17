@@ -1,12 +1,25 @@
 <ul class="nav navbar-nav">
     <li class="nav-item dropdown">
-        <a class="nav-link" href="{{ path('list_movienight') }}">
+        <a class="nav-link" href="{{ path('movie_night_list_all') }}">
             <i class="{{ 'af.logo.movie'|trans }}" aria-hidden="true"></i>
             Alle Termine
         </a>
     </li>
 </ul>
 <ul class="nav navbar-nav ml-md-auto">
+    <li class="nav-item  dropdown">
+        <a class="nav-link dropdown-toggle pointer" id="userAdministrationDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i>
+            Konto
+        </a>
+        <div class="dropdown-menu" aria-labelledby="userAdministrationDropdown">
+            <a href="{{ path('user_change_password_as_user', {'user': app.user.id}) }}" class="dropdown-item">
+                <i class="fas fa-key"></i>
+                Passwort ändern
+            </a>
+        </div>
+    </li>
     <li class="nav-item">
         <a href="{{ path('app_logout') }}" class="nav-link">
             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>

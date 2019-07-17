@@ -49,14 +49,9 @@ class Movie
     private $plot;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\MovieNight", mappedBy="movie")
+     * @ORM\ManyToMany(targetEntity="App\Entity\MovieNight", inversedBy="movies", cascade={"persist"})
      */
     private $movieNights;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Voting", mappedBy="movies", cascade={"persist"})
-     */
-    private $votings;
 
     /**
      * Movie constructor.
@@ -64,7 +59,6 @@ class Movie
     public function __construct()
     {
         $this->movieNights = new ArrayCollection();
-        $this->votings = new ArrayCollection();
     }
 
     /**
@@ -204,7 +198,7 @@ class Movie
     }
 
     /**
-     * @param MovieNight $movieNight connection to movienight
+     * @param MovieNight $movieNight add to movie
      *
      * @return Movie
      */
@@ -212,14 +206,13 @@ class Movie
     {
         if (!$this->movieNights->contains($movieNight)) {
             $this->movieNights[] = $movieNight;
-            $movieNight->setMovie($this);
         }
 
         return $this;
     }
 
     /**
-     * @param MovieNight $movieNight remove movienight connection
+     * @param MovieNight $movieNight remove from movie
      *
      * @return Movie
      */
@@ -227,48 +220,6 @@ class Movie
     {
         if ($this->movieNights->contains($movieNight)) {
             $this->movieNights->removeElement($movieNight);
-            // set the owning side to null (unless already changed)
-            if ($movieNight->getMovie() === $this) {
-                $movieNight->setMovie(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Voting[]
-     */
-    public function getVotings(): Collection
-    {
-        return $this->votings;
-    }
-
-    /**
-     * @param Voting $voting add relation to voting
-     *
-     * @return Movie
-     */
-    public function addVoting(Voting $voting): self
-    {
-        if (!$this->votings->contains($voting)) {
-            $this->votings[] = $voting;
-            $voting->addMovie($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Voting $voting remove voting relation
-     *
-     * @return Movie
-     */
-    public function removeVoting(Voting $voting): self
-    {
-        if ($this->votings->contains($voting)) {
-            $this->votings->removeElement($voting);
-            $voting->removeMovie($this);
         }
 
         return $this;

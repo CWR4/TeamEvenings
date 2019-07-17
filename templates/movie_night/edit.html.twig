@@ -8,7 +8,7 @@
     <div class="container margin-top-20">
         <div class="row justify-content-around">
             <div class="col-lg-5 justify-content-center">
-                <div class="card">
+                <div class="card text-center">
                     <div class="card-header">
                         <h3 class="h3 font-weight-normal no-margin text-center">
                             Termin bearbeiten
@@ -16,11 +16,12 @@
                     </div>
                     <div class="card-body">
                         {{ form_start(form) }}
+                        {{ form_errors(form.dateAndTime) }}
                         <div class="row justify-content-center margin-top-20">
-                            {{ form_widget(form.date) }}
+                            {{ form_widget(form.dateAndTime.date) }}
                         </div>
                         <div class="row justify-content-center margin-top-20">
-                            {{ form_widget(form.time) }}
+                            {{ form_widget(form.dateAndTime.time) }}
                         </div>
                         <div class="row justify-content-center margin-top-20">
                             {{ form_widget(form.location) }}
@@ -30,7 +31,7 @@
                             <button type="submit" class="btn btn-sm btn-secondary btn-spacing btn-size-form">
                                 Speichern
                             </button>
-                            <a href="{{ path('list_movienight') }}">
+                            <a href="{{ path('movie_night_list_all') }}">
                                 <button type="button" class="btn btn-sm btn-outline-secondary btn-spacing btn-margin btn-size-form">
                                     Abbruch
                                 </button>

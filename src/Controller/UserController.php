@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Vote;
-use App\Form\ChangePasswordType;
+use App\Form\ChangePasswordTypeAsAdmin;
+use App\Form\ChangePasswordTypeAsUser;
 use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
 use App\Form\SetUserRoleType;
+
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
@@ -19,14 +23,31 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserController
- * @IsGranted("ROLE_ADMIN")
+ *
+ * @Route("/user/", name="user_")
  */
 class UserController extends AbstractController
 {
     /**
-     * @return Response
+     * @var ObjectManager
+     */
+    private $manager;
+
+    /**
+     * UserController constructor.
+     * @param ObjectManager $manager handling entities
+     */
+    public function __construct(ObjectManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
+     * @Route("", name="all")
      *
-     * @Route("/user", name="all_user")
+     * @IsGranted("ROLE_ADMIN")
+     *
+     * @return Response
      */
     public function listAll(): Response
     {
@@ -38,29 +59,29 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("{user<\d+>?}/delete", name="delete")
+     *
+     * @IsGranted("ROLE_ADMIN")
+     *
      * @param Request $request http request for form
-     * @param int     $userId  user id
+     * @param User    $user    user
      *
      * @return Response
-     *
-     * @Route("/deleteuser/{userId<\d+>?}", name="delete_user")
      */
-    public function deleteUser(Request $request, $userId): Response
+    public function deleteUser(Request $request, User $user): Response
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $deleteForm = $this->createForm(DeleteUserType::class);
-        $deleteForm->add('id', HiddenType::class, ['data' => $userId]);
+        $deleteForm->add('id', HiddenType::class, ['data' => $user->getId()]);
         $deleteForm->handleRequest($request);
 
         if ($deleteForm->isSubmitted()) {
-            $manager = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()->getRepository(User::class)->find($deleteForm->getData());
             $this->getDoctrine()->getRepository(Vote::class)->deleteVotes($user);
-            $manager->remove($user);
-            $manager->flush();
+            $this->manager->remove($user);
+            $this->manager->flush();
             $this->addFlash('success', 'Nutzer gelöscht');
 
-            return $this->redirectToRoute('all_user');
+            return $this->redirectToRoute('user_all');
         }
 
         return $this->render('user/deleteUser.html.twig', [
@@ -70,26 +91,30 @@ class UserController extends AbstractController
     }
 
     /**
-     * @param User $id user as parameter
+     * @Route("{user<\d+>?}/edit", name="edit")
+     *
+     * @IsGranted("ROLE_ADMIN")
+     *
+     * @param User $user user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/edit/{id<\d+>?}", name="edit_user")
      */
-    public function editUser(User $id): Response
+    public function editUser(User $user): Response
     {
         return $this->render('user/editUser.html.twig', [
-            'user' => $id,
+            'user' => $user,
         ]);
     }
 
     /**
+     * @Route("{user<\d+>?}/changeusername", name="change_username")
+     *
+     * @IsGranted("ROLE_ADMIN")
+     *
      * @param Request $request http request for form
      * @param User    $user    user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/changeusername/{user<\d+>?0}", name="change_username")
      */
     public function changeUsername(Request $request, User $user): Response
     {
@@ -97,16 +122,12 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-
             $user->setUsername($form->getData()->getUsername());
-
-            $manager->persist($user);
-            $manager->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'Nutzername geändert!');
 
-            return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
         }
 
         return $this->render('user/changeUsername.html.twig', [
@@ -116,12 +137,14 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("{user<\d+>?}/changerole", name="change_role")
+     *
+     * @IsGranted("ROLE_ADMIN")
+     *
      * @param Request $request http request for form
      * @param User    $user    user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/changerole/{user<\d+>?}", name="change_role")
      */
     public function changeRole(Request $request, User $user): Response
     {
@@ -130,13 +153,11 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted()) {
             $user->setRoles([$form->getData()['roles']]);
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($user);
-            $manager->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'Rolle erfolgreich geändert!');
 
-            return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
         }
 
         return $this->render('user/changeRole.html.twig', [
@@ -146,36 +167,66 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("{user<\d+>?}/changepassword", name="change_password_as_user")
+     *
+     * @IsGranted("ROLE_USER")
+     *
      * @param UserPasswordEncoderInterface $encoder dependency injection
      * @param Request                      $request http request for form
      * @param User                         $user    user as parameter
      *
      * @return Response
-     *
-     * @Route("/user/changepassword/{user<\d+>?}", name="change_password")
-     *
-     * @TODO Eventuell diese Maske für alle Nutzer erreichbar machen und Admins immer, ohne Eingabe des alten Passwortes, erlauben das Passwort zu ändern.
      */
-    public function changePassword(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
+    public function changePasswordAsUser(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
     {
-        $form = $this->createForm(ChangePasswordType::class);
+        $form = $this->createForm(ChangePasswordTypeAsUser::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($encoder->isPasswordValid($user, $form->getData()->getPassword())) {
-                $user->setPassword($encoder->encodePassword($user, $form->get('newPassword')->getData()));
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($user);
-                $manager->flush();
+            if (!$encoder->isPasswordValid($user, $form->getData()['password'])) {
+                $form->get('password')->addError(new FormError('Passwort falsch!'));
+            } else {
+                $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
+                $this->manager->flush();
 
-                $this->addFlash('success', 'Passwort erfolgreich geändert!');
+                $this->addFlash('success', 'Passwort geändert!');
 
-                return $this->redirectToRoute('edit_user', ['id' => $user->getId()]);
+                return $this->redirectToRoute('movie_night_list_all');
             }
-            $form->get('password')->addError(new FormError('Passwort falsch!'));
         }
 
-        return $this->render('user/changePassword.html.twig', [
+        return $this->render('user/changePasswordAsUser.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("{user<\d+>?}/admin/changepassword", name="change_password_as_admin")
+     *
+     * @IsGranted("ROLE_ADMIN")
+     *
+     * @param UserPasswordEncoderInterface $encoder dependency injection
+     * @param Request                      $request http request for form
+     * @param User                         $user    user as parameter
+     *
+     * @return Response
+     */
+    public function changePasswordAsAdmin(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
+    {
+        $form = $this->createForm(ChangePasswordTypeAsAdmin::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Passwort geändert!');
+
+            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
+        }
+
+        return $this->render('user/changePasswordAsAdmin.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
         ]);

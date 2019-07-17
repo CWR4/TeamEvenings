@@ -9,9 +9,9 @@
         <!-- Current movienight to add movie to -->
         <div class="row justify-content-center margin-top-20">
             <h4>
-                {{ date.date|date('d.m.Y') }} -
-                {{ date.time|date('H:i') }} -
-                {{ date.location }}
+                {{ movieNight.dateAndTime|date('d.m.Y') }} -
+                {{ movieNight.dateAndTime|date('H:i') }} -
+                {{ movieNight.location }}
             </h4>
         </div>
 
@@ -58,14 +58,11 @@
                                 {{ movie.Year }}
                             </td>
                             <td>
-                                {{ form_start(addform) }}
-                                {{ form_widget(addform.movieid, {value: movie.imdbID}) }}
-                                {{ form_widget(addform.movienightid, {value: date.id}) }}
-                                {{ form_rest(addform) }}
-                                <button class="btn btn-secondary">
-                                    Zu Event hinzufügen
-                                </button>
-                                {{ form_end(addform) }}
+                                <a href="{{ path('movie_night_add_movie', {'movieNight': movieNight.id, 'imdbId': movie.imdbID}) }}">
+                                    <button class="btn btn-secondary">
+                                        Zu Event hinzufügen
+                                    </button>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

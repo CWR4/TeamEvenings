@@ -12,9 +12,9 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class ChangePasswordType
+ * Class ChangePasswordTypeAsUser
  */
-class ChangePasswordType extends AbstractType
+class ChangePasswordTypeAsUser extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder dependency injection
@@ -41,7 +41,6 @@ class ChangePasswordType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-                'mapped' => false,
             ])
         ;
     }
@@ -52,7 +51,6 @@ class ChangePasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
         ]);
     }
 }

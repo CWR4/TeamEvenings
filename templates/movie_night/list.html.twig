@@ -7,7 +7,7 @@
     <!-- list of all movienights if any are planned (as a table) -->
     <div class="container margin-top-20">
         <div class="row justify-content-center">
-            {% if (is_granted('ROLE_ADMIN') and movienights is not empty) or (movienights is not empty and movienights[0].voting.movies is not empty) %}
+            {% if (is_granted('ROLE_ADMIN') and movienights is not empty) or (movienights is not empty and movienights[0].movies is not empty) %}
                 <table class="table mytable table-hover">
                     <thead>
                     <tr>
@@ -18,24 +18,24 @@
                     </thead>
                     <tbody>
                     {% for movienight in movienights %}
-                        {% if movienight.voting.movies is not empty or is_granted('ROLE_ADMIN') %}
+                        {% if movienight.movies is not empty or is_granted('ROLE_ADMIN') %}
                             <tr>
                                 <td class="align-middle">
-                                    {{ movienight.date|date('d.m.Y') }}
+                                    {{ movienight.dateAndTime | date('d.m.Y') }}
                                     <br/>
-                                    {{ movienight.time|date('H:i') }}
+                                    {{ movienight.dateAndTime | date('H:i') }}
                                     <br/>
                                     {{ movienight.location }}
                                 </td>
-                                {% if movienight.voting.movies is empty %}
+                                {% if movienight.movies is empty %}
                                     <td colspan="3" class="align-middle text-center">Keine Filme vorgeschlagen!</td>
                                 {% else %}
                                     {% for i in 0..2 %}
-                                        {% if  movienight.voting.movies[i] is defined %}
+                                        {% if  movienight.movies[i] is defined %}
                                             <td class="tab-content-3 text-center align-middle">
-                                                <img src="{{ movienight.voting.movies[i].poster }}" class="tab-poster">
+                                                <img src="{{ movienight.movies[i].poster }}" class="tab-poster">
                                                 <br/>
-                                                {{ movienight.voting.movies[i].title }}
+                                                {{ movienight.movies[i].title }}
                                             </td>
                                         {% else %}
                                             <td class="tab-content-3">
@@ -44,27 +44,27 @@
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
-                                {% if is_granted('ROLE_ADMIN') or movienight.voting.movies|length > 1 %}
+                                {% if is_granted('ROLE_ADMIN') or movienight.movies|length > 1 %}
                                 <td class="tab-button align-middle">
-                                    {% if movienight.voting.movies is not empty and movienight.voting.movies|length > 1 %}
-                                        <a href="{{ path('voting', {'mnid': movienight.id}) }}">
+                                    {% if movienight.movies is not empty and movienight.movies|length > 1 %}
+                                        <a href="{{ path('movie_night_voting', {'movieNight': movienight.id}) }}">
                                             <button class="btn btn-sm btn-secondary btn-spacing">
                                                 Abstimmen!
                                             </button>
                                         </a>
                                     {% endif %}
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{ path('edit_movienight', {'id': movienight.id}) }}">
+                                        <a href="{{ path('movie_night_edit', {'movieNight': movienight.id}) }}">
                                             <button class="btn btn-sm btn-secondary btn-spacing">
                                                 Termin
                                             </button>
                                         </a>
-                                        <a href="{{ path('addMovie', {'vid': movienight.voting.id}) }}">
+                                        <a href="{{ path('movie_night_add_movie', {'movieNight': movienight.id}) }}">
                                             <button class="btn btn-sm btn-secondary btn-spacing">
                                                 Filme
                                             </button>
                                         </a>
-                                        <a href="{{ path('delete_movienight', {'id': movienight.id}) }}">
+                                        <a href="{{ path('movie_night_delete', {'movieNight': movienight.id}) }}">
                                             <button class="btn btn-sm btn-outline-secondary btn-spacing">
                                                 Löschen
                                             </button>

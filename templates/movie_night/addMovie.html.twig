@@ -12,7 +12,7 @@
                     Filme für
                 </h4>
                 <h3>
-                    {{ movienight.date|date('d.m.Y') }} - {{ movienight.time|date('H:i') }}
+                    {{ movienight.dateAndTime|date('d.m.Y') }} - {{ movienight.dateAndTime|date('H:i') }}
                 </h3>
             </div>
         {% endif %}
@@ -48,12 +48,7 @@
                                 </td>
 
                                 <td class="tab-button justify-content-center align-middle">
-                                    <a href="{{ path('omdb', {'mnid': movienight.id, 'mid': movie.id}) }}">
-                                        <button class="btn btn-sm btn-secondary tab-button btn-spacing">
-                                            Film
-                                        </button>
-                                    </a>
-                                    <a href="{{ path('deleteMovieFromVoting', {'vid': movienight.voting.id, 'mid': movie.id}) }}">
+                                    <a href="{{ path('movie_night_delete_movie', {'movieNight': movienight.id, 'movie': movie.id}) }}">
                                         <button class="btn btn-sm btn-outline-secondary tab-button btn-spacing">
                                             Löschen
                                         </button>
@@ -67,7 +62,7 @@
                                     Weiteren Film hinzufügen
                                 </td>
                                 <td class="tab-button justify-content-center align-middle">
-                                    <a href="{{ path('omdb', {'mnid': movienight.id}) }}">
+                                    <a href="{{ path('omdb', {'movieNight': movienight.id}) }}">
                                         <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                                     </a>
                                 </td>
@@ -79,7 +74,7 @@
                                 Bisher kein Film eingeplant.
                             </td>
                             <td class="tab-button justify-content-center align-middle">
-                                <a href="{{ path('omdb', {'mnid': movienight.id, 'vid': movienight.voting.id}) }}">
+                                <a href="{{ path('omdb', {'movieNight': movienight.id}) }}">
                                     <button class="btn btn-sm btn-secondary tab-button btn-spacing">Film</button>
                                 </a>
                             </td>

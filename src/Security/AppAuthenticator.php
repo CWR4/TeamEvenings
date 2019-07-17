@@ -3,7 +3,9 @@
 namespace App\Security;
 
 use App\Entity\User;
+
 use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -132,7 +134,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
         }
 
         // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        return new RedirectResponse($this->urlGenerator->generate('list_movienight'));
+        return new RedirectResponse($this->urlGenerator->generate('movie_night_list_all'));
     }
 
     /**

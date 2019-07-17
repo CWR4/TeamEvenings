@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\MovieNight;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -34,11 +36,9 @@ class MovieNightRepository extends ServiceEntityRepository
     public function findAllByDateAsc()  : array
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date > :currentDate or (m.time > :currentTime and m.date = :currentDate)')
-            ->setParameter('currentDate', date('Y-m-d'))
-            ->setParameter('currentTime', date('H:i', time()-900))
-            ->orderBy('m.date', 'ASC')
-            ->addOrderBy('m.time', 'ASC')
+            ->andWhere('m.dateAndTime >= :currentDateAndTime')
+            ->setParameter('currentDateAndTime', date('Y-m-d H:i'))
+            ->orderBy('m.dateAndTime', 'ASC')
             ->getQuery()
         ;
 
@@ -49,25 +49,17 @@ class MovieNightRepository extends ServiceEntityRepository
      *  - retrieve next movienight or null if none planned
      */
     /**
-     * @param int $offset offset = next movienight
-     *
      * @return MovieNight|null
      *
      * @throws NonUniqueResultException
      */
-    public function getNextMovienight($offset = 0)  : ?MovieNight
+    public function getNextMovienight()  : ?MovieNight
     {
         $qb = $this->createQueryBuilder('m')
-            ->andWhere('m.date = :currentDate')
-            ->setParameter('currentDate', date('Y-m-d'))
-            ->andWhere('m.time > :currentTime')
-            ->setParameter('currentTime', date('H:i', time() - 900))
-            ->orWhere('m.date > :currentDate')
-            ->setParameter('currentDate', date('Y-m-d'))
-            ->orderBy('m.date', 'ASC')
-            ->addOrderBy('m.time', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults(1)
+            ->andWhere('m.dateAndTime >= :currentDateAndTime')
+            ->setParameter('currentDateAndTime', date('Y-m-d H:i'))
+            ->andWhere('m.movies is not empty')
+            ->orderBy('m.dateAndTime', 'ASC')
             ->getQuery()
         ;
 
