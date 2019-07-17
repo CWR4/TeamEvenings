@@ -10,6 +10,7 @@ use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
 use App\Form\SetUserRoleType;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,20 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
+    /**
+     * @var ObjectManager
+     */
+    private $manager;
+
+    /**
+     * UserController constructor.
+     * @param ObjectManager $manager handling entities
+     */
+    public function __construct(ObjectManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     /**
      * @Route("", name="all")
      *
@@ -60,11 +75,10 @@ class UserController extends AbstractController
         $deleteForm->handleRequest($request);
 
         if ($deleteForm->isSubmitted()) {
-            $manager = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()->getRepository(User::class)->find($deleteForm->getData());
             $this->getDoctrine()->getRepository(Vote::class)->deleteVotes($user);
-            $manager->remove($user);
-            $manager->flush();
+            $this->manager->remove($user);
+            $this->manager->flush();
             $this->addFlash('success', 'Nutzer gelöscht');
 
             return $this->redirectToRoute('user_all');
@@ -108,12 +122,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-
             $user->setUsername($form->getData()->getUsername());
-
-            $manager->persist($user);
-            $manager->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'Nutzername geändert!');
 
@@ -143,9 +153,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted()) {
             $user->setRoles([$form->getData()['roles']]);
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($user);
-            $manager->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'Rolle erfolgreich geändert!');
 
@@ -179,7 +187,8 @@ class UserController extends AbstractController
                 $form->get('password')->addError(new FormError('Passwort falsch!'));
             } else {
                 $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
-                $this->getDoctrine()->getManager()->flush();
+                $this->manager->flush();
+
                 $this->addFlash('success', 'Passwort geändert!');
 
                 return $this->redirectToRoute('movie_night_list_all');
@@ -210,7 +219,8 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
-            $this->getDoctrine()->getManager()->flush();
+            $this->manager()->flush();
+
             $this->addFlash('success', 'Passwort geändert!');
 
             return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
