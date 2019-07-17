@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Vote;
-use App\Form\ChangePasswordType;
+use App\Form\ChangePasswordTypeAsAdmin;
+use App\Form\ChangePasswordTypeAsUser;
 use App\Form\ChangeUsernameType;
 use App\Form\DeleteUserType;
 use App\Form\SetUserRoleType;
@@ -158,7 +159,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("{user<\d+>?}/changepassword", name="change_password")
+     * @Route("{user<\d+>?}/changepassword", name="change_password_as_user")
      *
      * @IsGranted("ROLE_USER")
      *
@@ -167,29 +168,55 @@ class UserController extends AbstractController
      * @param User                         $user    user as parameter
      *
      * @return Response
-     *
-     * @TODO Bug fix!!
      */
-    public function changePassword(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
+    public function changePasswordAsUser(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
     {
-        $form = $this->createForm(ChangePasswordType::class);
+        $form = $this->createForm(ChangePasswordTypeAsUser::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($encoder->isPasswordValid($user, $form->getData()->getPassword())) {
-                $user->setPassword($encoder->encodePassword($user, $form->get('newPassword')->getData()));
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($user);
-                $manager->flush();
+            if (!$encoder->isPasswordValid($user, $form->getData()['password'])) {
+                $form->get('password')->addError(new FormError('Passwort falsch!'));
+            } else {
+                $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', 'Passwort geändert!');
 
-                $this->addFlash('success', 'Passwort erfolgreich geändert!');
-
-                return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
+                return $this->redirectToRoute('movie_night_list_all');
             }
-            $form->get('password')->addError(new FormError('Passwort falsch!'));
         }
 
-        return $this->render('user/changePassword.html.twig', [
+        return $this->render('user/changePasswordAsUser.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("{user<\d+>?}/admin/changepassword", name="change_password_as_admin")
+     *
+     * @IsGranted("ROLE_ADMIN")
+     *
+     * @param UserPasswordEncoderInterface $encoder dependency injection
+     * @param Request                      $request http request for form
+     * @param User                         $user    user as parameter
+     *
+     * @return Response
+     */
+    public function changePasswordAsAdmin(UserPasswordEncoderInterface $encoder, Request $request, User $user): Response
+    {
+        $form = $this->createForm(ChangePasswordTypeAsAdmin::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($encoder->encodePassword($user, $form->getData()['newPassword']));
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Passwort geändert!');
+
+            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
+        }
+
+        return $this->render('user/changePasswordAsAdmin.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
         ]);

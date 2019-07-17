@@ -14,6 +14,7 @@ use Exception;
 
 use Psr\Log\LoggerInterface;
 
+use Psr\Log\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -81,7 +82,7 @@ class MovieNightController extends AbstractController
             $this->manager->persist($movieNight);
             $this->manager->flush();
 
-            $this->logger->log('', 'Termin erstellt');
+            $this->logger->log(LogLevel::INFO, 'Termin erstellt');
             $this->addFlash('success', 'Termin erfolgreich erstellt!');
 
             return $this->redirectToRoute('movie_night_list_all');
