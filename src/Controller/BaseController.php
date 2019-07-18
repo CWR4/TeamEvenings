@@ -25,7 +25,7 @@ class BaseController extends AbstractController
      *
      * @return Response
      */
-    public function index() : Response
+    public function landingPage() : Response
     {
         $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
         if ($movieNight) {

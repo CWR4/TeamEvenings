@@ -71,7 +71,7 @@ class MovieNightController extends AbstractController
      *
      * @return Response
      */
-    public function createMovieNight(Request $request): Response
+    public function create(Request $request): Response
     {
         $movieNight = new MovieNight();
 
@@ -125,7 +125,7 @@ class MovieNightController extends AbstractController
      *
      * @return Response
      */
-    public function editMovieNight(Request $request, MovieNight $movieNight): Response
+    public function edit(Request $request, MovieNight $movieNight): Response
     {
         $editMovieNightForm = $this->createForm(MovieNightType::class, $movieNight);
         $editMovieNightForm->handleRequest($request);
@@ -155,7 +155,7 @@ class MovieNightController extends AbstractController
      *
      * @return Response
      */
-    public function deleteMovieNight(MovieNight $movieNight): Response
+    public function delete(MovieNight $movieNight): Response
     {
         $this->manager->remove($movieNight);
         $this->manager->flush();

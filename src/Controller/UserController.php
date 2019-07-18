@@ -68,7 +68,7 @@ class UserController extends AbstractController
      *
      * @return Response
      */
-    public function deleteUser(Request $request, User $user): Response
+    public function delete(Request $request, User $user): Response
     {
         $deleteForm = $this->createForm(DeleteUserType::class);
         $deleteForm->add('id', HiddenType::class, ['data' => $user->getId()]);
@@ -99,7 +99,7 @@ class UserController extends AbstractController
      *
      * @return Response
      */
-    public function editUser(User $user): Response
+    public function edit(User $user): Response
     {
         return $this->render('user/editUser.html.twig', [
             'user' => $user,
