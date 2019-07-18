@@ -33,7 +33,7 @@ class VoteRepository extends ServiceEntityRepository
     {
         $this->createQueryBuilder('vote')
             ->delete()
-            ->where('vote.User = :user')
+            ->where('vote.user = :user')
             ->setParameter('user', $user)
             ->getQuery()
             ->execute();

@@ -104,7 +104,9 @@ class MovieNightController extends AbstractController
      */
     public function listAll(): Response
     {
-        $movieNights = $this->getDoctrine()->getRepository(MovieNight::class)->findAllByDateAsc();
+        $movieNights = $this->getDoctrine()
+            ->getRepository(MovieNight::class)
+            ->findAllByDateAsc();
 
         return $this->render('movie_night/list.html.twig', [
             'movienights' => $movieNights,
@@ -185,7 +187,9 @@ class MovieNightController extends AbstractController
         if (isset($movie)) {
             $votingService->vote($movieNight, $movie);
 
-            return $this->redirectToRoute('movie_night_voting', ['movieNight' => $movieNight->getId()]);
+            return $this->redirectToRoute('movie_night_voting', [
+                'movieNight' => $movieNight->getId(),
+            ]);
         }
 
         return $this->render('movie_night/voting.html.twig', [
@@ -218,7 +222,9 @@ class MovieNightController extends AbstractController
                 $this->addFlash('error', 'Film konnte nicht hinzugefügt werden!');
             }
 
-            return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
+            return $this->redirectToRoute('movie_night_add_movie', [
+                'movieNight' => $movieNight->getId(),
+            ]);
         }
 
         return $this->render('movie_night/addMovie.html.twig', [
@@ -246,6 +252,8 @@ class MovieNightController extends AbstractController
 
         $this->addFlash('success', 'Film erfolgreich entfernt!');
 
-        return $this->redirectToRoute('movie_night_add_movie', ['movieNight' => $movieNight->getId()]);
+        return $this->redirectToRoute('movie_night_add_movie', [
+            'movieNight' => $movieNight->getId(),
+        ]);
     }
 }

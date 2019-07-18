@@ -27,7 +27,9 @@ class BaseController extends AbstractController
      */
     public function landingPage() : Response
     {
-        $movieNight = $this->getDoctrine()->getRepository(MovieNight::class)->getNextMovienight();
+        $movieNight = $this->getDoctrine()
+            ->getRepository(MovieNight::class)
+            ->getNextMovienight();
         if ($movieNight) {
             $movie = $movieNight->getVotedMovie();
         } else {

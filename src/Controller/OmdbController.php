@@ -66,14 +66,24 @@ class OmdbController extends AbstractController
         $form->handleRequest($request);
 
         // Set parameters for pagination and api call
-        $parameters = ['movieNight' => $movieNight->getId(), 'title' => $title, 'page' => $page];
+        $parameters = [
+            'movieNight' => $movieNight->getId(),
+            'title' => $title,
+            'page' => $page,
+        ];
 
         // Set variables to null, so they won't show if not needed
         $movies = [];
         $pagination = [];
 
         // Process form, get pagination and movies
-        $this->omdbService->processAndUpdateOmdbRequest($this->paginationService, $form, $parameters, $pagination, $movies);
+        $this->omdbService->processAndUpdateOmdbRequest(
+            $this->paginationService,
+            $form,
+            $parameters,
+            $pagination,
+            $movies
+        );
 
         return $this->render('omdb/index.html.twig', [
             'form' => $form->createView(),

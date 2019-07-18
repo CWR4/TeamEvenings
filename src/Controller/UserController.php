@@ -51,7 +51,9 @@ class UserController extends AbstractController
      */
     public function listAll(): Response
     {
-        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->getAllUser();
+        $users = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->getAllUser();
 
         return $this->render('user/index.html.twig', [
             'users' => $users,
@@ -71,12 +73,22 @@ class UserController extends AbstractController
     public function delete(Request $request, User $user): Response
     {
         $deleteForm = $this->createForm(DeleteUserType::class);
-        $deleteForm->add('id', HiddenType::class, ['data' => $user->getId()]);
+        $deleteForm->add(
+            'id',
+            HiddenType::class,
+            [
+                'data' => $user->getId(),
+            ]
+        );
         $deleteForm->handleRequest($request);
 
         if ($deleteForm->isSubmitted()) {
-            $user = $this->getDoctrine()->getRepository(User::class)->find($deleteForm->getData());
-            $this->getDoctrine()->getRepository(Vote::class)->deleteVotes($user);
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->find($deleteForm->getData());
+            $this->getDoctrine()
+                ->getRepository(Vote::class)
+                ->deleteVotes($user);
             $this->manager->remove($user);
             $this->manager->flush();
             $this->addFlash('success', 'Nutzer gelöscht');
@@ -127,7 +139,9 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Nutzername geändert!');
 
-            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
+            return $this->redirectToRoute('user_edit', [
+                'user' => $user->getId(),
+            ]);
         }
 
         return $this->render('user/changeUsername.html.twig', [
@@ -157,7 +171,9 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Rolle erfolgreich geändert!');
 
-            return $this->redirectToRoute('user_edit', ['user' => $user->getId()]);
+            return $this->redirectToRoute('user_edit', [
+                'user' => $user->getId(),
+            ]);
         }
 
         return $this->render('user/changeRole.html.twig', [
